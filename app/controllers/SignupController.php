@@ -12,7 +12,13 @@
  * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
  */
 
-class SignupController
+class SignupController extends \Phalcon\Mvc\Controller
 {
-
+    public function indexAction($pageNumber = null)
+    {
+        if (isset($pageNumber))
+        {
+            $this->view->pageNumber = $pageNumber;
+        }
+    }
 }
