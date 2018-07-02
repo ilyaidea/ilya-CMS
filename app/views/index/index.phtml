@@ -4,6 +4,11 @@
         <title>IndexController => indexAction</title>
     </head>
     <body>
-        <h1><?php echo "Hello IndexController => indexAction"; ?></h1>
+        <h1>Hello IndexController => indexAction</h1>
+        <?php
+            echo PHP_EOL;
+
+            echo $this->tag->linkTo('signup', 'Sign up Here!');
+        ?>
     </body>
 </html>

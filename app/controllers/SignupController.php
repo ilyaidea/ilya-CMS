@@ -14,11 +14,7 @@
 
 class SignupController extends \Phalcon\Mvc\Controller
 {
-    public function indexAction($pageNumber = null)
+    public function indexAction()
     {
-        if (isset($pageNumber))
-        {
-            $this->view->pageNumber = $pageNumber;
-        }
     }
 }
