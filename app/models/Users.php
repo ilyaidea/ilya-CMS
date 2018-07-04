@@ -12,7 +12,9 @@
  * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
  */
 
-class Users
+class Users extends \Phalcon\Mvc\Model
 {
-
+    public $id;
+    public $name;
+    public $email;
 }

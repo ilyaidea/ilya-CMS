@@ -45,6 +45,18 @@ $di->set('url', function () {
     return $url;
 });
 
+// Setup the database service
+$di->set('db', function () {
+    $db = new \Phalcon\Db\Adapter\Pdo\Mysql([
+        'host'     => '127.0.0.1',
+        'username' => 'root',
+        'password' => '',
+        'dbname'   => 'cms'
+    ]);
+
+    return $db;
+});
+
 $application = new \Phalcon\Mvc\Application($di);
 
 try {
