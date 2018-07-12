@@ -18,9 +18,10 @@ use Phalcon\Mvc\Router;
 class Services extends \Lib\Di\FactoryDefault
 {
     /**
-     * Summary Function initUrl
+     * This method helps in the generation of: URIs, URLs and Paths
      *
-     * Description Function initUrl
+     * setBaseUri method => Sets a prefix for all the URIs to be generated.
+     * And return new Url
      *
      * @author Ali Mansoori
      * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
