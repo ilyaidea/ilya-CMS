@@ -1,1 +1,7 @@
 /.idea
+/data
+data/*
+schemas/*
+!schemas/ilya-cms.sql
+public/final.css
+public/final.js

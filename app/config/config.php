@@ -2,7 +2,7 @@
 return new \Phalcon\Config(
     [
         'database' => [
-            'adapter' => 'Sqlite',
+            'adapter' => 'Mysql',
             'host' => '127.0.0.1',
             'username' => 'root',
             'password' => '',
@@ -15,6 +15,7 @@ return new \Phalcon\Config(
             'controllersDir'  => APP_PATH. 'controllers/',
             'modelsDir'  => APP_PATH. 'models/',
             'libraryDir'  => APP_PATH. 'library/',
+            'themesDir'       => BASE_PATH. 'public/ilya-theme/',
         ]
     ]
 );

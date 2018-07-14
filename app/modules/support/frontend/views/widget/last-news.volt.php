@@ -1,0 +1,1 @@
+<div>Hello Last News</div>

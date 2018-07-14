@@ -1,0 +1,82 @@
+<?php
+/**
+ * Summary File Application
+ *
+ * Description File Application
+ *
+ * ILYA CMS Created by ILYA-IDEA Company.
+ * @author Ali Mansoori
+ * Date: 7/14/2018
+ * Time: 10:10 AM
+ * @version 1.0.0
+ * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+ */
+namespace Lib\Mvc;
+
+class Application extends \Phalcon\Mvc\Application
+{
+    public function __construct(\Phalcon\DiInterface $di = null)
+    {
+        parent::__construct($di);
+        $this->registerModules(self::getAllModules());
+        $this->initRoute($di);
+    }
+
+    public static function getAllModules()
+    {
+        $modules = [];
+
+        foreach (\Lib\Common\Directory::getSubDirs(APP_PATH. 'modules/*') as $modulePath)
+        {
+            foreach (\Lib\Common\Directory::getSubDirs($modulePath. '/*') as $module)
+            {
+                $modules[basename($module)] = [
+                    'className' => 'Modules\\'. ucfirst(basename($modulePath)). "\\". ucfirst(basename($module)). '\Module',
+                    'path'      => $module. '/Module.php'
+                ];
+            }
+        }
+
+        return $modules;
+    }
+
+    private function initRoute(\Phalcon\DiInterface $di)
+    {
+        $router = new \Lib\Mvc\DefaultRouter();
+
+        foreach ($this->getModules() as $module)
+        {
+            $this->registerModulesRoutesClass($module, $router);
+            $this->registerModulesInitClass($module);
+        }
+        $router->setDi($di);
+        $di->set('router', $router);
+    }
+
+    private function registerModulesRoutesClass($module, $router)
+    {
+        $routesClassName = str_replace('\Module', '\Routes', $module['className']);
+
+        if (file_exists(str_replace('Module.php', 'Routes.php', $module['path'])))
+        {
+            include_once str_replace('Module.php', 'Routes.php', $module['path']);
+            if (class_exists($routesClassName))
+            {
+                $routesClass = new $routesClassName();
+                return $routesClass->init($router);
+            }
+        }
+    }
+
+    private function registerModulesInitClass($module)
+    {
+        $initClassName = str_replace('\Module', '\Init', $module['className']);
+        if (is_dir(str_replace('Module.php', 'Init.php', $module['path'])))
+        {
+            include str_replace('Module.php', 'Init.php', $module['path']);
+            if (class_exists($initClassName)) {
+                new $initClassName();
+            }
+        }
+    }
+}

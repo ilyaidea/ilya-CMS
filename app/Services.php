@@ -13,7 +13,9 @@
  */
 namespace Ilya;
 
+use Lib\Mvc\Helper;
 use Phalcon\Mvc\Router;
+use Phalcon\Mvc\View;
 
 class Services extends \Lib\Di\FactoryDefault
 {
@@ -33,7 +35,35 @@ class Services extends \Lib\Di\FactoryDefault
     {
         $url = new \Phalcon\Mvc\Url();
         $url->setBaseUri($this->get('config')->app->baseUri);
+        $url->setBasePath('/cms/');
         return $url;
+    }
+
+    protected function initView()
+    {
+        $view = new View();
+
+        define('THEME_PATH', $this->get('config')->app->themesDir);
+        $view->setMainView(THEME_PATH. 'frontend/theme');
+        $view->setLayoutsDir(THEME_PATH. 'frontend/layouts/');
+        $view->setLayout('main');
+        $view->setPartialsDir(THEME_PATH. 'frontend/partials/');
+
+        // Volt
+        $volt = new View\Engine\Volt($view, $this);
+        $volt->setOptions([
+            'compiledPath' => BASE_PATH. 'data/cache/volt/'
+        ]);
+
+        $phtml = new View\Engine\Php($view, $this);
+        $viewEngines = [
+            '.volt' => $volt,
+            '.phtml' => $phtml
+        ];
+
+        $view->registerEngines($viewEngines);
+
+        return $view;
     }
 
     /**
@@ -47,42 +77,18 @@ class Services extends \Lib\Di\FactoryDefault
      * @version 1.0.0
      * @example Desc <code></code>
      */
-    protected function initDb()
+    protected function initSharedDb()
     {
-        $adapter = '\Phalcon\Db\Adapter\Pdo\\'. $this->get('config')->database->adapter;
+        $dbConf = $this->get('config')->database->toArray();
 
-        $db = new $adapter([
-            'host'     => $this->get('config')->database->host,
-            'username' => $this->get('config')->database->username,
-            'password' => $this->get('config')->database->password,
-            'dbname'   => $this->get('config')->database->dbname
-        ]);
+        $adapter = 'Phalcon\Db\Adapter\Pdo\\'. $dbConf['adapter'];
+        unset($dbConf['adapter']);
 
-        return $db;
+        return new $adapter($dbConf);
     }
 
-    /**
-     * Summary Function initRouter
-     *
-     * Description Function initRouter
-     *
-     * @author Ali Mansoori
-     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
-     * @version 1.0.0
-     * @example Desc <code></code>
-     */
-    protected function initRouter()
+    protected function initHelper()
     {
-        $router = new Router();
-
-        $router->setDefaultModule('frontend');
-        $router->add('/:module/:controller/:action/:params', [
-            'module' => 1,
-            'controller' => 2,
-            'action' => 3,
-            'params' => 4
-        ])->setName('default_route');
-
-        return $router;
+        return new Helper();
     }
 }

@@ -18,7 +18,7 @@ use Phalcon\Di\FactoryDefault;
 // Define some absolute path constants to aid in locating resources
 define('BASE_PATH', dirname(__DIR__). '/');
 define('APP_PATH', BASE_PATH. 'app/');
-define('MODULES_PATH', APP_PATH. 'modules/');
+define('MODULE_PATH', APP_PATH. 'modules/');
 
 require_once APP_PATH. 'Bootstrap.php';
 
