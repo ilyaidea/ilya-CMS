@@ -18,10 +18,9 @@ use Phalcon\Mvc\Router;
 class Services extends \Lib\Di\FactoryDefault
 {
     /**
-     * This method helps in the generation of: URIs, URLs and Paths
+     * Summary Function initUrl
      *
-     * setBaseUri method => Sets a prefix for all the URIs to be generated.
-     * And return new Url
+     * Description Function initUrl
      *
      * @author Ali Mansoori
      * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
@@ -37,9 +36,9 @@ class Services extends \Lib\Di\FactoryDefault
     }
 
     /**
-     * Summary Function initDb
+     * this method creates a connection by instantiating the adapter class.
      *
-     * Description Function initDb
+     * adapter => requires an array with the connection parameters
      *
      * @author Ali Mansoori
      * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
@@ -62,9 +61,9 @@ class Services extends \Lib\Di\FactoryDefault
     }
 
     /**
-     * Summary Function initRouter
+     * This method defines routes whose paths include modules by parsing url to determine this information.
      *
-     * Description Function initRouter
+     * Add method =>using pattern you want to match and a set of paths to define a route.
      *
      * @author Ali Mansoori
      * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
