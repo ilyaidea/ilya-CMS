@@ -2,6 +2,9 @@
 /**
  * Summary File Bootstrap
  *
+ * We introduce the namespace in classes so that if we had another class with the same name
+ ,we would recognize another class in another class
+ *
  * Description File Bootstrap
  *
  * ILYA CMS Created by ILYA-IDEA Company.
@@ -21,6 +24,8 @@ class Bootstrap
 
     /**
      * Bootstrap constructor.
+     *
+     * construct: Config path to be specified. And the config will be voiced
      */
     public function __construct()
     {
@@ -31,6 +36,8 @@ class Bootstrap
      * Summary Function run
      *
      * Description Function run
+     *
+     * When bootstrap runs, it becomes config
      *
      * @author Ali Mansoori
      * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
