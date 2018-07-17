@@ -1,7 +1,7 @@
 <?php
 /**
  * Summary File Application
- *
+ * Application Class and it's Methods Definition
  * Description File Application
  *
  * ILYA CMS Created by ILYA-IDEA Company.
@@ -15,6 +15,11 @@ namespace Lib\Mvc;
 
 class Application extends \Phalcon\Mvc\Application
 {
+    /**
+     * Application constructor.
+     * Loads the modules and initializes their routs
+     * @param \Phalcon\DiInterface|null $di
+     */
     public function __construct(\Phalcon\DiInterface $di = null)
     {
         parent::__construct($di);
@@ -22,6 +27,11 @@ class Application extends \Phalcon\Mvc\Application
         $this->initRoute($di);
     }
 
+    /**
+     * Summary Function getAllModules
+     * Returns all modules that located in \Lib\Common\Directory
+     * @return array
+     */
     public static function getAllModules()
     {
         $modules = [];
@@ -40,6 +50,11 @@ class Application extends \Phalcon\Mvc\Application
         return $modules;
     }
 
+    /**
+     * Summary Function initRoute
+     * Sets the modules Routs
+     * @param \Phalcon\DiInterface $di
+     */
     private function initRoute(\Phalcon\DiInterface $di)
     {
         $router = new \Lib\Mvc\DefaultRouter();
@@ -53,6 +68,11 @@ class Application extends \Phalcon\Mvc\Application
         $di->set('router', $router);
     }
 
+    /**
+     * @param $module
+     * @param $router
+     * @return mixed
+     */
     private function registerModulesRoutesClass($module, $router)
     {
         $routesClassName = str_replace('\Module', '\Routes', $module['className']);
@@ -68,6 +88,9 @@ class Application extends \Phalcon\Mvc\Application
         }
     }
 
+    /**
+     * @param $module
+     */
     private function registerModulesInitClass($module)
     {
         $initClassName = str_replace('\Module', '\Init', $module['className']);
