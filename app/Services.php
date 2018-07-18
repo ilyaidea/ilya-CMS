@@ -16,6 +16,7 @@ namespace Ilya;
 use Lib\Mvc\Helper;
 use Phalcon\Mvc\Router;
 use Phalcon\Mvc\View;
+use Phalcon\Session\Adapter\Files;
 
 class Services extends \Lib\Di\FactoryDefault
 {
@@ -89,5 +90,31 @@ class Services extends \Lib\Di\FactoryDefault
     protected function initHelper()
     {
         return new Helper();
+    }
+
+    protected function initFlash()
+    {
+        return new \Phalcon\Flash\Direct([
+            'error' => 'alert alert-danger',
+            'success' => 'alert alert-success',
+            'notice' => 'alert alert-info',
+            'warning' => 'alert alert-warning'
+        ]);
+    }
+    protected function initFlashSession()
+    {
+        return new \Phalcon\Flash\Session([
+            'error' => 'alert alert-danger',
+            'success' => 'alert alert-success',
+            'notice' => 'alert alert-info',
+            'warning' => 'alert alert-warning'
+        ]);
+    }
+
+    protected function initSession()
+    {
+        $session = new Files();
+        $session->start();
+        return $session;
     }
 }

@@ -15,6 +15,7 @@
 class Users extends \Phalcon\Mvc\Model
 {
     public $id;
-    public $name;
+    public $username;
     public $email;
+    public $password;
 }
