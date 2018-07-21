@@ -2,7 +2,8 @@
 /**
  * Summary File FactoryDefault
  *
- * Description File FactoryDefault
+ * This factorydefault was created to Instead of using the service directly from phalcons factorydefault,
+ * Use this factorydefault.
  *
  * ILYA CMS Created by ILYA-IDEA Company.
  * @author Ali Mansoori
@@ -16,7 +17,7 @@ namespace Lib\Di;
 class FactoryDefault extends \Phalcon\Di\FactoryDefault
 {
     /**
-     * FactoryDefault constructor.
+     *when this factorydefault run,first this fanction  runs her father's features(phalcons factorydefault).
      * @param $config
      */
     public function __construct($config)
@@ -30,7 +31,7 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
     /**
      * Summary Function bindServices
      *
-     * Description Function bindServices
+     * this function gives all metodes of factorydefault and services.
      *
      * @author Ali Mansoori
      * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
