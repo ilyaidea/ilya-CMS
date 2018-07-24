@@ -10,12 +10,11 @@ return new \Phalcon\Config(
         ],
 
         'app' => [
-            'baseUri' => '/cms/',
-            'viewsDir' => APP_PATH. 'views/',
-            'controllersDir'  => APP_PATH. 'controllers/',
-            'modelsDir'  => APP_PATH. 'models/',
-            'libraryDir'  => APP_PATH. 'library/',
+            'baseUri'         => '/cms/',
+            'modelsDir'       => APP_PATH. 'models/',
+            'libraryDir'      => APP_PATH. 'library/',
             'themesDir'       => BASE_PATH. 'public/ilya-theme/',
+            'cryptSalt'       => 'eEAfR|_&G&f,+vU]:jFr!!A&+71w1Ms9~8_4L!<@[N@DyaIP_2My|:+.u>/6m,$D'
         ]
     ]
 );

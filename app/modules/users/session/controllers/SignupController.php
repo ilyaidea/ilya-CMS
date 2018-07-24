@@ -15,6 +15,7 @@
 namespace Modules\Users\Session\Controllers;
 
 
+use Ilya\Models\Users;
 use Lib\Mvc\Controller;
 use Modules\Users\Session\Forms\SignUpForm;
 use Phalcon\Mvc\View;
@@ -23,24 +24,47 @@ class SignupController extends Controller
 {
     public function indexAction()
     {
-        $this->setEnviroment('backend', 'main');
-        $this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
-        $signupForm = new SignUpForm(
-            null,
-            [
+        $this->setEnviroment('backend', 'session');
+        $this->view->setRenderLevel(View::LEVEL_LAYOUT);
+        $this->tag->setTitle('Sign up');
+        $this->view->title = 'Sign up';
 
-            ]
-        );
+        $signupForm = new SignUpForm();
 
         if ($this->request->isPost())
         {
             if ($signupForm->isValid($this->request->getPost()))
             {
+                $user = new Users(
+                    [
+                        'username' => $this->request->getPost('username'),
+                        'email'    => $this->request->getPost('email'),
+                        'password' => $this->security->hash($this->request->getPort('password')),
+                        'active' => 'N'
+                    ]
+                );
 
-            }
-            else
-            {
+                if ($user->save())
+                {
+                    $this->flash->success('Success save');
 
+                    return $this->response->redirect(
+                            [
+                                'for'        => 'default',
+                                'module'     => 'session',
+                                'controller' => 'login',
+                                'action'     => 'index',
+                                'params'     => ''
+                            ]
+                        );
+                }
+                else
+                {
+                    foreach ($user->getMessages() as $message)
+                    {
+                        $this->flash->error($message);
+                    }
+                }
             }
         }
 

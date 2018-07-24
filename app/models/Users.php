@@ -11,6 +11,7 @@
  * @version 1.0.0
  * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
  */
+namespace Ilya\Models;
 
 class Users extends \Phalcon\Mvc\Model
 {
@@ -18,4 +19,16 @@ class Users extends \Phalcon\Mvc\Model
     public $username;
     public $email;
     public $password;
+    public $created;
+    public $active;
+
+    public function initialize()
+    {
+        $this->setSource('users');
+    }
+
+    public function afterSave()
+    {
+        $this->created = date('Y-m-d H:m:s');
+    }
 }

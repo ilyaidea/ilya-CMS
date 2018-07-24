@@ -1,3 +1,4 @@
+{{ flash.output() }}
 {% if form is defined %}
 
         {{ form('class': 'md-float-material') }}

@@ -14,6 +14,7 @@
 namespace Ilya;
 
 use Lib\Mvc\Helper;
+use Phalcon\Crypt;
 use Phalcon\Mvc\Router;
 use Phalcon\Mvc\View;
 use Phalcon\Session\Adapter\Files;
@@ -94,15 +95,6 @@ class Services extends \Lib\Di\FactoryDefault
 
     protected function initFlash()
     {
-        return new \Phalcon\Flash\Direct([
-            'error' => 'alert alert-danger',
-            'success' => 'alert alert-success',
-            'notice' => 'alert alert-info',
-            'warning' => 'alert alert-warning'
-        ]);
-    }
-    protected function initFlashSession()
-    {
         return new \Phalcon\Flash\Session([
             'error' => 'alert alert-danger',
             'success' => 'alert alert-success',
@@ -116,5 +108,12 @@ class Services extends \Lib\Di\FactoryDefault
         $session = new Files();
         $session->start();
         return $session;
+    }
+
+    protected function initCrypt()
+    {
+        $crypt = new Crypt();
+        $crypt->setKey($this->get('config')->app->cryptSalt);
+        return $crypt;
     }
 }
