@@ -28,6 +28,11 @@ class DefaultRouter extends \Phalcon\Mvc\Router
         $this->setDefaultController('index');
         $this->setDefaultAction('index');
 
+        $this->addpatterns();
+    }
+
+    private function addpatterns()
+    {
         $this->add('/:module/:controller/:action/:params(|/)', [
             'module'     => 1,
             'controller' => 2,
@@ -57,13 +62,9 @@ class DefaultRouter extends \Phalcon\Mvc\Router
         foreach ($languages as $lang=>$items)
         {
             if (isset($items['primary']) && $items['primary'])
-            {
                 $this->add($pattern, $paths)->setName(self::LANG_PREFIX. $name. '_'. $lang);
-            }
             else
-            {
                 $this->add('/'. $lang. $pattern, $paths)->setName(self::LANG_PREFIX. $name. '_'. $lang);
-            }
         }
     }
 }

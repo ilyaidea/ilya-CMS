@@ -180,7 +180,15 @@ class ModuleManager
     public function sortedModuleFiles()
     {
         $this->cleanRemovedModules();
+
         $filesystemModules = $this->getFilesystemPlugins(true);
+        $this->addmoduledirpaths($filesystemModules);
+
+        return [];
+    }
+
+    private function addmoduledirpaths($filesystemModules)
+    {
         if (!empty($filesystemModules))
         {
             $metadataUtil = new UtilMetaData();
@@ -206,7 +214,5 @@ class ModuleManager
 
             return $sortedModuleFiles;
         }
-
-        return [];
     }
 }
