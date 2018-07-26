@@ -25,6 +25,15 @@ class IndexController extends \Lib\Mvc\Controller
 
         $this->view->languages_disabled = false;
 
+        $this->addcss();
+
+        $this->addjs();
+
+        $this->setmetas();
+
+    }
+    private function addcss()
+    {
         $this->assets->addCss('ilya-theme/backend/assets/icon/themify-icons/themify-icons.css');
         $this->assets->addCss('ilya-theme/backend/assets/icon/icofont/css/icofont.css');
 
@@ -38,7 +47,9 @@ class IndexController extends \Lib\Mvc\Controller
         $cssCollection->addCss('ilya-theme/backend/assets/css/jquery.mCustomScrollbar.css');
         $cssCollection->join(true);
         $cssCollection->addFilter(new Cssmin());
-
+    }
+    private function addjs()
+    {
         $this->assets->addJs('ilya-theme/backend/assets/bower_components/jquery/js/jquery.min.js');
         $this->assets->addJs('ilya-theme/backend/assets/bower_components/jquery-ui/js/jquery-ui.min.js');
         $this->assets->addJs('ilya-theme/backend/assets/bower_components/jquery-slimscroll/js/jquery.slimscroll.js');
@@ -46,8 +57,9 @@ class IndexController extends \Lib\Mvc\Controller
         $this->assets->addJs('ilya-theme/backend/assets/js/demo-12.js');
         $this->assets->addJs('ilya-theme/backend/assets/js/jquery.mCustomScrollbar.concat.min.js');
         $this->assets->addJs('ilya-theme/backend/assets/js/script.min.js');
-
-        // set metas
+    }
+    private function setmetas()
+    {
         $this->helper->meta()->set('description', 'meta description');
         $this->helper->meta()->set('keywords', 'meta keyword');
 
@@ -55,6 +67,7 @@ class IndexController extends \Lib\Mvc\Controller
 
         $moduleManager = new ModuleManager();
         $this->helper->sidebarMenu()->set($moduleManager->sortedModuleFiles());
-//        die(print_r($moduleManager->sortedModuleFiles()));
+
     }
+
 }

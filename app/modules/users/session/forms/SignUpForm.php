@@ -13,36 +13,62 @@
  */
 namespace Modules\Users\Session\Forms;
 
+use Ilya\Models\Users;
 use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\Email;
 use Phalcon\Validation\Validator\Identical;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\StringLength;
-use function PHPSTORM_META\type;
+use Phalcon\Validation\Validator\Uniqueness;
+
 
 class SignUpForm extends \Phalcon\Forms\Form
 {
     public function initialize($entity = null, $options = null)
+    {
+        $this->addusername();
+
+        $this->addEmail();
+
+        $this->addpassword();
+
+        $this->addterms();
+
+        $this->addcsrf();
+
+    }
+
+    private function addusername()
     {
         $username = new \Phalcon\Forms\Element\Text('username', [
             'class' => 'form-control',
             'placeholder' => 'Choose username',
             'type' => 'text'
         ]);
-
         $username->addValidators([
-            new PresenceOf([
-                'message' => 'The username is required'
-            ])
+            new PresenceOf(
+                [
+                    'message' => 'The username is required'
+                ]
+            ),
+            new Uniqueness(
+                [
+                    'model'  => new Users(),
+                    'message'=> ':field must be unique'
+                ]
+            )
+
         ]);
         $this->add($username);
+    }
 
+    private function addEmail()
+    {
         $email = new \Phalcon\Forms\Element\Text('email', [
             'class' => 'form-control',
             'placeholder' => 'Your Email Address',
             'type'        => 'text'
         ]);
-
         $email->addValidators(
             [
                 new PresenceOf(
@@ -54,12 +80,20 @@ class SignUpForm extends \Phalcon\Forms\Form
                     [
                         'message' => 'the email is not valid'
                     ]
+                ),
+                new Uniqueness(
+                    [
+                        'model'  => new Users(),
+                        'message'=> ':field must be unique'
+                    ]
                 )
             ]
         );
         $this->add($email);
+    }
 
-        // Add password
+    private function addpassword()
+    {
         $password = new \Phalcon\Forms\Element\Password('password', [
             'class' => 'form-control',
             'placeholder' => 'Enter Password',
@@ -103,7 +137,10 @@ class SignUpForm extends \Phalcon\Forms\Form
             ]
         );
         $this->add($confirmPassword);
+    }
 
+    private function addterms()
+    {
         $terms = new \Phalcon\Forms\Element\Check('terms', [
             'value' => 'yes',
             'type'  => 'checkbox'
@@ -120,7 +157,10 @@ class SignUpForm extends \Phalcon\Forms\Form
             ]
         );
         $this->add($terms);
+    }
 
+    private function addcsrf()
+    {
         $csrf = new \Phalcon\Forms\Element\Hidden('csrf', [
             'type' => 'hidden'
         ]);
@@ -139,10 +179,9 @@ class SignUpForm extends \Phalcon\Forms\Form
             'class' => 'btn btn-primary btn-md btn-block waves-effect text-center m-b-20',
             'type'  => 'submit'
         ]));
-
     }
 
-    /**
+        /**
      * Prints messages for a specific element
      */
     public function messages($name)
