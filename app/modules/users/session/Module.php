@@ -53,16 +53,13 @@ class Module implements \Phalcon\Mvc\ModuleDefinitionInterface
             $dispatcher->setDefaultNamespace('Modules\Users\Session\Controllers\\');
             return $dispatcher;
         });
-
         $di->set('view' , $this->setView($di));
-
     }
 
     private function setView(\Phalcon\DiInterface $di)
     {
         $view = $di->get('view');
         $view->setViewsDir(__DIR__. '/views/');
-
         return $view;
     }
 }

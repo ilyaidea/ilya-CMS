@@ -16,8 +16,6 @@
  */
 namespace Ilya;
 
-use Phalcon\Mvc\Application;
-
 class Bootstrap
 {
     private $config;

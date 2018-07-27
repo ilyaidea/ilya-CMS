@@ -14,7 +14,6 @@
 
 namespace Modules\Users\Session\Controllers;
 
-
 use Ilya\Models\Users;
 use Lib\Mvc\Controller;
 use Modules\Users\Session\Forms\SignUpForm;
@@ -29,6 +28,11 @@ class SignupController extends Controller
         $this->tag->setTitle('Sign up');
         $this->view->title = 'Sign up';
 
+        $signupForm=$this->SignupForm();
+        $this->view->form = $signupForm;
+    }
+    public function SignupForm($signupForm)
+    {
         $signupForm = new SignUpForm();
 
         if ($this->request->isPost())
@@ -49,14 +53,14 @@ class SignupController extends Controller
                     $this->flash->success('Success save');
 
                     return $this->response->redirect(
-                            [
-                                'for'        => 'default',
-                                'module'     => 'session',
-                                'controller' => 'login',
-                                'action'     => 'index',
-                                'params'     => ''
-                            ]
-                        );
+                        [
+                            'for'        => 'default',
+                            'module'     => 'session',
+                            'controller' => 'login',
+                            'action'     => 'index',
+                            'params'     => ''
+                        ]
+                    );
                 }
                 else
                 {
@@ -67,7 +71,6 @@ class SignupController extends Controller
                 }
             }
         }
-
-        $this->view->form = $signupForm;
+        return $signupForm;
     }
 }

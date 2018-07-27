@@ -50,23 +50,20 @@ class Services extends \Lib\Di\FactoryDefault
         $view->setLayout('main');
         $view->setPartialsDir(THEME_PATH. 'frontend/partials/');
 
-        // Volt
+        //Volt
         $volt = new View\Engine\Volt($view, $this);
         $volt->setOptions([
             'compiledPath' => BASE_PATH. 'data/cache/volt/'
         ]);
-
         $phtml = new View\Engine\Php($view, $this);
         $viewEngines = [
             '.volt' => $volt,
             '.phtml' => $phtml
         ];
-
         $view->registerEngines($viewEngines);
 
         return $view;
     }
-
     /**
      * Summary Function initDb
      *
@@ -80,6 +77,7 @@ class Services extends \Lib\Di\FactoryDefault
      */
     protected function initSharedDb()
     {
+
         $dbConf = $this->get('config')->database->toArray();
 
         $adapter = 'Phalcon\Db\Adapter\Pdo\\'. $dbConf['adapter'];
