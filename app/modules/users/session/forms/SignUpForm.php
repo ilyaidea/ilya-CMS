@@ -26,7 +26,23 @@ class SignUpForm extends \Phalcon\Forms\Form
 {
     public function initialize($entity = null, $options = null)
     {
-        // Username
+        $this->addusername();
+
+        $this->addEmail();
+
+        $this->addpassword();
+
+        $this->addpasswordconfirm();
+
+        $this->addterms();
+
+        $this->addCSRF();
+
+        $this->addsubmit();
+    }
+
+    public function addusername()
+    {
         $username = new \Phalcon\Forms\Element\Text('username', [
             'class' => 'form-control',
             'placeholder' => 'Choose username',
@@ -46,7 +62,10 @@ class SignUpForm extends \Phalcon\Forms\Form
         ]);
         $this->add($username);
 
-        // Email
+    }
+
+    public function addEmail()
+    {
         $email = new \Phalcon\Forms\Element\Text('email', [
             'class' => 'form-control',
             'placeholder' => 'Your Email Address',
@@ -73,8 +92,10 @@ class SignUpForm extends \Phalcon\Forms\Form
             ]
         );
         $this->add($email);
+    }
 
-        // Password
+    public function addpassword()
+    {
         $password = new \Phalcon\Forms\Element\Password('password', [
             'class' => 'form-control',
             'placeholder' => 'Enter Password',
@@ -102,8 +123,10 @@ class SignUpForm extends \Phalcon\Forms\Form
             ]
         );
         $this->add($password);
+    }
 
-        // Confirm password
+    public function addpasswordconfirm()
+    {
         $confirmPassword = new \Phalcon\Forms\Element\Password('confirmPassword', [
             'class' => 'form-control',
             'placeholder' => 'Confirm password',
@@ -119,8 +142,10 @@ class SignUpForm extends \Phalcon\Forms\Form
             ]
         );
         $this->add($confirmPassword);
+    }
 
-        // Terms
+    public function addterms()
+    {
         $terms = new \Phalcon\Forms\Element\Check('terms', [
             'value' => 'yes',
             'type'  => 'checkbox'
@@ -137,8 +162,10 @@ class SignUpForm extends \Phalcon\Forms\Form
             ]
         );
         $this->add($terms);
+    }
 
-        // CSRF
+    public function addCSRF()
+    {
         $csrf = new \Phalcon\Forms\Element\Hidden('csrf', [
             'type' => 'hidden'
         ]);
@@ -150,15 +177,15 @@ class SignUpForm extends \Phalcon\Forms\Form
         ));
         $csrf->clear();
         $this->add($csrf);
+    }
 
-        // Submit
+    public function addsubmit()
+    {
         $this->add(new \Phalcon\Forms\Element\Submit('Sign up', [
             'class' => 'btn btn-primary btn-md btn-block waves-effect text-center m-b-20',
             'type'  => 'submit'
         ]));
-
     }
-
     /**
      * Prints messages for a specific element
      */

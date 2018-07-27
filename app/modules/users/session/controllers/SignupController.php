@@ -35,39 +35,43 @@ class SignupController extends Controller
         {
             if ($signupForm->isValid($this->request->getPost()))
             {
-                $user = new Users(
-                    [
-                        'username' => $this->request->getPost('username'),
-                        'email'    => $this->request->getPost('email'),
-                        'password' => $this->security->hash($this->request->getPort('password')),
-                        'active' => 'N'
-                    ]
-                );
-
-                if ($user->save())
-                {
-                    $this->flash->success('Success save');
-
-                    return $this->response->redirect(
-                            [
-                                'for'        => 'default',
-                                'module'     => 'session',
-                                'controller' => 'login',
-                                'action'     => 'index',
-                                'params'     => ''
-                            ]
-                        );
-                }
-                else
-                {
-                    foreach ($user->getMessages() as $message)
-                    {
-                        $this->flash->error($message);
-                    }
-                }
+                $this->addflash();
             }
         }
 
         $this->view->form = $signupForm;
+    }
+    private function addflash()
+    {
+        $user = new Users(
+            [
+                'username' => $this->request->getPost('username'),
+                'email'    => $this->request->getPost('email'),
+                'password' => $this->security->hash($this->request->getPort('password')),
+                'active' => 'N'
+            ]
+        );
+
+        if ($user->save())
+        {
+            $this->flash->success('Success save');
+
+            return $this->response->redirect(
+                [
+                    'for'        => 'default',
+                    'module'     => 'session',
+                    'controller' => 'login',
+                    'action'     => 'index',
+                    'params'     => ''
+                ]
+            );
+        }
+        else
+        {
+            foreach ($user->getMessages() as $message)
+            {
+                $this->flash->error($message);
+            }
+        }
     }
 }
