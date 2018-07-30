@@ -23,9 +23,9 @@
                         <div class="col-md-12">
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    {{ form.render('terms') }}
+                                    {{ field.render() }}
                                     <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                    <span class="text-inverse">{{ form.label('terms') }}</span>
+                                    <span class="text-inverse">{{ field.label() }}</span>
                                 </label>
                                 {{ partial('forms/flash/message') }}
                             </div>
@@ -43,7 +43,7 @@
 
         {% endfor %}
 
-        {{ form.render('csrf', ['value': security.getSessionToken()]) }}
+        {{ form.render('csrf', ['value': security.getToken()]) }}
         {% if form.hasMessagesFor('csrf') %}
             {% for message in form.getMessagesFor('csrf') %}
                 <div class="messages">

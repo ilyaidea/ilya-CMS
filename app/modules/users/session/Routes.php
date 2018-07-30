@@ -28,7 +28,16 @@ class Routes
                 'controller' => 'signup',
                 'action' => 'index'
             ]
-        );
+        )->setName('session_signup');
+
+        $router->add(
+            '/login(/|)',
+            [
+                'module' => 'session',
+                'controller' => 'login',
+                'action' => 'index'
+            ]
+        )->setName('session_login');
         return $router;
     }
 }

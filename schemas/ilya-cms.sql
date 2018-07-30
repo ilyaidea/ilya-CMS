@@ -5,8 +5,11 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `users` (
   `id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(70) NOT NULL,
-  `email` varchar(70) NOT NULL
+  `username` varchar(32) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` char(60) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `active` char(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `users`

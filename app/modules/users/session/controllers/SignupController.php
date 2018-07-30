@@ -31,11 +31,49 @@ class SignupController extends Controller
 
         $signupForm = new SignUpForm();
 
+        try
+        {
+
+        }
+        catch (\Exception $exception)
+        {
+            $this->flash->error($exception->getMessage());
+        }
+
         if ($this->request->isPost())
         {
             if ($signupForm->isValid($this->request->getPost()))
             {
-                $this->addflash();
+                $user = new Users(
+                    [
+                        'username' => $this->request->getPost('username'),
+                        'email'    => $this->request->getPost('email'),
+                        'password' => $this->request->getPost('password'),
+                        'active'   => 'Y'
+                    ]
+                );
+
+                if ($user->save())
+                {
+                    $this->flash->success('Success save');
+
+                    return $this->response->redirect(
+                            [
+                                'for'        => 'default',
+                                'module'     => 'session',
+                                'controller' => 'login',
+                                'action'     => 'index',
+                                'params'     => ''
+                            ]
+                        );
+                }
+                else
+                {
+                    foreach ($user->getMessages() as $message)
+                    {
+                        $this->flash->error($message);
+                    }
+                }
             }
         }
 

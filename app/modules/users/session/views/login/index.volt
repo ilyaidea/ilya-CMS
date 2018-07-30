@@ -1,2 +1,1 @@
-<div>{{ flash.output() }}</div>
-<h1>Login Page</h1>
+{{ partial('forms/form') }}

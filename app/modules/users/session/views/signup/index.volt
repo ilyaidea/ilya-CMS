@@ -1,2 +1,1 @@
-
-                        {{ partial('forms/form') }}
+{{ partial('forms/form') }}

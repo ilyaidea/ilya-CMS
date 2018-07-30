@@ -17,6 +17,7 @@ use Lib\Mvc\Helper;
 use Phalcon\Crypt;
 use Phalcon\Mvc\Router;
 use Phalcon\Mvc\View;
+use Phalcon\Security;
 use Phalcon\Session\Adapter\Files;
 
 class Services extends \Lib\Di\FactoryDefault
@@ -110,10 +111,16 @@ class Services extends \Lib\Di\FactoryDefault
         return $session;
     }
 
-    protected function initCrypt()
+    protected function initSharedCrypt()
     {
         $crypt = new Crypt();
+        $crypt->setCipher('aes-256-ctr');
         $crypt->setKey($this->get('config')->app->cryptSalt);
         return $crypt;
+    }
+
+    protected function initSecurity()
+    {
+        return new Security();
     }
 }

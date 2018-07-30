@@ -14,7 +14,7 @@ return new \Phalcon\Config(
             'modelsDir'       => APP_PATH. 'models/',
             'libraryDir'      => APP_PATH. 'library/',
             'themesDir'       => BASE_PATH. 'public/ilya-theme/',
-            'cryptSalt'       => 'eEAfR|_&G&f,+vU]:jFr!!A&+71w1Ms9~8_4L!<@[N@DyaIP_2My|:+.u>/6m,$D'
+            'cryptSalt'       => 'eEAfR\|_&G\&f\,+v\U]:\jF\!!A&\\\+71w1M\\\s9~8_4L!<@[N@DyaI\\P_2My|:\\\+.u>/6m,$D'
         ]
     ]
 );

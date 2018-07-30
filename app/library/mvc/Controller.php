@@ -19,7 +19,7 @@ class Controller extends \Phalcon\Mvc\Controller
 {
     public function initialize()
     {
-        $this->tag->appendTitle("Ilya CMS");
+        $this->tag->appendTitle("Ilya CMS | ");
         $this->tag->setTitleSeparator(" | ");
     }
 

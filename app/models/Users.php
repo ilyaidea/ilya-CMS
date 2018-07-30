@@ -11,6 +11,7 @@
  * @version 1.0.0
  * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
  */
+
 namespace Ilya\Models;
 
 class Users extends \Phalcon\Mvc\Model
@@ -18,7 +19,7 @@ class Users extends \Phalcon\Mvc\Model
     public $id;
     public $username;
     public $email;
-    public $password;
+    protected $password;
     public $created;
     public $active;
 
@@ -30,5 +31,21 @@ class Users extends \Phalcon\Mvc\Model
     public function afterSave()
     {
         $this->created = date('Y-m-d H:m:s');
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = $this->getDI()->get('crypt')->encryptBase64(
+            $password,
+            $this->getDI()->get('crypt')->getKey()
+        );
+    }
+
+    public function getPassword()
+    {
+        return $this->getDI()->get('crypt')->decryptBase64(
+            $this->password,
+            $this->getDI()->get('crypt')->getKey()
+        );
     }
 }
