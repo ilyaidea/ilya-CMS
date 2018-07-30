@@ -28,16 +28,20 @@ class SignupController extends Controller
         $this->tag->setTitle('Sign up');
         $this->view->title = 'Sign up';
 
-        $signupForm=$this->SignupForm();
-        $this->view->form = $signupForm;
+        $signupform=$this->SignupForm();
+
+        $this->view->form = $signupform;
     }
-    public function SignupForm($signupForm)
+
+    //There is a function to store each user's information in the database
+
+    public function SignupForm()
     {
-        $signupForm = new SignUpForm();
+        $signupform = new SignUpForm();
 
         if ($this->request->isPost())
         {
-            if ($signupForm->isValid($this->request->getPost()))
+            if ($signupform->isValid($this->request->getPost()))
             {
                 $user = new Users(
                     [
@@ -71,6 +75,6 @@ class SignupController extends Controller
                 }
             }
         }
-        return $signupForm;
+        return $signupform;
     }
 }

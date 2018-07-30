@@ -17,6 +17,7 @@ use Ilya\Models\Users;
 use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\Email;
 use Phalcon\Validation\Validator\Identical;
+use Phalcon\Validation\Validator\InclusionIn;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\StringLength;
 use Phalcon\Validation\Validator\Uniqueness;
@@ -26,24 +27,21 @@ class SignUpForm extends \Phalcon\Forms\Form
     public function initialize($entity = null, $options = null)
     {
         $this->addUsername();
+
         $this->addEmail();
+
         $this->addPassword();
-        $this->ConfirmPassword();
-        $this->acceptTerms();
-        $this->Csrf();
-        $this->Submit();
+
+        $this->addConfirmPassword();
+
+        $this->addTerms();
+
+        $this->addCSRF();
+
+        $this->addSubmit();
     }
-    /**
-     * Prints messages for a specific element
-     */
-    public function messages($name)
-    {
-        if ($this->hasMessagesFor($name)) {
-            foreach ($this->getMessagesFor($name) as $message) {
-                $this->flash->error($message);
-            }
-        }
-    }
+
+    //Add the textBox username to the form
     public function addUsername()
     {
         $username = new \Phalcon\Forms\Element\Text('username', [
@@ -66,6 +64,7 @@ class SignUpForm extends \Phalcon\Forms\Form
         $this->add($username);
     }
 
+    //Add the textBox email to the form
     public function addEmail()
     {
         $email = new \Phalcon\Forms\Element\Text('email', [
@@ -96,6 +95,7 @@ class SignUpForm extends \Phalcon\Forms\Form
         $this->add($email);
     }
 
+    //Add the textBox password to the form
     public function addPassword()
     {
         $password = new \Phalcon\Forms\Element\Password('password', [
@@ -125,10 +125,10 @@ class SignUpForm extends \Phalcon\Forms\Form
             ]
         );
         $this->add($password);
-
     }
 
-    public function ConfirmPassword()
+    //Add the textBox confirmPassword to the form
+    public function addConfirmPassword()
     {
         $confirmPassword = new \Phalcon\Forms\Element\Password('confirmPassword', [
             'class' => 'form-control',
@@ -147,7 +147,8 @@ class SignUpForm extends \Phalcon\Forms\Form
         $this->add($confirmPassword);
     }
 
-    public function acceptTerms()
+    //Add the checkbox term to the form
+    public function addTerms()
     {
         $terms = new \Phalcon\Forms\Element\Check('terms', [
             'value' => 'yes',
@@ -167,7 +168,8 @@ class SignUpForm extends \Phalcon\Forms\Form
         $this->add($terms);
     }
 
-    public function Csrf()
+    //Add the checkbox term to the form
+    public function addCSRF()
     {
         $csrf = new \Phalcon\Forms\Element\Hidden('csrf', [
             'type' => 'hidden'
@@ -182,14 +184,24 @@ class SignUpForm extends \Phalcon\Forms\Form
         $this->add($csrf);
     }
 
-    public function Submit()
+    //Add the Buttom term to the form
+    public function addSubmit()
     {
         $this->add(new \Phalcon\Forms\Element\Submit('Sign up', [
             'class' => 'btn btn-primary btn-md btn-block waves-effect text-center m-b-20',
             'type'  => 'submit'
         ]));
     }
-
-
+    /**
+     * Prints messages for a specific element
+     */
+    public function messages($name)
+    {
+        if ($this->hasMessagesFor($name)) {
+            foreach ($this->getMessagesFor($name) as $message) {
+                $this->flash->error($message);
+            }
+        }
+    }
 
 }
