@@ -14,12 +14,23 @@
 
 namespace Modules\Users\Session\Controllers;
 
-
-use Ilya\Models\Users;
+use Lib\Authenticates\Auth;
 use Lib\Mvc\Controller;
 use Modules\Users\Session\Forms\LoginForm;
 use Phalcon\Mvc\View;
 
+/**
+ * Summary Class LoginController
+ *
+ * Description Class LoginController
+ *
+ * @author Ali Mansoori
+ * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+ * @package Modules\Users\Session\Controllers
+ * @version 1.0.0
+ * @example Desc <code></code>
+ * @property Auth $auth
+ */
 class LoginController extends Controller
 {
     public function indexAction()
@@ -35,7 +46,7 @@ class LoginController extends Controller
         {
             if ($this->request->isPost() && $loginForm->isValid($this->request->getPost()))
             {
-                $this->checkAuthenticate();
+                $this->auth->check($this->request->getPost());
             }
         }
         catch (\Exception $exception)
@@ -44,30 +55,6 @@ class LoginController extends Controller
         }
 
         $this->view->form = $loginForm;
-    }
-
-    private function checkAuthenticate()
-    {
-        $user = Users::findFirst(
-            [
-                "(email = :user_email: OR username = :user_email:) AND active = 'Y'",
-                'bind' => [
-                    'user_email' => $this->request->getPost('user_email'),
-                ]
-            ]
-        );
-
-        if (!$user)
-        {
-            throw new \Exception("This user has not registered yet");
-        }
-
-        if (!$this->isEqualVars($user->password, $this->request->getPost('password')))
-        {
-            throw new \Exception("The password you entered is incorrect");
-        }
-
-        $this->flash->success('Login Success');
     }
 
     private function exceptionPrint(\Exception $exception)
@@ -85,12 +72,4 @@ class LoginController extends Controller
         }
     }
 
-    private function isEqualVars($var1, $var2)
-    {
-        if ($var1 == $var2)
-        {
-            return true;
-        }
-        return false;
-    }
 }

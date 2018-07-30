@@ -13,6 +13,7 @@
  */
 namespace Ilya;
 
+use Lib\Authenticates\Auth;
 use Lib\Mvc\Helper;
 use Phalcon\Crypt;
 use Phalcon\Mvc\Router;
@@ -122,5 +123,10 @@ class Services extends \Lib\Di\FactoryDefault
     protected function initSecurity()
     {
         return new Security();
+    }
+
+    protected function initAuth()
+    {
+        return new Auth();
     }
 }

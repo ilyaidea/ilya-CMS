@@ -48,4 +48,16 @@ class Users extends \Phalcon\Mvc\Model
             $this->getDI()->get('crypt')->getKey()
         );
     }
+
+    public static function findUserWithUsernameOrEmail($user_email)
+    {
+        return self::findFirst(
+            [
+                "(username = :user_email: OR email = :user_email:) AND active = 'Y'",
+                'bind' => [
+                    'user_email' => $user_email
+                ]
+            ]
+        );
+    }
 }
