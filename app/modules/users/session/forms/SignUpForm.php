@@ -17,13 +17,35 @@ use Ilya\Models\Users;
 use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\Email;
 use Phalcon\Validation\Validator\Identical;
-use Phalcon\Validation\Validator\InclusionIn;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\StringLength;
 use Phalcon\Validation\Validator\Uniqueness;
 
+/**
+ * Summary Class SignUpForm
+ *
+ * Description Class SignUpForm
+ *
+ * @author Ali Mansoori
+ * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+ * @package Modules\Users\Session\Forms
+ * @version 1.0.0
+ * @example Desc <code></code>
+ */
 class SignUpForm extends \Phalcon\Forms\Form
 {
+    /**
+     * Summary Function initialize
+     *
+     * Description Function initialize
+     *
+     * @author Ali Mansoori
+     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+     * @param null $entity
+     * @param null $options
+     * @version 1.0.0
+     * @example Desc <code></code>
+     */
     public function initialize($entity = null, $options = null)
     {
         $this->addusername();
@@ -61,6 +83,7 @@ class SignUpForm extends \Phalcon\Forms\Form
             )
         ]);
         $this->add($username);
+    }
 
     }
 
