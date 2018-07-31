@@ -14,7 +14,6 @@
 
 namespace Modules\Users\Session\Controllers;
 
-
 use Ilya\Models\Users;
 use Lib\Mvc\Controller;
 use Modules\Users\Session\Forms\SignUpForm;
@@ -29,7 +28,7 @@ class SignupController extends Controller
         $this->tag->setTitle('Sign up');
         $this->view->title = 'Sign up';
 
-        $signupForm = new SignUpForm();
+        $signupform = new SignUpForm();
 
         try
         {
@@ -42,7 +41,7 @@ class SignupController extends Controller
 
         if ($this->request->isPost())
         {
-            if ($signupForm->isValid($this->request->getPost()))
+            if ($signupform->isValid($this->request->getPost()))
             {
                 $user = new Users(
                     [
@@ -58,14 +57,14 @@ class SignupController extends Controller
                     $this->flash->success('Success save');
 
                     return $this->response->redirect(
-                            [
-                                'for'        => 'default',
-                                'module'     => 'session',
-                                'controller' => 'login',
-                                'action'     => 'index',
-                                'params'     => ''
-                            ]
-                        );
+                        [
+                            'for'        => 'default',
+                            'module'     => 'session',
+                            'controller' => 'login',
+                            'action'     => 'index',
+                            'params'     => ''
+                        ]
+                    );
                 }
                 else
                 {
@@ -77,7 +76,14 @@ class SignupController extends Controller
             }
         }
 
-        $this->view->form = $signupForm;
+        $this->view->form = $signupform;
+    }
+
+    //There is a function to store each user's information in the database
+
+    public function signupForm()
+    {
+
     }
     private function addflash()
     {

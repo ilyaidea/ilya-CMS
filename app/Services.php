@@ -66,12 +66,10 @@ class Services extends \Lib\Di\FactoryDefault
             '.volt' => $volt,
             '.phtml' => $phtml
         ];
-
         $view->registerEngines($viewEngines);
 
         return $view;
     }
-
     /**
      * Summary Function initDb
      *
@@ -85,6 +83,7 @@ class Services extends \Lib\Di\FactoryDefault
      */
     protected function initSharedDb()
     {
+
         $dbConf = $this->get('config')->database->toArray();
 
         $adapter = 'Phalcon\Db\Adapter\Pdo\\'. $dbConf['adapter'];
