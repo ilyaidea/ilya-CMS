@@ -17,13 +17,35 @@ use Ilya\Models\Users;
 use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\Email;
 use Phalcon\Validation\Validator\Identical;
-use Phalcon\Validation\Validator\InclusionIn;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\StringLength;
 use Phalcon\Validation\Validator\Uniqueness;
 
+/**
+ * Summary Class SignUpForm
+ *
+ * Description Class SignUpForm
+ *
+ * @author Ali Mansoori
+ * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+ * @package Modules\Users\Session\Forms
+ * @version 1.0.0
+ * @example Desc <code></code>
+ */
 class SignUpForm extends \Phalcon\Forms\Form
 {
+    /**
+     * Summary Function initialize
+     *
+     * Description Function initialize
+     *
+     * @author Ali Mansoori
+     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+     * @param null $entity
+     * @param null $options
+     * @version 1.0.0
+     * @example Desc <code></code>
+     */
     public function initialize($entity = null, $options = null)
     {
         $this->addUsername();
@@ -41,7 +63,16 @@ class SignUpForm extends \Phalcon\Forms\Form
         $this->addSubmit();
     }
 
-    //Add the textBox username to the form
+    /**
+     * Add the textBox username to the form
+     *
+     * Description Function addUsername
+     *
+     * @author Ali Mansoori
+     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+     * @version 1.0.0
+     * @example Desc <code></code>
+     */
     public function addUsername()
     {
         $username = new \Phalcon\Forms\Element\Text('username', [
@@ -64,7 +95,16 @@ class SignUpForm extends \Phalcon\Forms\Form
         $this->add($username);
     }
 
-    //Add the textBox email to the form
+    /**
+     * Add the textBox email to the form
+     *
+     * Description Function addEmail
+     *
+     * @author Ali Mansoori
+     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+     * @version 1.0.0
+     * @example Desc <code></code>
+     */
     public function addEmail()
     {
         $email = new \Phalcon\Forms\Element\Text('email', [
@@ -95,7 +135,16 @@ class SignUpForm extends \Phalcon\Forms\Form
         $this->add($email);
     }
 
-    //Add the textBox password to the form
+    /**
+     * Add the textBox password to the form
+     *
+     * Description Function addPassword
+     *
+     * @author Ali Mansoori
+     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+     * @version 1.0.0
+     * @example Desc <code></code>
+     */
     public function addPassword()
     {
         $password = new \Phalcon\Forms\Element\Password('password', [
@@ -127,7 +176,16 @@ class SignUpForm extends \Phalcon\Forms\Form
         $this->add($password);
     }
 
-    //Add the textBox confirmPassword to the form
+    /**
+     * Add the textBox confirmPassword to the form
+     *
+     * Description Function addConfirmPassword
+     *
+     * @author Ali Mansoori
+     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+     * @version 1.0.0
+     * @example Desc <code></code>
+     */
     public function addConfirmPassword()
     {
         $confirmPassword = new \Phalcon\Forms\Element\Password('confirmPassword', [
@@ -147,7 +205,16 @@ class SignUpForm extends \Phalcon\Forms\Form
         $this->add($confirmPassword);
     }
 
-    //Add the checkbox term to the form
+    /**
+     * Add the checkbox term to the form
+     *
+     * Description Function addTerms
+     *
+     * @author Ali Mansoori
+     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+     * @version 1.0.0
+     * @example Desc <code></code>
+     */
     public function addTerms()
     {
         $terms = new \Phalcon\Forms\Element\Check('terms', [
@@ -168,7 +235,16 @@ class SignUpForm extends \Phalcon\Forms\Form
         $this->add($terms);
     }
 
-    //Add the checkbox term to the form
+    /**
+     * Add the checkbox term to the form
+     *
+     * Description Function addCSRF
+     *
+     * @author Ali Mansoori
+     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+     * @version 1.0.0
+     * @example Desc <code></code>
+     */
     public function addCSRF()
     {
         $csrf = new \Phalcon\Forms\Element\Hidden('csrf', [
@@ -184,7 +260,16 @@ class SignUpForm extends \Phalcon\Forms\Form
         $this->add($csrf);
     }
 
-    //Add the Buttom term to the form
+    /**
+     * Add the Buttom term to the form
+     *
+     * Description Function addSubmit
+     *
+     * @author Ali Mansoori
+     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+     * @version 1.0.0
+     * @example Desc <code></code>
+     */
     public function addSubmit()
     {
         $this->add(new \Phalcon\Forms\Element\Submit('Sign up', [
@@ -192,6 +277,7 @@ class SignUpForm extends \Phalcon\Forms\Form
             'type'  => 'submit'
         ]));
     }
+
     /**
      * Prints messages for a specific element
      */
