@@ -69,4 +69,8 @@ class IndexController extends \Lib\Mvc\Controller
         $moduleManager = new ModuleManager();
         $this->helper->sidebarMenu()->set($moduleManager->sortedModuleFiles());
     }
+
+    public function beforeExecuteRoute($dispatcher)
+    {
+    }
 }

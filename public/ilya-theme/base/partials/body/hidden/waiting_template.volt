@@ -1,0 +1,1 @@
+<span id="qa-waiting-template" class="qa-waiting">...</span>

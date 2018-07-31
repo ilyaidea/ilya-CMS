@@ -15,6 +15,7 @@ namespace Ilya;
 
 use Lib\Authenticates\Auth;
 use Lib\Mvc\Helper;
+use Lib\Mvc\View\Engine\Volt;
 use Phalcon\Crypt;
 use Phalcon\Mvc\Router;
 use Phalcon\Mvc\View;
@@ -53,10 +54,12 @@ class Services extends \Lib\Di\FactoryDefault
         $view->setPartialsDir(THEME_PATH. 'frontend/partials/');
 
         // Volt
-        $volt = new View\Engine\Volt($view, $this);
+        $volt = new Volt($view, $this);
         $volt->setOptions([
             'compiledPath' => BASE_PATH. 'data/cache/volt/'
         ]);
+        $volt->initCompiler();
+
 
         $phtml = new View\Engine\Php($view, $this);
         $viewEngines = [
