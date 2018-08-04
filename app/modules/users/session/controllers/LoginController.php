@@ -35,6 +35,12 @@ class LoginController extends Controller
 {
     public function indexAction()
     {
+        // Check user is logged in
+        if ($this->auth->isLoggedIn())
+        {
+            $this->response->redirect('');
+        }
+
         $this->setEnviroment('backend', 'session');
         $this->view->setRenderLevel(View::LEVEL_LAYOUT);
         $this->tag->setTitle('Log in');

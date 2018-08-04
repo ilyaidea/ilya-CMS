@@ -9,7 +9,7 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `password` char(60) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `active` char(1) DEFAULT NULL
+  `active` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `users`

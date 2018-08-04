@@ -17,11 +17,11 @@ namespace Ilya\Models;
 class Users extends \Phalcon\Mvc\Model
 {
     public $id;
-    public $username;
-    public $email;
+    protected $username;
+    protected $email;
     protected $password;
     public $created;
-    public $active;
+    public $active = false;
 
     public function initialize()
     {
@@ -31,6 +31,31 @@ class Users extends \Phalcon\Mvc\Model
     public function afterSave()
     {
         $this->created = date('Y-m-d H:m:s');
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     public function setPassword($password)
@@ -49,13 +74,53 @@ class Users extends \Phalcon\Mvc\Model
         );
     }
 
+    public function setActive($active)
+    {
+        if ($active)
+            $this->active = true;
+        else
+            $this->active = false;
+    }
+
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    public function isActive()
+    {
+        if ($this->getActive())
+            return true;
+
+        return false;
+    }
+
+    public function checkPassword($password)
+    {
+        if ($password == $this->getPassword())
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public function getAuthData()
+    {
+        $authData = new \stdClass();
+        $authData->id = $this->getId();
+        $authData->username = $this->getUsername();
+        $authData->email    = $this->getEmail();
+        return $authData;
+    }
+
     public static function findUserWithUsernameOrEmail($user_email)
     {
         return self::findFirst(
             [
-                "(username = :user_email: OR email = :user_email:) AND active = 'Y'",
+                "(username = :user_email: OR email = :user_email:) AND active = :active:",
                 'bind' => [
-                    'user_email' => $user_email
+                    'user_email' => $user_email,
+                    'active'     => true
                 ]
             ]
         );

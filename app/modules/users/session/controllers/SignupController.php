@@ -23,6 +23,12 @@ class SignupController extends Controller
 {
     public function indexAction()
     {
+        // Check user is logged in
+        if ($this->auth->isLoggedIn())
+        {
+            return $this->response->redirect('');
+        }
+
         $this->setEnviroment('backend', 'session');
         $this->view->setRenderLevel(View::LEVEL_LAYOUT);
         $this->tag->setTitle('Sign up');
@@ -32,49 +38,49 @@ class SignupController extends Controller
 
         try
         {
+            if ($this->request->isPost())
+            {
+                if ($signupform->isValid($this->request->getPost()))
+                {
+                    $user = new Users(
+                        [
+                            'username' => $this->request->getPost('username'),
+                            'email'    => $this->request->getPost('email'),
+                            'password' => $this->request->getPost('password'),
+                            'active'   => true
+                        ]
+                    );
 
+                    if ($user->save())
+                    {
+                        $this->flash->success('Success save');
+
+                        return $this->response->redirect(
+                            [
+                                'for'        => 'default',
+                                'module'     => 'session',
+                                'controller' => 'login',
+                                'action'     => 'index',
+                                'params'     => ''
+                            ]
+                        );
+                    }
+                    else
+                    {
+                        foreach ($user->getMessages() as $message)
+                        {
+                            $this->flash->error($message);
+                        }
+                    }
+                }
+            }
         }
         catch (\Exception $exception)
         {
             $this->flash->error($exception->getMessage());
         }
 
-        if ($this->request->isPost())
-        {
-            if ($signupform->isValid($this->request->getPost()))
-            {
-                $user = new Users(
-                    [
-                        'username' => $this->request->getPost('username'),
-                        'email'    => $this->request->getPost('email'),
-                        'password' => $this->request->getPost('password'),
-                        'active'   => 'Y'
-                    ]
-                );
 
-                if ($user->save())
-                {
-                    $this->flash->success('Success save');
-
-                    return $this->response->redirect(
-                        [
-                            'for'        => 'default',
-                            'module'     => 'session',
-                            'controller' => 'login',
-                            'action'     => 'index',
-                            'params'     => ''
-                        ]
-                    );
-                }
-                else
-                {
-                    foreach ($user->getMessages() as $message)
-                    {
-                        $this->flash->error($message);
-                    }
-                }
-            }
-        }
 
         $this->view->form = $signupform;
     }

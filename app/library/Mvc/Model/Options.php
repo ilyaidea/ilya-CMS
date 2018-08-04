@@ -22,7 +22,6 @@ class Options extends Model
     public function initialize()
     {
         $this->setSource('options');
-
     }
 
     public function beforeValidationOnCreate()

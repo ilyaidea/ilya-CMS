@@ -38,6 +38,15 @@ class Routes
                 'action' => 'index'
             ]
         )->setName('session_login');
+
+        $router->add(
+            '/logout(/|)',
+            [
+                'module' => 'session',
+                'controller' => 'logout',
+                'action' => 'index'
+            ]
+        )->setName('session_logout');
         return $router;
     }
 }

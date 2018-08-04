@@ -14,29 +14,67 @@
 namespace Lib\Authenticates;
 
 use Phalcon\Mvc\User\Component;
+use Ilya\Models\Users;
 
+/**
+ * Summary Class Auth
+ *
+ * Description Class Auth
+ *
+ * @author Ali Mansoori
+ * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+ * @package Lib\Authenticates
+ * @version 1.0.0
+ * @example Desc <code></code>
+ */
 class Auth extends Component
 {
     public function check($credetials)
     {
         // Check if the user exist
-        $user = \Ilya\Models\Users::findUserWithUsernameOrEmail($credetials['user_email']);
+        $user = Users::findUserWithUsernameOrEmail($credetials['user_email']);
         if (!$user)
         {
             throw new \Exception('This user has not registered yet');
         }
 
-        if (!$this->isEqualVars($user->password, $credetials['password']))
+        // Check if the password match to db
+        if (!$user->checkPassword($credetials['password']))
         {
             throw new \Exception("The password you entered is incorrect");
         }
 
+        // Check user is active
+        if (!$user->isActive())
+        {
+            throw new \Exception('This User is not Active');
+        }
+
+        // Check if the remember me was selected
+        if (isset($credetials['remember']))
+        {
+            $this->createRememberEnvironment($user);
+        }
+
+        // No error
+        $this->session->set('auth', $user->getAuthData());
+        $this->response->redirect('');
         $this->flash->success('Login Success');
     }
 
-    private function isEqualVars($var1, $var2)
+    public function createRememberEnvironment($user)
     {
-        if ($var1 == $var2)
+
+    }
+
+    public function remove()
+    {
+        $this->session->remove('auth');
+    }
+
+    public function isLoggedIn()
+    {
+        if ($this->session->get('auth'))
         {
             return true;
         }

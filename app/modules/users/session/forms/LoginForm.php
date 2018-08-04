@@ -75,7 +75,7 @@ class LoginForm extends Form
     private function addRememberMe()
     {
         $remember = new Check('remember', [
-            'value' => 'yes',
+            'value' => true,
             'type' => 'checkbox'
         ]);
         $remember->setLabel('Remember Me');
