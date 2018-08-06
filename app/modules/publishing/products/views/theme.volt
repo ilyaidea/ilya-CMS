@@ -1,0 +1,2 @@
+{{ content() }}
+<b>ggggg</b>
