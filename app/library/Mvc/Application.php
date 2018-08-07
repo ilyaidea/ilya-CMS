@@ -40,7 +40,7 @@ class Application extends \Phalcon\Mvc\Application
         {
             foreach (\Lib\Common\Directory::getSubDirs($modulePath. '/*') as $module)
             {
-                $modules[basename($module)] = [
+                $modules[lcfirst(basename($module))] = [
                     'className' => 'Modules\\'. ucfirst(basename($modulePath)). "\\". ucfirst(basename($module)). '\Module',
                     'path'      => $module. '/Module.php'
                 ];

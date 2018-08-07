@@ -25,7 +25,7 @@ class DefaultRouter extends \Phalcon\Mvc\Router
 
     private function setDefaultRoutes()
     {
-        $this->setDefaultModule('base');
+        $this->setDefaultModule('session');
         $this->setDefaultController('index');
         $this->setDefaultAction('index');
 
