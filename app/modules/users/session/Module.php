@@ -21,7 +21,8 @@ class Module implements \Phalcon\Mvc\ModuleDefinitionInterface
 {
 
     /**
-     * Registers an autoloader related to the module
+     * this function register autoloaders
+     *
      *
      * @param \Phalcon\DiInterface $dependencyInjector
      */
