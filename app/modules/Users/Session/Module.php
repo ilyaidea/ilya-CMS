@@ -30,10 +30,10 @@ class Module implements \Phalcon\Mvc\ModuleDefinitionInterface
         // TODO: Implement registerAutoloaders() method.
         $loader = new Loader();
         $loader->registerNamespaces([
-            'Modules\Users\Session\Controllers' => MODULE_PATH. 'users/session/controllers/',
-            'Modules\Users\Session\Models'      => MODULE_PATH. 'users/session/models/',
-            'Modules\Users\Session\Forms'       => MODULE_PATH. 'users/session/forms/',
-            'Modules\Users\Session\Lib'         => MODULE_PATH. 'users/session/library/',
+            'Modules\Users\Session\Controllers' => MODULE_PATH. 'Users/Session/Controllers/',
+            'Modules\Users\Session\Models'      => MODULE_PATH. 'Users/Session/Models/',
+            'Modules\Users\Session\Forms'       => MODULE_PATH. 'Users/Session/Forms/',
+            'Modules\Users\Session\Lib'         => MODULE_PATH. 'Users/Session/Library/',
         ])->register();
     }
 

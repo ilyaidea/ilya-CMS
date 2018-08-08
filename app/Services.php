@@ -39,7 +39,7 @@ class Services extends \Lib\Di\FactoryDefault
     {
         $url = new \Phalcon\Mvc\Url();
         $url->setBaseUri($this->get('config')->app->baseUri);
-        $url->setBasePath('/cms/');
+        $url->setBasePath($this->get('config')->app->baseUri);
         return $url;
     }
 

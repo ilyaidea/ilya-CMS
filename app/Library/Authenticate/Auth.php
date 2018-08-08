@@ -29,6 +29,18 @@ use Ilya\Models\Users;
  */
 class Auth extends Component
 {
+    /**
+     * Summary Function check
+     *
+     * Description Function check
+     *
+     * @author Ali Mansoori
+     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+     * @param $credetials
+     * @throws \Exception
+     * @version 1.0.0
+     * @example Desc <code></code>
+     */
     public function check($credetials)
     {
         // Check if the user exist
