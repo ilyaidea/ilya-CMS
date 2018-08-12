@@ -3,5 +3,6 @@
 data/*
 schemas/*
 !schemas/ilya-cms.sql
+!schemas/ER.mwb
 public/final.css
 public/final.js

@@ -36,11 +36,11 @@ class Application extends \Phalcon\Mvc\Application
     {
         $modules = [];
 
-        foreach (\Lib\Common\Directory::getSubDirs(APP_PATH. 'modules/*') as $modulePath)
+        foreach (\Lib\Common\Directory::getSubDirs(APP_PATH. 'Modules/*') as $modulePath)
         {
             foreach (\Lib\Common\Directory::getSubDirs($modulePath. '/*') as $module)
             {
-                $modules[lcfirst(basename($module))] = [
+                $modules[strtolower(basename($module))] = [
                     'className' => 'Modules\\'. ucfirst(basename($modulePath)). "\\". ucfirst(basename($module)). '\Module',
                     'path'      => $module. '/Module.php'
                 ];

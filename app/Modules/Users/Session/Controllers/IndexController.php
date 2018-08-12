@@ -13,13 +13,41 @@
  */
 namespace Modules\Users\Session\Controllers;
 
+use Ilya\Models\Lang;
+use Modules\Users\Session\Forms\LoginForm;
+use Modules\Users\Session\Models\UserFieldsCategory;
 use Phalcon\Mvc\View;
 
 class IndexController extends \Lib\Mvc\Controller
 {
     public function indexAction()
     {
-        $this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
-    }
+        echo "<pre>";
 
+//        $categories = UserFieldsCategory::findFirst(1);
+
+        $langs = Lang::find();
+
+        $row = [];
+        foreach ($langs as $lang)
+        {
+            $testArray = [];
+            $testArray['title'] = $lang->title;
+            $testArray['value'] = $lang->value;
+
+            $testArray['categories'] = [];
+            foreach ($lang->userFieldsCategories as $key => $category)
+            {
+                $testArray['categories'][$key]['title'] = $category->title;
+                $testArray['categories'][$key]['fields'] = $category->getFields()->toArray();
+            }
+
+            $row[] = $testArray;
+        }
+
+        print_r($row);
+
+
+        $this->view->disable();
+    }
 }
