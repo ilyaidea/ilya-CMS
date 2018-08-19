@@ -7,7 +7,7 @@ return new \Phalcon\Config(
             'username' => 'root',
             'password' => '',
             'dbname'   => 'cms',
-            'charset'  => 'utf8'
+            'charset'  => 'utf8mb4'
         ],
 
         'app' => [

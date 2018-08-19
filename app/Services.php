@@ -13,10 +13,19 @@
  */
 namespace Ilya;
 
+use Lib\Acl\Acl;
 use Lib\Authenticates\Auth;
+use Lib\DataTables\Editor;
+use Lib\Db\MyDbListener;
 use Lib\Mvc\Helper;
 use Lib\Mvc\View\Engine\Volt;
+use Lib\Plugins\Localization;
 use Phalcon\Crypt;
+use Phalcon\Db;
+use Phalcon\Db\Profiler;
+use Phalcon\Events\Event;
+use Phalcon\Events\Manager;
+use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\Router;
 use Phalcon\Mvc\View;
 use Phalcon\Security;
@@ -39,6 +48,7 @@ class Services extends \Lib\Di\FactoryDefault
     {
         $url = new \Phalcon\Mvc\Url();
         $url->setBaseUri($this->get('config')->app->baseUri);
+        $url->setStaticBaseUri($this->get('config')->app->baseUri);
         $url->setBasePath($this->get('config')->app->baseUri);
         return $url;
     }
@@ -130,5 +140,51 @@ class Services extends \Lib\Di\FactoryDefault
     protected function initAuth()
     {
         return new Auth();
+    }
+
+    protected function initAcl()
+    {
+        $acl = new Acl();
+        return $acl;
+    }
+
+    protected function initDispatcher()
+    {
+        $di = $this;
+        $dispatcher = new Dispatcher();
+
+        $eventManager = new Manager();
+
+        $eventManager->attach(
+            'dispatch:beforeDispatchLoop',
+            function ($event, Dispatcher $dispatcher) use ($di)
+            {
+                new Localization($dispatcher);
+            }
+        );
+
+        $profiler = new Profiler();
+        $this->set('profiler', $profiler);
+        $eventManager->attach(
+            'db',
+            function (Event $event, $db) use ($profiler) {
+                if ($event->getType() == 'beforeQuery')
+                    $profiler->startProfile($db->getSQLStatement());
+                if ($event->getType() == 'afterQuery')
+                    $profiler->stopProfile();
+            }
+        );
+
+        $db = $this->get('db');
+        $db->setEventsManager($eventManager);
+
+        $dispatcher->setEventsManager($eventManager);
+
+        return $dispatcher;
+    }
+
+    protected function initSharedDt()
+    {
+        return Editor::getInstance();
     }
 }

@@ -13,6 +13,7 @@
  */
 namespace Modules\Users\Session;
 
+use Phalcon\DiInterface;
 use Phalcon\Events\Manager;
 use Phalcon\Loader;
 use Phalcon\Mvc\Dispatcher;
@@ -43,21 +44,21 @@ class Module implements \Phalcon\Mvc\ModuleDefinitionInterface
      *
      * @param \Phalcon\DiInterface $dependencyInjector
      */
-    public function registerServices(\Phalcon\DiInterface $di)
+    public function registerServices(DiInterface $di)
     {
         // TODO: Implement registerServices() method.
-        $di->set('dispatcher', function () {
-            $dispatcher = new Dispatcher();
-            $eventManager = new Manager();
-
-            $dispatcher->setEventsManager($eventManager);
-            $dispatcher->setDefaultNamespace('Modules\Users\Session\Controllers\\');
-            return $dispatcher;
-        });
+        $di->set('dispatcher', $this->setDispatcher($di));
         $di->set('view' , $this->setView($di));
     }
 
-    private function setView(\Phalcon\DiInterface $di)
+    private function setDispatcher(DiInterface $di)
+    {
+        $dispatcher = $di->get('dispatcher');
+
+        $dispatcher->setDefaultNamespace('Modules\Users\Session\Controllers\\');
+        return $dispatcher;
+    }
+    private function setView(DiInterface $di)
     {
         $view = $di->get('view');
         $view->setViewsDir(__DIR__. '/views/');

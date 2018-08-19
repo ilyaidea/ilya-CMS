@@ -47,6 +47,13 @@ class Routes
                 'action' => 'index'
             ]
         )->setName('session_logout');
+
+        $router->addForLang('/', array(
+            'module' => 'session',
+            'controller' => 'index',
+            'action' => 'index',
+        ), 'home');
+
         return $router;
     }
 }

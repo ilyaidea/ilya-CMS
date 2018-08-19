@@ -13,6 +13,8 @@
  */
 namespace Lib\Mvc;
 
+use Lib\Mvc\Helper\CmsCache;
+
 class DefaultRouter extends \Phalcon\Mvc\Router
 {
     const LANG_PREFIX = 'LP_';
@@ -25,7 +27,7 @@ class DefaultRouter extends \Phalcon\Mvc\Router
 
     private function setDefaultRoutes()
     {
-        $this->setDefaultModule('session');
+//        $this->setDefaultModule('session');
         $this->setDefaultController('index');
         $this->setDefaultAction('index');
 
@@ -51,19 +53,19 @@ class DefaultRouter extends \Phalcon\Mvc\Router
 
     public function addForLang($pattern, $paths = null, $name)
     {
-        $languages = [
-            'fa' => []
-        ];
+        $languages = CmsCache::getInstance()->get('languages');
 
-        foreach ($languages as $lang=>$items)
+        foreach ($languages as $language)
         {
-            if (isset($items['primary']) && $items['primary'])
+            if (isset($language['is_primary']) && $language['is_primary'])
             {
-                $this->add($pattern, $paths)->setName(self::LANG_PREFIX. $name. '_'. $lang);
+                $this->add($pattern, $paths)->setName(self::LANG_PREFIX. $name. '_'. $language['value']);
             }
             else
             {
-                $this->add('/'. $lang. $pattern, $paths)->setName(self::LANG_PREFIX. $name. '_'. $lang);
+                $newPattern = '/'. $language['value']. $pattern;
+                $paths['lang'] = $language['value'];
+                $this->add($newPattern, $paths)->setName(self::LANG_PREFIX. $name. '_'. $language['value']);
             }
         }
     }

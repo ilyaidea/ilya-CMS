@@ -11,4 +11,8 @@ $loader->registerDirs(
         'Ilya' => APP_PATH,
         'Lib' => $this->config->app->libraryDir
     ]
+)->registerFiles(
+    [
+        BASE_PATH. 'vendor/autoload.php'
+    ]
 )->register();

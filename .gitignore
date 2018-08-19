@@ -1,8 +1,10 @@
 /.idea
 /data
 data/*
+!data/cache/cms/*
 schemas/*
 !schemas/ilya-cms.sql
 !schemas/ER.mwb
 public/final.css
 public/final.js
+/vendor/

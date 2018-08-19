@@ -16,6 +16,7 @@ namespace Ilya\Models;
 
 
 use Phalcon\Mvc\Model;
+use Phalcon\Validation;
 
 class Lang extends Model
 {
@@ -34,6 +35,57 @@ class Lang extends Model
                 'alias' => 'UserFieldsCategories'
             ]
         );
+    }
+
+    public function validation()
+    {
+        $validator = new Validation();
+
+        /**
+         * Value
+         */
+        $validator->add(
+            'value',
+            new Validation\Validator\Uniqueness(
+                [
+                    'model' => $this,
+                    'message' => 'The inputted ISO language is existing'
+                ]
+            )
+        );
+        $validator->add(
+            'value',
+            new Validation\Validator\PresenceOf(
+                [
+                    'model' => $this,
+                    'message' => 'The value is required'
+                ]
+            )
+        );
+
+        /**
+         * title
+         */
+        $validator->add(
+            'title',
+            new Validation\Validator\Uniqueness(
+                [
+                    'model' => $this,
+                    'message' => 'The inputted title is existing'
+                ]
+            )
+        );
+        $validator->add(
+            'title',
+            new Validation\Validator\PresenceOf(
+                [
+                    'model' => $this,
+                    'message' => 'title is required'
+                ]
+            )
+        );
+
+        return $this->validationHasFailed() != true;
     }
 
     public function getSource ()
