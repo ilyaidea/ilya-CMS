@@ -18,16 +18,16 @@
     <meta name="author" content="#">
     <!-- Favicon icon -->
 
-    <link rel="icon" href="{{ url.path() }}ilya-theme/backend/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="{{ static_url('ilya-theme/backend/assets/images/favicon.ico') }}" type="image/x-icon">
     <!-- Google font--><link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,800" rel="stylesheet">
     <!-- Required Fremwork -->
-    <link rel="stylesheet" type="text/css" href="{{ url.path() }}ilya-theme/backend/assets/bower_components/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ static_url('ilya-theme/backend/assets/bower_components/bootstrap/css/bootstrap.min.css') }}">
     <!-- themify-icons line icon -->
-    <link rel="stylesheet" type="text/css" href="{{ url.path() }}ilya-theme/backend/assets/icon/themify-icons/themify-icons.css">
+    <link rel="stylesheet" type="text/css" href="{{ static_url('ilya-theme/backend/assets/icon/themify-icons/themify-icons.css') }}">
     <!-- ico font -->
-    <link rel="stylesheet" type="text/css" href="{{ url.path() }}ilya-theme/backend/assets/icon/icofont/css/icofont.css">
+    <link rel="stylesheet" type="text/css" href="{{ static_url('ilya-theme/backend/assets/icon/icofont/css/icofont.css') }}">
     <!-- Style.css -->
-    <link rel="stylesheet" type="text/css" href="{{ url.path() }}ilya-theme/backend/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="{{ static_url('ilya-theme/backend/assets/css/style.css') }}">
 
 
 </head>
@@ -60,7 +60,7 @@
                 <!-- Authentication card start -->
                 <div class="signup-card card-block auth-body mr-auto ml-auto">
                     <div class="text-center">
-                        <img src="{{ url.path() }}ilya-theme/backend/assets/images/auth/logo-dark.png" alt="logo.png">
+                        <img src="{{ static_url('ilya-theme/backend/assets/images/auth/logo-dark.png') }}" alt="logo.png">
                     </div>
                     <div class="auth-box">
                         <div class="row m-b-20">
@@ -77,7 +77,7 @@
                                 <p class="text-inverse text-left"><b>Your Authentication Team</b></p>
                             </div>
                             <div class="col-md-2">
-                                <img src="{{ url.path() }}ilya-theme/backend/assets/images/auth/Logo-small-bottom.png" alt="small-logo.png">
+                                <img src="{{ static_url('ilya-theme/backend/assets/images/auth/Logo-small-bottom.png') }}" alt="small-logo.png">
                             </div>
                         </div>
                     </div>
@@ -101,31 +101,31 @@
         <ul class="iew-download">
             <li>
                 <a href="http://www.google.com/chrome/">
-                    <img src="assets/images/browser/chrome.png" alt="Chrome">
+                    <img src="{{ url.get() }}assets/images/browser/chrome.png" alt="Chrome">
                     <div>Chrome</div>
                 </a>
             </li>
             <li>
                 <a href="https://www.mozilla.org/en-US/firefox/new/">
-                    <img src="assets/images/browser/firefox.png" alt="Firefox">
+                    <img src="{{ url.get() }}assets/images/browser/firefox.png" alt="Firefox">
                     <div>Firefox</div>
                 </a>
             </li>
             <li>
                 <a href="http://www.opera.com">
-                    <img src="assets/images/browser/opera.png" alt="Opera">
+                    <img src="{{ url.get() }}assets/images/browser/opera.png" alt="Opera">
                     <div>Opera</div>
                 </a>
             </li>
             <li>
                 <a href="https://www.apple.com/safari/">
-                    <img src="assets/images/browser/safari.png" alt="Safari">
+                    <img src="{{ url.get() }}assets/images/browser/safari.png" alt="Safari">
                     <div>Safari</div>
                 </a>
             </li>
             <li>
                 <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
-                    <img src="assets/images/browser/ie.png" alt="">
+                    <img src="{{ url.get() }}assets/images/browser/ie.png" alt="">
                     <div>IE (9 & above)</div>
                 </a>
             </li>
@@ -136,21 +136,21 @@
 <![endif]-->
 <!-- Warning Section Ends -->
 <!-- Required Jquery -->
-<script type="text/javascript" src="{{ url.path() }}ilya-theme/backend/assets/bower_components/jquery/js/jquery.min.js"></script>
-<script type="text/javascript" src="{{ url.path() }}ilya-theme/backend/assets/bower_components/jquery-ui/js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="{{ url.path() }}ilya-theme/backend/assets/bower_components/popper.js/js/popper.min.js"></script>
-<script type="text/javascript" src="{{ url.path() }}ilya-theme/backend/assets/bower_components/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{{ static_url('ilya-theme/backend/assets/bower_components/jquery/js/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('ilya-theme/backend/assets/bower_components/jquery-ui/js/jquery-ui.min.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('ilya-theme/backend/assets/bower_components/popper.js/js/popper.min.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('ilya-theme/backend/assets/bower_components/bootstrap/js/bootstrap.min.js') }}"></script>
 <!-- jquery slimscroll js -->
-<script type="text/javascript" src="{{ url.path() }}ilya-theme/backend/assets/bower_components/jquery-slimscroll/js/jquery.slimscroll.js"></script>
+<script type="text/javascript" src="{{ static_url('ilya-theme/backend/assets/bower_components/jquery-slimscroll/js/jquery.slimscroll.js') }}"></script>
 <!-- modernizr js -->
-<script type="text/javascript" src="{{ url.path() }}ilya-theme/backend/assets/bower_components/modernizr/js/modernizr.js"></script>
-<script type="text/javascript" src="{{ url.path() }}ilya-theme/backend/assets/bower_components/modernizr/js/css-scrollbars.js"></script>
+<script type="text/javascript" src="{{ static_url('ilya-theme/backend/assets/bower_components/modernizr/js/modernizr.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('ilya-theme/backend/assets/bower_components/modernizr/js/css-scrollbars.js') }}"></script>
 <!-- i18next.min.js -->
-<script type="text/javascript" src="{{ url.path() }}ilya-theme/backend/assets/bower_components/i18next/js/i18next.min.js"></script>
-<script type="text/javascript" src="{{ url.path() }}ilya-theme/backend/assets/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js"></script>
-<script type="text/javascript" src="{{ url.path() }}ilya-theme/backend/assets/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js"></script>
-<script type="text/javascript" src="{{ url.path() }}ilya-theme/backend/assets/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
-<script type="text/javascript" src="{{ url.path() }}ilya-theme/backend/assets/js/common-pages.js"></script>
+<script type="text/javascript" src="{{ static_url('ilya-theme/backend/assets/bower_components/i18next/js/i18next.min.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('ilya-theme/backend/assets/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('ilya-theme/backend/assets/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('ilya-theme/backend/assets/bower_components/jquery-i18next/js/jquery-i18next.min.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('ilya-theme/backend/assets/js/common-pages.js') }}"></script>
 </body>
 
 </html>

@@ -1,32 +1,32 @@
 <li class="user-profile header-notification">
     <a href="#!">
-        <img src="{{ url.path() }}ilya-theme/backend/assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-        <span>John Doe</span>
+        <img src="{{ url.get() }}ilya-theme/backend/assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+        <span>{{ session.get('auth').username }}</span>
         <i class="ti-angle-down"></i>
     </a>
     <ul class="show-notification profile-notification">
         <li>
-            <a href="#!">
+            <a href="#">
                 <i class="ti-settings"></i> Settings
             </a>
         </li>
         <li>
-            <a href="user-profile.html">
+            <a href="#">
                 <i class="ti-user"></i> Profile
             </a>
         </li>
         <li>
-            <a href="email-inbox.html">
+            <a href="#">
                 <i class="ti-email"></i> My Messages
             </a>
         </li>
         <li>
-            <a href="auth-lock-screen.html">
+            <a href="#">
                 <i class="ti-lock"></i> Lock Screen
             </a>
         </li>
         <li>
-            <a href="auth-normal-sign-in.html">
+            <a href="{{ url.get('logout') }}">
                 <i class="ti-layout-sidebar-left"></i> Logout
             </a>
         </li>

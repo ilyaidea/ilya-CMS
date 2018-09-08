@@ -11,7 +11,7 @@
 
     {% block favicon %}
         {% if file_exists(url.path()~'favicon.ico') is true %}
-            <link href="{{ url.path() }}favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
+            <link href="{{ url.get() }}favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
         {% endif %}
     {% endblock %}
 

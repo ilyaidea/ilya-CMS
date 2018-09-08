@@ -1,6 +1,6 @@
 <div class="">
     <div class="main-menu-header">
-        <img class="img-40 img-radius" src="{{ url.path() }}ilya-theme/backend/assets/images/avatar-4.jpg" alt="User-Profile-Image">
+        <img class="img-40 img-radius" src="{{ url.get() }}ilya-theme/backend/assets/images/avatar-4.jpg" alt="User-Profile-Image">
         <div class="user-details">
             <span>John Doe</span>
             <span id="more-details">UX Designer<i class="ti-angle-down"></i></span>

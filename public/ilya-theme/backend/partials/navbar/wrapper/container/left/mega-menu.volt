@@ -68,19 +68,19 @@
         <li class="col-sm-3">
             <h6 class="mega-menu-title">Gallery</h6>
             <div class="row m-b-20">
-                <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="{{ url.path() }}ilya-theme/backend/assets/images/avatar-2.jpg" alt="Gallery-1">
+                <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="{{ url.get() }}ilya-theme/backend/assets/images/avatar-2.jpg" alt="Gallery-1">
                 </div>
-                <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="{{ url.path() }}ilya-theme/backend/assets/images/avatar-3.jpg" alt="Gallery-2">
+                <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="{{ url.get() }}ilya-theme/backend/assets/images/avatar-3.jpg" alt="Gallery-2">
                 </div>
-                <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="{{ url.path() }}ilya-theme/backend/assets/images/avatar-4.jpg" alt="Gallery-3">
+                <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="{{ url.get() }}ilya-theme/backend/assets/images/avatar-4.jpg" alt="Gallery-3">
                 </div>
             </div>
             <div class="row m-b-20">
-                <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="{{ url.path() }}ilya-theme/backend/assets/images/avatar-3.jpg" alt="Gallery-4">
+                <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="{{ url.get() }}ilya-theme/backend/assets/images/avatar-3.jpg" alt="Gallery-4">
                 </div>
-                <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="{{ url.path() }}ilya-theme/backend/assets/images/avatar-4.jpg" alt="Gallery-5">
+                <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="{{ url.get() }}ilya-theme/backend/assets/images/avatar-4.jpg" alt="Gallery-5">
                 </div>
-                <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="{{ url.path() }}ilya-theme/backend/assets/images/avatar-2.jpg" alt="Gallery-6">
+                <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="{{ url.get() }}ilya-theme/backend/assets/images/avatar-2.jpg" alt="Gallery-6">
                 </div>
             </div>
             <button class="btn btn-primary btn-sm btn-block">Browse Gallery</button>
