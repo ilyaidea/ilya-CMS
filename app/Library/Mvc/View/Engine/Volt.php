@@ -22,5 +22,8 @@ class Volt extends \Phalcon\Mvc\View\Engine\Volt
         $compiler->addFunction('strlen', 'strlen');
         $compiler->addFunction('in_array', 'in_array');
         $compiler->addFunction('is_array', 'is_array');
+        $compiler->addFunction('json_encode', 'json_encode');
+        $compiler->addFunction('json_decode', 'json_decode');
+        $compiler->addFunction('array_merge', 'array_merge');
     }
 }

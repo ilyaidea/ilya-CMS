@@ -19,40 +19,46 @@ use Lib\Mvc\DefaultRouter;
 
 class Routes
 {
-    public function init(DefaultRouter $router)
+    public function init ( DefaultRouter $router )
     {
         $router->add(
             '/register(/|)',
             [
-                'module' => 'session',
+                'module'     => 'session',
                 'controller' => 'signup',
-                'action' => 'index'
+                'action'     => 'index'
             ]
-        )->setName('session_signup');
+        )->setName( 'session_signup' );
 
         $router->add(
             '/login(/|)',
             [
-                'module' => 'session',
+                'module'     => 'session',
                 'controller' => 'login',
-                'action' => 'index'
+                'action'     => 'index'
             ]
-        )->setName('session_login');
+        )->setName( 'session_login' );
 
         $router->add(
             '/logout(/|)',
             [
-                'module' => 'session',
+                'module'     => 'session',
                 'controller' => 'logout',
-                'action' => 'index'
+                'action'     => 'index'
             ]
-        )->setName('session_logout');
+        )->setName( 'session_logout' );
 
-        $router->addForLang('/', array(
-            'module' => 'session',
+        $router->addForLang( '/', array (
+            'module'     => 'session',
             'controller' => 'index',
-            'action' => 'index',
-        ), 'home');
+            'action'     => 'index',
+        ), 'home' );
+
+        $router->addForLang( '/login', array (
+            'module'     => 'session',
+            'controller' => 'login',
+            'action'     => 'index',
+        ), 'login_lang' );
 
         return $router;
     }

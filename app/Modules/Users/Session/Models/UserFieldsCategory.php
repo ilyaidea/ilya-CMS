@@ -15,7 +15,12 @@
 namespace Modules\Users\Session\Models;
 
 
+use Lib\Mvc\Model\BaseModel;
+use Lib\Validation\Validation;
 use Phalcon\Mvc\Model;
+use Phalcon\Validation\Validator\Identical;
+use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Uniqueness;
 
 class UserFieldsCategory extends Model
 {
@@ -44,10 +49,56 @@ class UserFieldsCategory extends Model
                 'alias' => 'Lang'
             ]
         );
+
+//        die(print_r($this->getEditor()->get()));
     }
 
     public function getSource ()
     {
         return 'ilya_user_fields_category';
+    }
+
+    /**
+     * Summary Function validation
+     *
+     * Description Function validation
+     *
+     * @author Ali Mansoori
+     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+     * @version 1.0.0
+     * @example Desc <code></code>
+     */
+    public function validation ()
+    {
+        $validator = new Validation();
+        $validator->add(
+            'title',
+            new Uniqueness(
+                [
+                    'message' => 'jjjj',
+                    'domain' => []
+                ]
+            )
+        );
+
+        $validator->add(
+            'title',
+            new PresenceOf(
+                [
+                    'message' => 'requeeee'
+                ]
+            )
+        );
+
+        $validator->add(
+            'id',
+            new Uniqueness(
+                [
+                    'message' => 'iddddddd'
+                ]
+            )
+        );
+
+        $this->validate($validator);
     }
 }
