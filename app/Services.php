@@ -24,6 +24,7 @@ use Phalcon\Mvc\View;
 use Phalcon\Security;
 use Phalcon\Session\Adapter\Files;
 use Plugins\Acl;
+use Plugins\NotFoundPlugin;
 
 class Services extends \Lib\Di\FactoryDefault
 {
@@ -148,7 +149,7 @@ class Services extends \Lib\Di\FactoryDefault
 
         $eventManager = new Manager();
 
-        $eventManager->attach(
+        $eventManager->attach('dispatch:beforeException', new NotFoundPlugin());
 
         $eventManager->attach('dispatch:beforeDispatchLoop', function($eventManager, $dispatcher) use ($di){
             new Acl($di->get('acl'), $dispatcher);
