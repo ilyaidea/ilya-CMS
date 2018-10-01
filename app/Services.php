@@ -13,23 +13,18 @@
  */
 namespace Ilya;
 
-use Lib\Acl\Acl;
+use Lib\Acl\DefaultAcl;
 use Lib\Authenticates\Auth;
-use Lib\DataTables\Editor;
-use Lib\Db\MyDbListener;
 use Lib\Mvc\Helper;
 use Lib\Mvc\View\Engine\Volt;
-use Lib\Plugins\Localization;
 use Phalcon\Crypt;
-use Phalcon\Db;
-use Phalcon\Db\Profiler;
-use Phalcon\Events\Event;
 use Phalcon\Events\Manager;
 use Phalcon\Mvc\Dispatcher;
-use Phalcon\Mvc\Router;
 use Phalcon\Mvc\View;
 use Phalcon\Security;
 use Phalcon\Session\Adapter\Files;
+use Plugins\Acl;
+use Plugins\NotFoundPlugin;
 
 class Services extends \Lib\Di\FactoryDefault
 {
@@ -91,7 +86,7 @@ class Services extends \Lib\Di\FactoryDefault
      * @version 1.0.0
      * @example Desc <code></code>
      */
-    protected function initSharedDb()
+    protected function initDb()
     {
 
         $dbConf = $this->get('config')->database->toArray();
@@ -144,8 +139,7 @@ class Services extends \Lib\Di\FactoryDefault
 
     protected function initAcl()
     {
-        $acl = new Acl();
-        return $acl;
+        return new DefaultAcl();
     }
 
     protected function initDispatcher()
@@ -155,36 +149,14 @@ class Services extends \Lib\Di\FactoryDefault
 
         $eventManager = new Manager();
 
-        $eventManager->attach(
-            'dispatch:beforeDispatchLoop',
-            function ($event, Dispatcher $dispatcher) use ($di)
-            {
-                new Localization($dispatcher);
-            }
-        );
+        $eventManager->attach('dispatch:beforeException', new NotFoundPlugin());
 
-        $profiler = new Profiler();
-        $this->set('profiler', $profiler);
-        $eventManager->attach(
-            'db',
-            function (Event $event, $db) use ($profiler) {
-                if ($event->getType() == 'beforeQuery')
-                    $profiler->startProfile($db->getSQLStatement());
-                if ($event->getType() == 'afterQuery')
-                    $profiler->stopProfile();
-            }
-        );
-
-        $db = $this->get('db');
-        $db->setEventsManager($eventManager);
+        $eventManager->attach('dispatch:beforeDispatchLoop', function($eventManager, $dispatcher) use ($di){
+            new Acl($di->get('acl'), $dispatcher);
+        });
 
         $dispatcher->setEventsManager($eventManager);
 
         return $dispatcher;
-    }
-
-    protected function initSharedDt()
-    {
-        return Editor::getInstance();
     }
 }

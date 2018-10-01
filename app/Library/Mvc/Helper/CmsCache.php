@@ -29,8 +29,6 @@ class CmsCache extends Component
         if ( !file_exists( self::DIR_CACHE ) )
         {
             mkdir( self::DIR_CACHE, 0777, true );
-//            touch( self::DIR_CACHE.'.gitignore' );
-//            file_put_contents( self::DIR_CACHE.'.gitignore', "*\n!.gitignore" );
         }
 
         if ( !self::$instance )
@@ -62,6 +60,9 @@ class CmsCache extends Component
         {
             $this->flash->error( $exception->getMessage() );
         }
+
+        return self::getInstance();
+
     }
 
     private function file ( $key )

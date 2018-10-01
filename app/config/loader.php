@@ -9,7 +9,8 @@ $loader->registerDirs(
 )->registerNamespaces(
     [
         'Ilya' => APP_PATH,
-        'Lib' => $this->config->app->libraryDir
+        'Lib' => $this->config->app->libraryDir,
+        'Plugins' => $this->config->app->pluginsDir
     ]
 )->registerFiles(
     [

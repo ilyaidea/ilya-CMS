@@ -22,6 +22,7 @@ class Users extends \Phalcon\Mvc\Model
     protected $password;
     public $created;
     public $active = false;
+    private $role;
 
     public function initialize()
     {
@@ -125,4 +126,22 @@ class Users extends \Phalcon\Mvc\Model
             ]
         );
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    /**
+     * @param mixed $role
+     */
+    public function setRole( $role )
+    {
+        $this->role = $role;
+    }
+
+
 }
