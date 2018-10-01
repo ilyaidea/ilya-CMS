@@ -35,7 +35,7 @@ class Module implements \Phalcon\Mvc\ModuleDefinitionInterface
             'Modules\Users\Session\Controllers' => MODULE_PATH. 'Users/Session/Controllers/',
             'Modules\Users\Session\Models'      => MODULE_PATH. 'Users/Session/Models/',
             'Modules\Users\Session\Forms'       => MODULE_PATH. 'Users/Session/Forms/',
-            'Modules\Users\Session\Lib'         => MODULE_PATH. 'Users/Session/Library/',
+            'Modules\Users\Session\Lib'         => MODULE_PATH. 'Users/Session/Lib/',
         ])->register();
     }
 
