@@ -24,6 +24,7 @@ class IndexController extends \Lib\Mvc\Controller
     public function indexAction()
     {
         echo "<pre>";
+        die(print_r($this->getDI()->getShared('config')));
 //        $session = $this->session->get('auth');
 //
 //        $id = $session->id;

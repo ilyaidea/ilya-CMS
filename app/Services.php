@@ -86,7 +86,7 @@ class Services extends \Lib\Di\FactoryDefault
      * @version 1.0.0
      * @example Desc <code></code>
      */
-    protected function initDb()
+    protected function initSharedDb()
     {
 
         $dbConf = $this->get('config')->database->toArray();
@@ -137,22 +137,27 @@ class Services extends \Lib\Di\FactoryDefault
         return new Auth();
     }
 
-    protected function initAcl()
+    protected function initSharedManager()
+    {
+        return new Manager();
+    }
+
+    protected function initSharedAcl()
     {
         return new DefaultAcl();
     }
 
-    protected function initDispatcher()
+    protected function initSharedDispatcher()
     {
         $di = $this;
         $dispatcher = new Dispatcher();
 
-        $eventManager = new Manager();
+        $eventManager = $this->getShared('manager');
 
         $eventManager->attach('dispatch:beforeException', new NotFoundPlugin());
 
         $eventManager->attach('dispatch:beforeDispatchLoop', function($eventManager, $dispatcher) use ($di){
-            new Acl($di->get('acl'), $dispatcher);
+            new Acl($di->getShared('acl'), $dispatcher, $di->get('view'));
         });
 
         $dispatcher->setEventsManager($eventManager);

@@ -11,57 +11,57 @@
  * @version 1.0.0
  * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
  */
+
 namespace Modules\Users\Session;
 
+use Lib\Di\RegisterServicesModules;
 use Phalcon\DiInterface;
-use Phalcon\Events\Manager;
 use Phalcon\Loader;
-use Phalcon\Mvc\Dispatcher;
 
 class Module implements \Phalcon\Mvc\ModuleDefinitionInterface
 {
-
     /**
      * this function register autoloaders
      *
      *
-     * @param \Phalcon\DiInterface $dependencyInjector
+     * @param DiInterface $di
      */
-    public function registerAutoloaders(\Phalcon\DiInterface $dependencyInjector = null)
+    public function registerAutoloaders( DiInterface $di = null )
     {
-        // TODO: Implement registerAutoloaders() method.
         $loader = new Loader();
-        $loader->registerNamespaces([
-            'Modules\Users\Session\Controllers' => MODULE_PATH. 'Users/Session/Controllers/',
-            'Modules\Users\Session\Models'      => MODULE_PATH. 'Users/Session/Models/',
-            'Modules\Users\Session\Forms'       => MODULE_PATH. 'Users/Session/Forms/',
-            'Modules\Users\Session\Lib'         => MODULE_PATH. 'Users/Session/Lib/',
-        ])->register();
+        $loader->registerNamespaces( [
+            'Modules\Users\Session\Controllers' => MODULE_PATH.'Users/Session/Controllers/',
+            'Modules\Users\Session\Models'      => MODULE_PATH.'Users/Session/Models/',
+            'Modules\Users\Session\Forms'       => MODULE_PATH.'Users/Session/Forms/',
+            'Modules\Users\Session\Lib'         => MODULE_PATH.'Users/Session/Lib/',
+        ] )->register();
     }
 
     /**
      * Registers services related to the module
      *
-     * @param \Phalcon\DiInterface $dependencyInjector
+     * @param DiInterface $di
      */
-    public function registerServices(DiInterface $di)
+    public function registerServices( DiInterface $di = null )
     {
-        // TODO: Implement registerServices() method.
-        $di->set('dispatcher', $this->setDispatcher($di));
-        $di->set('view' , $this->setView($di));
+        new RegisterServicesModules(__DIR__);
+
+        $di->setShared( 'dispatcher', $this->setSharedDispatcher( $di ) );
+        $di->setShared( 'view', $this->setSharedView( $di ) );
     }
 
-    private function setDispatcher(DiInterface $di)
+    private function setSharedDispatcher( DiInterface $di )
     {
-        $dispatcher = $di->get('dispatcher');
+        $dispatcher = $di->getShared( 'dispatcher' );
 
-        $dispatcher->setDefaultNamespace('Modules\Users\Session\Controllers\\');
+        $dispatcher->setDefaultNamespace( 'Modules\Users\Session\Controllers\\' );
         return $dispatcher;
     }
-    private function setView(DiInterface $di)
+
+    private function setSharedView( DiInterface $di )
     {
-        $view = $di->get('view');
-        $view->setViewsDir(__DIR__. '/views/');
+        $view = $di->getShared( 'view' );
+        $view->setViewsDir( __DIR__.'/views/' );
         return $view;
     }
 }

@@ -18,33 +18,37 @@ namespace Plugins;
 use Ilya\Models\Users;
 use Lib\Acl\DefaultAcl;
 use Phalcon\Acl\Adapter\Memory;
+use Phalcon\Http\Response;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\User\Plugin;
+use Phalcon\Mvc\View;
 
 class Acl extends Plugin
 {
-    public function __construct(Memory $acl, Dispatcher $dispatcher)
+    public function __construct(Memory $acl, Dispatcher $dispatcher, View $view)
     {
         $role = $this->getRole();
+
 
         $moduleName = $dispatcher->getModuleName();
         $controllerName = $dispatcher->getControllerName();
         $actionName = $dispatcher->getActionName();
 
-//        echo "Role => ". $role. '<br>';
-//        echo $moduleName. '/'. $controllerName. '/'. $actionName. "<br>";
-//
-//        if($acl->isAllowed($role, $moduleName. '/'. $controllerName, $actionName))
-//        {
-//            die('is Allowed');
-//        }
-//        else
-//        {
-//            die('dont Allowed');
-//        }
+        $resourceKey = $moduleName. '/'. $controllerName;
+        $resourceVal = $actionName;
 
-//        die( $moduleName. '/'. $controllerName. '/'. $actionName);
-//        echo "<br>";
+        if($acl->isResource($resourceKey))
+        {
+            if(!$acl->isAllowed($role, $resourceKey, $resourceVal))
+            {
+                $this->accessDenied($view, $resourceKey);
+            }
+        }
+        else
+        {
+            $this->resourceNotFined($view, $resourceKey);
+            die("Role => ". $role.' resource not find');
+        }
     }
 
     public function getRole()
@@ -64,5 +68,35 @@ class Acl extends Plugin
         }
 
         return $role;
+    }
+
+    private function resourceNotFined(View $view, $resourceKey)
+    {
+        $view->setViewsDir(THEME_PATH. 'errors/');
+        $view->setPartialsDir('partials/');
+        $view->message = "این راه به جایی نمیرسد.";
+        $view->partial('error404');
+
+        $response = new Response();
+        $response->setHeader(404, 'Not Found');
+        $response->sendHeaders();
+        echo $response->getContent();
+
+        exit;
+    }
+
+    private function accessDenied(View $view, $resourceKey)
+    {
+        $view->setViewsDir(THEME_PATH. 'errors/');
+        $view->setPartialsDir('partials/');
+        $view->message = "شما دسترسی به پیج را ندارید.";
+        $view->partial('error404');
+
+        $response = new Response();
+        $response->setHeader(403, 'Forbidden');
+        $response->sendHeaders();
+        echo $response->getContent();
+
+        exit;
     }
 }

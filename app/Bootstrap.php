@@ -16,6 +16,8 @@
  */
 namespace Ilya;
 
+use Phalcon\Application\Exception;
+
 class Bootstrap
 {
     private $config;
@@ -54,9 +56,17 @@ class Bootstrap
             $response = $application->handle();
             $response->send();
         }
-        catch (\Exception $e)
+        catch (Exception $e)
         {
-            echo 'Exception: ', $e->getMessage();
+            if(preg_match('/^Module \'(.*?)\' isn\'t registered in the application container$/', $e->getMessage(), $match)) {
+                // You can get the attempted module name from the router:
+                echo 'Exception: ', $e->getMessage();
+                echo '<pre>', var_dump($application->router->getModuleName()), '</pre>';
+                // Or the regexp match
+                echo '<pre>', var_dump($match[1]), '</pre>';
+                // Then handle it as you wish...
+//                echo $application->handle('/')->getContent();
+            }
         }
     }
 
