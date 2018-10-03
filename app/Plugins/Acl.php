@@ -29,7 +29,6 @@ class Acl extends Plugin
     {
         $role = $this->getRole();
 
-
         $moduleName = $dispatcher->getModuleName();
         $controllerName = $dispatcher->getControllerName();
         $actionName = $dispatcher->getActionName();
@@ -47,7 +46,6 @@ class Acl extends Plugin
         else
         {
             $this->resourceNotFined($view, $resourceKey);
-            die("Role => ". $role.' resource not find');
         }
     }
 

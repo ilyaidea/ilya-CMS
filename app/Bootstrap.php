@@ -29,7 +29,7 @@ class Bootstrap
      */
     public function __construct()
     {
-        $this->config = include_once APP_PATH. 'config/config.php';
+        $this->config = include_once APP_PATH. 'config/env/'.APP_ENV.'.php';
     }
 
     /**

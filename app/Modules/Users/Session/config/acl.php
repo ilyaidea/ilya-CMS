@@ -1,7 +1,7 @@
 <?php
 return [
     'guest' => [
-        'index' => 'index'
+        'index' => 'index',
     ],
     'member' => [
         'login' => 'index'

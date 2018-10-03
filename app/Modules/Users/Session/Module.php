@@ -37,11 +37,6 @@ class Module implements \Phalcon\Mvc\ModuleDefinitionInterface
         ] )->register();
     }
 
-    /**
-     * Registers services related to the module
-     *
-     * @param DiInterface $di
-     */
     public function registerServices( DiInterface $di = null )
     {
         new RegisterServicesModules(__DIR__);

@@ -1,9 +1,9 @@
 <?php
 return [
-    'guest' => [
-        'session/index' => '*',
-    ],
-    'member' => [
-        'session/login' => 'index'
-    ],
+//    'guest' => [
+//        'session/index' => '*',
+//    ],
+//    'member' => [
+//        'session/login' => 'index'
+//    ],
 ];
