@@ -27,32 +27,36 @@ class DefaultAcl extends \Phalcon\Acl\Adapter\Memory
         );
 
         $this->roles['admin'] = new Role('admin', 'Admin role');
-        $this->roles['member'] = new Role('member', 'Member role');
-        $this->roles['guest'] = new Role('guest', 'Guest role');
+//        $this->roles['member'] = new Role('member', 'Member role');
+//        $this->roles['guest'] = new Role('guest', 'Guest role');
 
 
         $this->addRole($this->roles['admin']);
 
-        $resources = require_once(APP_PATH. 'config/acl.php');
+//        $this->addRole($this->roles['member']);
+//        $this->addRole($this->roles['guest'], $this->roles['member']);
 
-        foreach($resources as $role => $resource)
-        {
-            $this->addRole($this->roles[$role]);
-            foreach($resource as $key => $value)
-            {
-                $this->addResource($key, $value);
-            }
-        }
+//        $resources = require_once(APP_PATH. 'config/acl.php');
 
+//        foreach($resources as $role => $resource)
+//        {
+////            $this->addRole($this->roles[$role]);
+//            foreach($resource as $key => $value)
+//            {
+//                $this->addResource($key, $value);
+//            }
+//        }
+
+//        die(print_r($this->getRoles()[2]));
         $this->allow('admin', '*', '*');
 
-        foreach($resources as $role => $resource)
-        {
-            foreach($resource as $key => $value)
-            {
-                $this->allow($role, $key, $value);
-            }
-        }
+//        foreach($resources as $role => $resource)
+//        {
+//            foreach($resource as $key => $value)
+//            {
+//                $this->allow($role, $key, $value);
+//            }
+//        }
 
     }
 

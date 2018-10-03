@@ -13,6 +13,11 @@
  */
 namespace Lib\Mvc;
 
+
+use Phalcon\Events\Event;
+use Phalcon\Events\Manager;
+use Phalcon\Mvc\Dispatcher;
+
 class Application extends \Phalcon\Mvc\Application
 {
     /**
@@ -24,6 +29,7 @@ class Application extends \Phalcon\Mvc\Application
     {
         parent::__construct($di);
         $this->registerModules(self::getAllModules());
+        $this->setDI($di);
         $this->initRoute($di);
     }
 
