@@ -29,12 +29,8 @@ class Acl extends Plugin
     {
         $role = $this->getRole();
 
-        $moduleName = $dispatcher->getModuleName();
-        $controllerName = $dispatcher->getControllerName();
-        $actionName = $dispatcher->getActionName();
-
-        $resourceKey = $moduleName. '/'. $controllerName;
-        $resourceVal = $actionName;
+        $resourceKey = $dispatcher->getControllerClass();
+        $resourceVal = $dispatcher->getActionName();
 
         if($acl->isResource($resourceKey))
         {

@@ -21,7 +21,6 @@ class NotFoundPlugin
 {
     public function beforeException(Event $event, Dispatcher $dispatcher, \Exception $exception)
     {
-        die('PPPP');
         $dispatcher->forward(
             [
                 'module' => 'session',

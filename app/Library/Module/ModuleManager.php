@@ -6,207 +6,99 @@
  *
  * ILYA CMS Created by ILYA-IDEA Company.
  * @author Ali Mansoori
- * Date: 5/22/2018
- * Time: 7:41 PM
+ * Date: 10/4/2018
+ * Time: 2:22 PM
  * @version 1.0.0
  * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
  */
+
 namespace Lib\Module;
 
-use Lib\Common\UtilMetaData;
-use Lib\Mvc\Model\Options;
 
-class ModuleManager
+use Lib\Di\ModuleServices;
+use Phalcon\Loader;
+use Phalcon\Mvc\User\Module;
+use Phalcon\Text;
+
+class ModuleManager extends Module
 {
-    const MODULE_DELIMITER = ';';
-    const OPT_ENABLED_PLUGINS = 'enabled_modules';
+    private $modulePath;
+    private $moduleName;
+    private $moduleNamespace;
 
-    private $loadBeforeDbInit = array();
-    private $loadAfterDbInit = array();
-
-    public function readAllPluginMetadatas()
+    public function __construct()
     {
-        $pluginDirectories = $this->getFilesystemPlugins(true);
+        $reflection = new \ReflectionObject($this);
 
-        foreach ($pluginDirectories as $pluginDirectory) {
-            $pluginFile = $pluginDirectory . 'qa-plugin.php';
-
-            if (!file_exists($pluginFile)) {
-                continue;
-            }
-
-            $metadataUtil = new Q2A_Util_Metadata();
-            $metadata = $metadataUtil->fetchFromAddonPath($pluginDirectory);
-            if (empty($metadata)) {
-                // limit plugin parsing to first 8kB
-                $contents = file_get_contents($pluginFile, false, null, 0, 8192);
-                $metadata = ilya_addon_metadata($contents, 'Plugin', true);
-            }
-
-            // skip plugin which requires a later version of Q2A
-            if (isset($metadata['min_q2a']) && ilya_ilya_version_below($metadata['min_q2a'])) {
-                continue;
-            }
-            // skip plugin which requires a later version of PHP
-            if (isset($metadata['min_php']) && ilya_php_version_below($metadata['min_php'])) {
-                continue;
-            }
-
-            $pluginInfoKey = basename($pluginDirectory);
-            $pluginInfo = array(
-                'pluginfile' => $pluginFile,
-                'directory' => $pluginDirectory,
-                'urltoroot' => substr($pluginDirectory, strlen(ILYA_BASE_DIR)),
-            );
-
-            if (isset($metadata['load_order'])) {
-                switch ($metadata['load_order']) {
-                    case 'after_db_init':
-                        $this->loadAfterDbInit[$pluginInfoKey] = $pluginInfo;
-                        break;
-                    case 'before_db_init':
-                        $this->loadBeforeDbInit[$pluginInfoKey] = $pluginInfo;
-                        break;
-                    default:
-                }
-            } else {
-                $this->loadBeforeDbInit[$pluginInfoKey] = $pluginInfo;
-            }
-        }
+        $this->modulePath = dirname($reflection->getFileName());
+        $this->moduleName = strtolower(basename($this->modulePath));
+        $this->moduleNamespace = $reflection->getNamespaceName();
     }
 
-    private function loadPlugins($pluginInfos)
+    public function registerAutoloaders()
     {
-        global $ilya_plugin_directory, $ilya_plugin_urltoroot;
+        $loader = new Loader();
+        $loader->registerNamespaces([
+            $this->moduleNamespace                  => $this->modulePath,
+            $this->moduleNamespace. '\\Controllers' => $this->modulePath.'/Controllers/',
+            $this->moduleNamespace. '\\Models'      => $this->modulePath.'/Models/',
+            $this->moduleNamespace. '\\Forms'       => $this->modulePath.'/Forms/',
+            $this->moduleNamespace. '\\Lib'         => $this->modulePath.'/Lib/',
+        ])->register();
 
-        foreach ($pluginInfos as $pluginInfo) {
-            $ilya_plugin_directory = $pluginInfo['directory'];
-            $ilya_plugin_urltoroot = $pluginInfo['urltoroot'];
-
-            require_once $pluginInfo['pluginfile'];
-        }
-
-        $ilya_plugin_directory = null;
-        $ilya_plugin_urltoroot = null;
+        return $loader;
     }
 
-    public function loadPluginsBeforeDbInit()
+    public function registerservices()
     {
-        $this->loadPlugins($this->loadBeforeDbInit);
-    }
-
-    public function loadPluginsAfterDbInit()
-    {
-        $enabledPlugins = $this->getEnabledPlugins(false);
-        $enabledForAfterDbInit = array();
-
-        foreach ($enabledPlugins as $enabledPluginDirectory) {
-            if (isset($this->loadAfterDbInit[$enabledPluginDirectory])) {
-                $enabledForAfterDbInit[$enabledPluginDirectory] = $this->loadAfterDbInit[$enabledPluginDirectory];
-            }
-        }
-
-        $this->loadPlugins($enabledForAfterDbInit);
-    }
-
-    public function getEnabledPlugins($fullPath = false)
-    {
-        $moduleDirectories = $this->getEnabledPluginsOption();
-
-        if ($fullPath) {
-            foreach ($moduleDirectories as $key => &$pluginDirectory) {
-                $pluginDirectory = MODULE_PATH . $pluginDirectory . '/';
-            }
-        }
-
-        return $moduleDirectories;
-    }
-
-    public function setEnabledPlugins($array)
-    {
-        $this->setEnabledPluginsOption($array);
-    }
-
-    public function getFilesystemPlugins($fullPath = false)
-    {
-        $result = array();
-
-        $fileSystemPluginFiles = glob(MODULE_PATH . '*/*/Module.php');
-
-        foreach ($fileSystemPluginFiles as $pluginFile) {
-            $directory = dirname($pluginFile) . '/';
-
-            if (!$fullPath) {
-                $directory = basename($directory);
-            }
-            $result[] = $directory;
-        }
-
-        return $result;
-    }
-
-    public function getHashesForPlugins($pluginDirectories)
-    {
-        $result = array();
-
-        foreach ($pluginDirectories as $pluginDirectory) {
-            $result[$pluginDirectory] = md5($pluginDirectory);
-        }
-
-        return $result;
-    }
-
-    private function getEnabledPluginsOption()
-    {
-        return explode(self::MODULE_DELIMITER, Options::Opt(self::OPT_ENABLED_PLUGINS));
-    }
-
-    private function setEnabledPluginsOption($array)
-    {
-        Options::Opt(self::OPT_ENABLED_PLUGINS, implode(self::MODULE_DELIMITER, $array));
-//        ilya_opt(self::OPT_ENABLED_PLUGINS, implode(self::PLUGIN_DELIMITER, $array));
-    }
-
-    public function cleanRemovedModules()
-    {
-        $finalEnabledPlugins = array_intersect(
-            $this->getFilesystemPlugins(),
-            $this->getEnabledPlugins()
-        );
-
-        $this->setEnabledPluginsOption($finalEnabledPlugins);
-    }
-
-    public function sortedModuleFiles()
-    {
-        $this->cleanRemovedModules();
-        $filesystemModules = $this->getFilesystemPlugins(true);
-        if (!empty($filesystemModules))
+        $serviceClass = $this->moduleNamespace. '\\Services';
+        if(!class_exists($serviceClass))
         {
-            $metadataUtil = new UtilMetaData();
-            $sortedModuleFiles = [];
+            return new ModuleServices($this->modulePath, $this->moduleNamespace);
+        }
+        return new $serviceClass($this->modulePath);
+    }
 
-            foreach ($filesystemModules as $moduleDirectoryPath)
+    public static function getAllControllers($modulePath, $namespace = null)
+    {
+        $controllers = [];
+
+        foreach(glob($modulePath. '/Controllers/*Controller.php') as $controller)
+        {
+            if($namespace)
             {
-                $moduleName = basename($moduleDirectoryPath);
-                $moduleCategory = basename(dirname($moduleDirectoryPath));
-                $metadata = $metadataUtil->fetchFromAddonPath($moduleDirectoryPath);
-
-                if (empty($metadata))
-                {
-                    $moduleFile = $moduleDirectoryPath. '/Module.php';
-
-                    // limit plugin parsing to first 8kB
-                    $contents = file_get_contents($moduleFile, false, null, 0, 8192);
-                    $metadata = $metadataUtil->AddonMetadata($contents, 'Module');
-                }
-
-                $sortedModuleFiles['systems_'. $moduleCategory][$moduleName] = $metadata;
+                $controllers[] = $namespace. '\Controllers\\' . basename($controller, '.php');
             }
-
-            return $sortedModuleFiles;
+            else
+            {
+                $controllers[] = basename($controller, '.php');
+            }
         }
 
-        return [];
+        return $controllers;
+    }
+
+    public static function getAllActions($controllerClass)
+    {
+        $methods = (new \ReflectionClass($controllerClass))->getMethods(\ReflectionMethod::IS_PUBLIC);
+
+        $actions = [];
+        foreach($methods as $method)
+        {
+            if(Text::endsWith($method->name, 'Action'))
+            {
+                $actions[] = str_replace('Action', '', $method->name);
+            }
+        }
+
+        return $actions;
+    }
+
+    public static function convertControllerNameToControllerClass($controllerName, $namespace)
+    {
+        $controller = ucfirst($controllerName). 'Controller';
+        $controllerClass  = $namespace. '\Controllers\\'. $controller;
+
+        return $controllerClass;
     }
 }

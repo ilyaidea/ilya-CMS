@@ -59,7 +59,7 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
      * @version 1.0.0
      * @example Desc <code></code>
      */
-    protected function condForUseSetOrSetSharedMethod($method)
+    protected function condForUseSetOrSetSharedMethod(\ReflectionMethod $method)
     {
         if ($this->isMethodNameStart($method->name, 10, 'initShared'))
         {

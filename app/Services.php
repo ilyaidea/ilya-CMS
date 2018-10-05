@@ -48,7 +48,7 @@ class Services extends \Lib\Di\FactoryDefault
         return $url;
     }
 
-    protected function initView()
+    protected function initSharedView()
     {
         $view = new View();
 
@@ -154,11 +154,11 @@ class Services extends \Lib\Di\FactoryDefault
 
         $eventManager = $this->getShared('manager');
 
-        $eventManager->attach('dispatch:beforeException', new NotFoundPlugin());
+//        $eventManager->attach('dispatch:beforeException', new NotFoundPlugin());
 
-        $eventManager->attach('dispatch:beforeDispatchLoop', function($eventManager, $dispatcher) use ($di){
-            new Acl($di->getShared('acl'), $dispatcher, $di->get('view'));
-        });
+//        $eventManager->attach('dispatch:beforeDispatchLoop', function($eventManager, $dispatcher) use ($di){
+//            new Acl($di->getShared('acl'), $dispatcher, $di->get('view'));
+//        });
 
         $dispatcher->setEventsManager($eventManager);
 

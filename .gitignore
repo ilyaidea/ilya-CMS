@@ -8,3 +8,9 @@ schemas/*
 public/final.css
 public/final.js
 /vendor/
+
+composer\.json
+
+composer\.lock
+
+app/config/env/production\.php
