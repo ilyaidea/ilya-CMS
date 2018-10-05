@@ -18,16 +18,23 @@ use Lib\Authenticates\Auth;
 use Lib\Mvc\Helper;
 use Lib\Mvc\View\Engine\Volt;
 use Phalcon\Crypt;
+use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Events\Manager;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\View;
 use Phalcon\Security;
 use Phalcon\Session\Adapter\Files;
 use Plugins\Acl;
+use Plugins\DbManagerPlugin;
 use Plugins\NotFoundPlugin;
 
 class Services extends \Lib\Di\FactoryDefault
 {
+    protected function initSharedManager()
+    {
+        return new Manager();
+    }
+
     /**
      * Summary Function initUrl
      *
@@ -88,13 +95,19 @@ class Services extends \Lib\Di\FactoryDefault
      */
     protected function initSharedDb()
     {
-
         $dbConf = $this->get('config')->database->toArray();
 
         $adapter = 'Phalcon\Db\Adapter\Pdo\\'. $dbConf['adapter'];
         unset($dbConf['adapter']);
 
-        return new $adapter($dbConf);
+        /** @var Mysql $connection */
+        $connection = new $adapter($dbConf);
+
+        /** @var Manager $eventManager */
+        $eventManager = $this->getShared('manager');
+
+        $connection->setEventsManager($eventManager);
+        return $connection;
     }
 
     protected function initHelper()
@@ -137,11 +150,6 @@ class Services extends \Lib\Di\FactoryDefault
         return new Auth();
     }
 
-    protected function initSharedManager()
-    {
-        return new Manager();
-    }
-
     protected function initSharedAcl()
     {
         return new DefaultAcl();
@@ -156,9 +164,10 @@ class Services extends \Lib\Di\FactoryDefault
 
 //        $eventManager->attach('dispatch:beforeException', new NotFoundPlugin());
 
-//        $eventManager->attach('dispatch:beforeDispatchLoop', function($eventManager, $dispatcher) use ($di){
+        $eventManager->attach('dispatch:beforeDispatchLoop', function($eventManager, $dispatcher) use ($di){
+            new DbManagerPlugin($eventManager, $dispatcher);
 //            new Acl($di->getShared('acl'), $dispatcher, $di->get('view'));
-//        });
+        });
 
         $dispatcher->setEventsManager($eventManager);
 
