@@ -88,8 +88,7 @@ class Application extends \Phalcon\Mvc\Application
             include_once str_replace('Module.php', 'Routes.php', $module['path']);
             if (class_exists($routesClassName))
             {
-                $routesClass = new $routesClassName();
-                return $routesClass->init($router);
+                return new $routesClassName($router);
             }
         }
     }
