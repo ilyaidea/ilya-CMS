@@ -34,21 +34,12 @@ class ModuleServices extends Component
     {
         $this->path = $path;
 
-        $reflection = new \ReflectionObject($this);
-
-        if($namespace)
-        {
-            $this->namespace = $namespace;
-        }
-        else
-        {
-            $this->namespace = $reflection->getNamespaceName();
-        }
+        $this->namespace = $namespace;
 
         $this->moduleName = strtolower(basename(($this->path)));
         $this->getDI()->setShared('config', $this->setConfig($path));
 
-        $this->bindServices($reflection);
+        $this->bindServices();
     }
 
     protected function setConfig($path)
@@ -76,13 +67,13 @@ class ModuleServices extends Component
         return $coreConfig;
     }
 
-    private function bindServices($reflection)
+    private function bindServices()
     {
         $this->getDI()->setShared('acl', $this->setAcl());
         $this->getDI()->setShared('dispatcher', $this->setDispatcher());
         $this->getDI()->setShared('view', $this->setView());
 
-        foreach ($reflection->getMethods() as $method)
+        foreach (get_class_methods($this) as $method)
         {
             $this->condForUseSetOrSetSharedMethod($method);
         }
@@ -117,8 +108,6 @@ class ModuleServices extends Component
             return $acl;
         }
 
-        $roles = [];
-
         $resources = require_once $aclPath;
 
         $acl->addRolesAndAllow($resources, $this->namespace);
@@ -133,17 +122,15 @@ class ModuleServices extends Component
         return $view;
     }
 
-    protected function condForUseSetOrSetSharedMethod(\ReflectionMethod $method)
+    protected function condForUseSetOrSetSharedMethod($method)
     {
-        if ($this->isMethodNameStart($method->name, 10, 'initShared'))
+        if ($this->isMethodNameStart($method, 10, 'initShared'))
         {
-            $method->invoke($this, $this->getDI());
-            $this->getDI()->setShared(lcfirst(substr($method->name, 10)), $method->getClosure($this));
+            $this->getDI()->setShared(lcfirst(substr($method, 10)), $this->$method());
         }
-        elseif ($this->isMethodNameStart($method->name, 4, 'init'))
+        elseif ($this->isMethodNameStart($method, 4, 'init'))
         {
-            $method->invoke($this, $this->getDI());
-            $this->getDI()->set(lcfirst(substr($method->name, 4)), $method->getClosure($this));
+            $this->getDI()->set(lcfirst(substr($method, 4)), $this->$method());
         }
     }
 
