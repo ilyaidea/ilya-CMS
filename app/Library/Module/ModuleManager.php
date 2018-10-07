@@ -33,6 +33,7 @@ class ModuleManager extends Module
         $this->modulePath = dirname($reflection->getFileName());
         $this->moduleName = strtolower(basename($this->modulePath));
         $this->moduleNamespace = $reflection->getNamespaceName();
+
     }
 
     public function registerAutoloaders()
@@ -56,7 +57,7 @@ class ModuleManager extends Module
         {
             return new ModuleServices($this->modulePath, $this->moduleNamespace);
         }
-        return new $serviceClass($this->modulePath);
+        return new $serviceClass($this->modulePath, $this->moduleNamespace);
     }
 
     public static function getAllControllers($modulePath, $namespace = null)

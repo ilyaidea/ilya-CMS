@@ -23,44 +23,6 @@ class IndexController extends \Lib\Mvc\Controller
 {
     public function indexAction()
     {
-        echo "<pre>";
-//        $session = $this->session->get('auth');
-//
-//        $id = $session->id;
-//
-//        $user = Users::findFirstById($id);
-//
-//
-//        die(
-//            print_r($user->getRole())
-//        );
-
-        // Client
-
-        $phone = new PhoneNumber();
-
-        $person = new Person($phone);
-
-        $person->setName('reza');
-
-        $person->getHomePhone()->setAreaCode('025');
-        $person->getHomePhone()->setPhoneNumber('32916547');
-
-        $person->getOfficePhone()->setAreaCode('021');
-        $person->getOfficePhone()->setPhoneNumber('2315489');
-
-        echo "Home => ". $person->getHomePhone()->getNumber();
-
-        echo "<br>";
-        echo "<br>";
-
-        echo "Office => ". $person->getOfficePhone()->getNumber();
-
-        $this->view->disable();
-    }
-
-    public function errorAction()
-    {
         $this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
     }
 }
