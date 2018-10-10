@@ -1,8 +1,9 @@
-<div class="ilya-header">
+{# Header in full width top bar #}
+{% set class = '' %}
+{#{% set class = fixed_topbar ? ' fixed': '' %}#}
+<div id="qam-topbar" class="clearfix{{ class }}">
+    {#{{ partial('body/header/nav_main_sub') }}#}
+</div> <!-- END qam-topbar -->
 
-    {{ partial('body/content/header/logo') }}
-    {{ partial('body/content/header/nav_user_search/index') }}
-    {{ partial('body/content/header/nav_main_sub') }}
-    {{ partial('body/content/header/header_clear') }}
-
-{{ helper.output('</div> <!-- END ilya-header -->', '') }}
+{#$this->output($this->ask_button());#}
+{#$this->qam_search('the-top', 'the-top-search');#}

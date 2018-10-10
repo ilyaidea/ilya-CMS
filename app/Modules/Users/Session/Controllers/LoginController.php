@@ -52,7 +52,7 @@ class LoginController extends Controller
         {
             if ($this->request->isPost() && $loginForm->isValid($this->request->getPost()))
             {
-                $this->auth->check($this->request->getPost());
+                $this->auth->check();
             }
         }
         catch (\Exception $exception)

@@ -25,6 +25,8 @@ define( 'APP_PATH', BASE_PATH.'app/' );
 define( 'MODULE_PATH', APP_PATH.'Modules/' );
 define( 'PROJECT_NAME', basename( BASE_PATH ) );
 
+define('HOST_HASH', substr(md5($_SERVER['HTTP_HOST']), 0, 12));
+
 // Application Envirement
 $applicationEnv = 'development';
 if( isset( $_SERVER[ 'HTTP_HOST' ] ) )

@@ -46,8 +46,8 @@ class SignupController extends Controller
                         [
                             'username' => $this->request->getPost('username', 'striptags'),
                             'email'    => $this->request->getPost('email', [
-                                'stritags',
-                                'stri'
+                                'striptags',
+                                'email'
                             ]),
                             'password' => $this->request->getPost('password'),
                             'active'   => true

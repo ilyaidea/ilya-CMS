@@ -41,10 +41,12 @@ class Auth extends Component
      * @version 1.0.0
      * @example Desc <code></code>
      */
-    public function check($credetials)
+    public function check()
     {
+        $credetials = $this->request->getPost();
         // Check if the user exist
-        $user = Users::findUserWithUsernameOrEmail($credetials['user_email']);
+        /** @var Users $user */
+        $user = Users::findUserWithUsernameOrEmail( $credetials[ 'user_email']);
         if (!$user)
         {
             throw new \Exception('This user has not registered yet');

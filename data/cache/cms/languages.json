@@ -1,1 +1,2 @@
-{"fa":{"id":"1","title":"\u0641\u0627\u0631\u0633\u06cc","value":"fa","is_primary":"1"},"en":{"id":"2","title":"English","value":"en","is_primary":"0"},"es":{"id":"3","title":"Espa\u00f1ol","value":"es","is_primary":"0"}}
+{"fa":{"id":"2","iso":"fa","locale":"fa_FA","name":"Persian","short_name":"PER","url":"fa","is_primary":"1","direction":"rtl"},
+"en":{"id":"1","iso":"en","locale":"en_EN","name":"English","short_name":"Eng","url":"en","is_primary":"0","direction":"ltr"}}

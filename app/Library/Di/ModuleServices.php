@@ -23,6 +23,7 @@ use Phalcon\Config;
 use Phalcon\Events\Manager;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\User\Component;
+use Phalcon\Text;
 
 class ModuleServices extends Component
 {
@@ -124,11 +125,11 @@ class ModuleServices extends Component
 
     protected function condForUseSetOrSetSharedMethod($method)
     {
-        if ($this->isMethodNameStart($method, 10, 'initShared'))
+        if (Text::startsWith($method, 'initShared'))
         {
             $this->getDI()->setShared(lcfirst(substr($method, 10)), $this->$method());
         }
-        elseif ($this->isMethodNameStart($method, 4, 'init'))
+        elseif (Text::startsWith($method, 'init'))
         {
             $this->getDI()->set(lcfirst(substr($method, 4)), $this->$method());
         }

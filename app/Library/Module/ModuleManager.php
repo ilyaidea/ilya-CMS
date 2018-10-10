@@ -79,7 +79,20 @@ class ModuleManager extends Module
         return $controllers;
     }
 
-    public static function getAllActions($controllerClass)
+    /**
+     * Summary Function getAllActions
+     *
+     * Description Function getAllActions
+     *
+     * @author Ali Mansoori
+     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+     * @param $controllerClass
+     * @return array
+     * @throws \ReflectionException
+     * @version 1.0.0
+     * @example Desc <code></code>
+     */
+    public static function getAllActions( $controllerClass)
     {
         $methods = (new \ReflectionClass($controllerClass))->getMethods(\ReflectionMethod::IS_PUBLIC);
 

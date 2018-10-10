@@ -15,12 +15,12 @@
 namespace Modules\Users\Session\Forms;
 
 
+use Lib\Forms\Form;
 use Phalcon\Forms\Element\Check;
 use Phalcon\Forms\Element\Hidden;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Forms\Element\Submit;
 use Phalcon\Forms\Element\Text;
-use Phalcon\Forms\Form;
 use Phalcon\Validation\Validator\Identical;
 use Phalcon\Validation\Validator\PresenceOf;
 
@@ -28,6 +28,13 @@ class LoginForm extends Form
 {
     public function initialize()
     {
+        $this->setTitle('Login Form', [
+            'id' => 'login-form'
+        ]);
+
+        $this->setAction('#login-form');
+
+        $this->setUserOption('name', 'ali');
         $this->addEmailOrUsername();
         $this->addPassword();
         $this->addRememberMe();
@@ -38,10 +45,11 @@ class LoginForm extends Form
     private function addEmailOrUsername()
     {
         $emailOrUsername = new Text('user_email', [
-            'class' => 'form-control',
-            'placeholder' => 'Enter Email Or Username',
-            'type' => 'text'
+            'placeholder' => 'Enter Email Or Username'
         ]);
+
+        $emailOrUsername->setLabel('Email Or Username');
+
         $emailOrUsername->addValidators(
             [
                 new PresenceOf(
@@ -57,10 +65,11 @@ class LoginForm extends Form
     private function addPassword()
     {
         $password = new Password('password', [
-            'class' => 'form-control',
-            'placeholder' => 'Enter Password',
-            'type'        => 'password'
+            'placeholder' => 'Enter Password'
         ]);
+
+        $password->setLabel('Password');
+
         $password->addValidator(
             new PresenceOf(
                 [
@@ -75,25 +84,28 @@ class LoginForm extends Form
     private function addRememberMe()
     {
         $remember = new Check('remember', [
-            'value' => true,
-            'type' => 'checkbox'
+            'value' => true
         ]);
+
         $remember->setLabel('Remember Me');
+
         $this->add($remember);
     }
 
     private function addSubmit()
     {
-        $submit = new Submit('Submit', [
-            'class' => 'btn btn-success',
-            'type' => 'submit'
-        ]);
+        $submit = new Submit('save');
+
+        $submit->setLabel('Login');
+
         $this->add($submit);
     }
 
     private function addCsrf()
     {
-        $csrf = new Hidden('csrf');
+        $csrf = new Hidden('csrf', [
+            'value' => $this->getToken()
+        ]);
         $csrf->addValidator(
             new Identical(
                 [

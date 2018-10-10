@@ -16,15 +16,16 @@ namespace Ilya;
 use Lib\Acl\DefaultAcl;
 use Lib\Authenticates\Auth;
 use Lib\Mvc\Helper;
+use Lib\Mvc\View;
 use Lib\Mvc\View\Engine\Volt;
+use Lib\Plugins\Localization;
 use Phalcon\Crypt;
 use Phalcon\Events\Manager;
 use Phalcon\Mvc\Dispatcher;
-use Phalcon\Mvc\View;
+use Phalcon\Mvc\View\Engine\Php;
 use Phalcon\Security;
 use Phalcon\Session\Adapter\Files;
 use Plugins\Acl;
-use Plugins\NotFoundPlugin;
 
 class Services extends \Lib\Di\FactoryDefault
 {
@@ -52,11 +53,11 @@ class Services extends \Lib\Di\FactoryDefault
     {
         $view = new View();
 
-        define('THEME_PATH', $this->get('config')->app->themesDir);
-        $view->setMainView(THEME_PATH. 'frontend/theme');
-        $view->setLayoutsDir(THEME_PATH. 'frontend/layouts/');
+        define('THEME_PATH', $this->getShared('config')->app->themesDir);
+        $view->setMainView(THEME_PATH. 'base/theme');
+        $view->setLayoutsDir(THEME_PATH. 'base/layouts/');
         $view->setLayout('main');
-        $view->setPartialsDir(THEME_PATH. 'frontend/partials/');
+        $view->setPartialsDir(THEME_PATH. 'base/partials/');
 
         // Volt
         $volt = new Volt($view, $this);
@@ -66,7 +67,7 @@ class Services extends \Lib\Di\FactoryDefault
         $volt->initCompiler();
 
 
-        $phtml = new View\Engine\Php($view, $this);
+        $phtml = new Php($view, $this);
         $viewEngines = [
             '.volt' => $volt,
             '.phtml' => $phtml
@@ -97,7 +98,7 @@ class Services extends \Lib\Di\FactoryDefault
         return new $adapter($dbConf);
     }
 
-    protected function initHelper()
+    protected function initSharedHelper()
     {
         return new Helper();
     }
@@ -105,10 +106,10 @@ class Services extends \Lib\Di\FactoryDefault
     protected function initFlash()
     {
         return new \Phalcon\Flash\Session([
-            'error' => 'alert alert-danger',
-            'success' => 'alert alert-success',
-            'notice' => 'alert alert-info',
-            'warning' => 'alert alert-warning'
+            'error' => 'ilya-error',
+            'success' => 'ilya-success',
+            'notice' => 'ilya-notice',
+            'warning' => 'ilya-warning'
         ]);
     }
 
@@ -156,9 +157,10 @@ class Services extends \Lib\Di\FactoryDefault
 
 //        $eventManager->attach('dispatch:beforeException', new NotFoundPlugin());
 
-//        $eventManager->attach('dispatch:beforeDispatchLoop', function($eventManager, $dispatcher) use ($di){
-//            new Acl($di->getShared('acl'), $dispatcher, $di->get('view'));
-//        });
+        $eventManager->attach('dispatch:beforeDispatchLoop', function($eventManager, Dispatcher $dispatcher) use ($di){
+            new Localization($dispatcher);
+            new Acl($di->getShared('acl'), $dispatcher, $di->getShared('view'));
+        });
 
         $dispatcher->setEventsManager($eventManager);
 

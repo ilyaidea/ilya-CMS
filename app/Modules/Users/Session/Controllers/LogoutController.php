@@ -36,8 +36,9 @@ class LogoutController extends Controller
     {
         $this->auth->remove();
 
-        $this->flash->notice('User is not login');
-        return $this->response->redirect('login');
+        $this->flash->clear();
+        $this->flash->notice('User is logout');
+        return $this->response->redirect('session');
     }
 
 }

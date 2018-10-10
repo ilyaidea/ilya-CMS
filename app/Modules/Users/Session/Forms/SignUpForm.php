@@ -14,6 +14,7 @@
 namespace Modules\Users\Session\Forms;
 
 use Ilya\Models\Users;
+use Lib\Forms\Form;
 use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\Email;
 use Phalcon\Validation\Validator\Identical;
@@ -32,7 +33,7 @@ use Phalcon\Validation\Validator\Uniqueness;
  * @version 1.0.0
  * @example Desc <code></code>
  */
-class SignUpForm extends \Phalcon\Forms\Form
+class SignUpForm extends Form
 {
     /**
      * Summary Function initialize
@@ -48,6 +49,12 @@ class SignUpForm extends \Phalcon\Forms\Form
      */
     public function initialize($entity = null, $options = null)
     {
+        $this->setTitle('Sign Up Form', [
+            'id' => 'sign-up-form'
+        ]);
+
+        $this->setAction('#sign-up-form');
+
         $this->addusername();
 
         $this->addEmail();
@@ -66,11 +73,18 @@ class SignUpForm extends \Phalcon\Forms\Form
     public function addusername()
     {
         $username = new \Phalcon\Forms\Element\Text('username', [
-            'class' => 'form-control',
-            'placeholder' => 'Choose username',
-            'type' => 'text'
+            'placeholder' => 'Choose username'
         ]);
+
+        $username->setLabel('Username');
+
         $username->addValidators([
+            new StringLength(
+                [
+                    'min' => 8,
+                    'messageMinimum' => ':field is too short, Minimum 8 characters'
+                ]
+            ),
             new PresenceOf([
                 'message' => 'The :field is required'
             ]),
@@ -88,17 +102,13 @@ class SignUpForm extends \Phalcon\Forms\Form
     public function addEmail()
     {
         $email = new \Phalcon\Forms\Element\Text('email', [
-            'class' => 'form-control',
-            'placeholder' => 'Your Email Address',
-            'type'        => 'text'
+            'placeholder' => 'Your Email Address'
         ]);
+
+        $email->setLabel('Email');
+
         $email->addValidators(
             [
-                new PresenceOf(
-                    [
-                        'message' => 'The :field is required'
-                    ]
-                ),
                 new Email(
                     [
                         'message' => 'the :field is not valid'
@@ -109,6 +119,11 @@ class SignUpForm extends \Phalcon\Forms\Form
                         'model' => new Users(),
                         'message' => 'This :field has already been registered'
                     ]
+                ),
+                new PresenceOf(
+                    [
+                        'message' => 'The :field is required'
+                    ]
                 )
             ]
         );
@@ -118,10 +133,11 @@ class SignUpForm extends \Phalcon\Forms\Form
     public function addpassword()
     {
         $password = new \Phalcon\Forms\Element\Password('password', [
-            'class' => 'form-control',
-            'placeholder' => 'Enter Password',
-            'type'        => 'password'
+            'placeholder' => 'Enter Password'
         ]);
+
+        $password->setLabel('Password');
+
         $password->addValidators(
             [
                 new PresenceOf(
@@ -149,10 +165,11 @@ class SignUpForm extends \Phalcon\Forms\Form
     public function addpasswordconfirm()
     {
         $confirmPassword = new \Phalcon\Forms\Element\Password('confirmPassword', [
-            'class' => 'form-control',
-            'placeholder' => 'Confirm password',
-            'type'        => 'password'
+            'placeholder' => 'Confirm password'
         ]);
+
+        $confirmPassword->setLabel('Confirm Password');
+
         $confirmPassword->addValidators(
             [
                 new PresenceOf(
@@ -168,10 +185,11 @@ class SignUpForm extends \Phalcon\Forms\Form
     public function addterms()
     {
         $terms = new \Phalcon\Forms\Element\Check('terms', [
-            'value' => 'yes',
-            'type'  => 'checkbox'
+            'value' => 'yes'
         ]);
+
         $terms->setLabel('Accept Terms');
+
         $terms->addValidators(
             [
                 new Identical(
@@ -188,7 +206,7 @@ class SignUpForm extends \Phalcon\Forms\Form
     public function addCSRF()
     {
         $csrf = new \Phalcon\Forms\Element\Hidden('csrf', [
-            'type' => 'hidden'
+            'value' => $this->getToken()
         ]);
         $csrf->addValidator(new Identical(
             [
@@ -202,21 +220,10 @@ class SignUpForm extends \Phalcon\Forms\Form
 
     public function addsubmit()
     {
-        $this->add(new \Phalcon\Forms\Element\Submit('Sign up', [
-            'class' => 'btn btn-primary btn-md btn-block waves-effect text-center m-b-20',
-            'type'  => 'submit'
-        ]));
-    }
-    /**
-     * Prints messages for a specific element
-     */
-    public function messages($name)
-    {
-        if ($this->hasMessagesFor($name)) {
-            foreach ($this->getMessagesFor($name) as $message) {
-                $this->flash->error($message);
-            }
-        }
-    }
+        $register = new \Phalcon\Forms\Element\Submit('save');
 
+        $register->setLabel('Sign Up');
+
+        $this->add($register);
+    }
 }

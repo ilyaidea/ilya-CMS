@@ -49,6 +49,8 @@ class Title extends Component
 
     public function get()
     {
+        self::$instance->append('Ilya Idea');
+
         if (!empty(self::$parts))
         {
             return implode(self::$separator, self::$parts);

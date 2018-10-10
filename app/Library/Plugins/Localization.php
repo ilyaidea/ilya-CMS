@@ -14,10 +14,23 @@
 namespace Lib\Plugins;
 
 use Ilya\Models\Lang;
+use Lib\Mvc\Helper;
 use Lib\Mvc\Helper\CmsCache;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\User\Plugin;
 
+/**
+ * Summary Class Localization
+ *
+ * Description Class Localization
+ *
+ * @author Ali Mansoori
+ * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+ * @package Lib\Plugins
+ * @version 1.0.0
+ * @example Desc <code></code>
+ * @property Helper $helper
+ */
 class Localization extends Plugin
 {
     public function __construct (Dispatcher $dispatcher)
@@ -27,6 +40,27 @@ class Localization extends Plugin
         /**
          * Set lang default
          */
+        $langDefault = $this->getLangDefault($languages);
+
+        $langQuery = $this->request->getQuery('lang');
+        if (!$langQuery)
+        {
+            $langParam = $dispatcher->getParam('lang');
+        }
+
+        if (!$langParam)
+        {
+            $langParam = $langDefault['iso'];
+        }
+
+        $this->helper->locale()->setLanguage($langParam);
+        $this->helper->locale()->setDirection($langDefault['direction']);
+
+        // Set translate ...
+    }
+
+    private function getLangDefault($languages)
+    {
         $langDefault = null;
         if (is_array($languages) || $languages instanceof \Traversable)
         {
@@ -40,23 +74,6 @@ class Localization extends Plugin
             }
         }
 
-        $langQuery = $this->request->getQuery('lang');
-        if (!$langQuery)
-        {
-            $langParam = $dispatcher->getParam('lang');
-        }
-        else
-        {
-            $langParam = $langQuery;
-        }
-
-        if (!$langParam)
-        {
-            $langParam = $langDefault['value'];
-        }
-
-        define('LANG', $langParam);
-
-        // Set translate ...
+        return $langDefault;
     }
 }
