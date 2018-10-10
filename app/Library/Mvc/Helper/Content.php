@@ -111,13 +111,23 @@ class Content extends Component
             $fields['label'] = $element->getLabel();
 
         if(!empty(array_merge($element->getAttributes(), ['name' => $element->getName()])))
+        {
             $fields['tags'] = $this->convertAttrsToTags(array_merge($element->getAttributes(), ['name' => $element->getName()]));
+        }
 
-        $fields['value'] = $element->getValue();
+        $fields['value'] = (!is_array($element->getValue())) ? $element->getValue() : null;
 
         $fields['error'] = (isset($errors[$element->getName()])) ? $errors[$element->getName()] : null ;
 
         $fields['type'] = $this->getTypeElement($element);
+
+        if($this->getTypeElement($element) == 'select')
+        {
+            foreach($element->getOptions() as $optionKey => $optionVal)
+            {
+                $fields['options'][$optionKey] = $optionVal;
+            }
+        }
 
         if(!empty($element->getUserOptions()))
             foreach($element->getUserOptions() as $optionKey => $optionVal)
@@ -197,6 +207,7 @@ class Content extends Component
             {
                 if(!$form->isValid(self::$instance->request->getPost()))
                 {
+                    self::$contentList[$formKey]['error'] = 'Please fix the following errors';
                     foreach($form->getMessages() as $message)
                     {
                         $errors[$message->getField()] = $message->getMessage();
@@ -206,7 +217,6 @@ class Content extends Component
                         }
                     }
 
-                    self::$contentList[$formKey]['error'] = 'Please fix the following errors';
                     self::$currentForm['isValid'] = false;
                 }
                 else

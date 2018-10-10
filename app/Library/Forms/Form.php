@@ -15,6 +15,7 @@ namespace Lib\Forms;
 
 use Lib\Forms\Element\Hidden;
 use Phalcon\Security;
+use Phalcon\Validation\Validator\Identical;
 
 class Form extends \Phalcon\Forms\Form
 {
@@ -30,8 +31,21 @@ class Form extends \Phalcon\Forms\Form
         $action = new Hidden('action', [
             'value' => $this->security->hash(get_class($this))
         ]);
-
         $this->add($action);
+
+        $csrf = new Hidden('csrf', [
+            'value' => $this->getToken()
+        ]);
+        $csrf->addValidator(
+            new Identical(
+                [
+                    'value' => $this->security->getSessionToken(),
+                    'message' => ':field validation failed'
+                ]
+            )
+        );
+        $csrf->clear();
+        $this->add($csrf);
     }
 
     /**

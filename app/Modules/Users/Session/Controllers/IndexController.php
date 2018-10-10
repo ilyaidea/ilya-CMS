@@ -46,8 +46,8 @@ class IndexController extends \Lib\Mvc\Controller
         if($content->getCurrentForm())
         {
             $currentForm = $content->getCurrentForm();
-            $className = $content->getCurrentForm()['className'];
-            $formKey = $content->getCurrentForm()['key'];
+            $className = $currentForm['className'];
+            $formKey = $currentForm['key'];
 
             if($loginForm instanceof $className && $currentForm['isValid'])
             {
