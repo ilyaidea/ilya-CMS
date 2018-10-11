@@ -1,5 +1,5 @@
 {# form_select(field, style) #}
-<select {{ ((filed['tags'] is defined) ? field['tags'] : '') }} class="ilya-form-{{ style }}-select">
+<select {{ ((field['tags'] is defined) ? field['tags'] : '') }} class="ilya-form-{{ style }}-select">
 
     {% set matchbykey = (field['match_by'] is defined) and field['match_by'] === 'key' %}
 
