@@ -35,71 +35,49 @@ class IndexController extends \Lib\Mvc\Controller
             $this->response->redirect('');
         }
 
-        $loginForm = new LoginForm();
-        $signupForm = new SignUpForm();
-
         $content = $this->helper->content();
 
-        $content->form($loginForm);
-        $content->form($signupForm);
+        $loginForm = $content->addFormWide(new LoginForm());
+        $signupForm = $content->addFormTall(new SignUpForm());
 
-        if($content->getCurrentForm())
+
+//        echo "<pre>";
+//        die(print_r($content->getContent()->getParts()));
+        if($loginForm->isValid())
         {
-            $currentForm = $content->getCurrentForm();
-            $className = $currentForm['className'];
-            $formKey = $currentForm['key'];
-
-            if($loginForm instanceof $className && $currentForm['isValid'])
+            try
             {
-                try
-                {
-                    $this->auth->check();
-                }
-                catch( \Exception $e )
-                {
-                    $this->helper->content()->setFormError($formKey, $e->getMessage());
-                }
-//                $this->helper->content()->setFormError($formKey, 'login error');
-//                $this->helper->content()->setFormOk($formKey, 'login Ok');
+                $this->auth->check();
             }
-
-            elseif($signupForm instanceof $className && $currentForm['isValid'])
+            catch( \Exception $e )
             {
-                $user = new Users(
-                    [
-                        'username' => $this->request->getPost('username', 'striptags'),
-                        'email'    => $this->request->getPost('email', [
-                            'striptags',
-                            'email'
-                        ]),
-                        'password' => $this->request->getPost('password'),
-                        'active'   => true
-                    ]
-                );
+                $this->flash->success($e->getMessage());
+            }
+        }
 
-                if ($user->save())
+        if($signupForm->isValid())
+        {
+            $user = new Users(
+                [
+                    'username' => $this->request->getPost('username', 'striptags'),
+                    'email'    => $this->request->getPost('email', [
+                        'striptags',
+                        'email'
+                    ]),
+                    'password' => $this->request->getPost('password'),
+                    'active'   => true
+                ]
+            );
+
+            if ($user->save())
+            {
+                $this->flash->success('Success save');
+            }
+            else
+            {
+                foreach ($user->getMessages() as $message)
                 {
-                    $this->flash->success('Success save');
-                    $content->setFormOk($formKey, 'Success save');
-
-//                    return $this->response->redirect(
-//                        [
-//                            'for'        => 'default',
-//                            'module'     => 'session',
-//                            'controller' => 'login',
-//                            'action'     => 'index',
-//                            'params'     => ''
-//                        ]
-//                    );
-                }
-                else
-                {
-                    foreach ($user->getMessages() as $message)
-                    {
-                        $this->flash->error($message);
-                    }
-
-                    $content->setFormError($formKey, 'sign up error');
+                    $this->flash->error($message);
                 }
             }
         }

@@ -4,7 +4,10 @@
     {% set matchbykey = (field['match_by'] is defined) and field['match_by'] === 'key' %}
 
     {% for key, value in field['options'] %}
-        {% set selected = (field['value'] is defined) and ((matchbykey and key === field['value']) or ((matchbykey is false) and value === field['value'])) %}
+        {% set selected = (field['value'] is defined) and (
+                (matchbykey and key == field['value']) or
+                ((matchbykey is false) and value == field['value'])
+            ) %}
 
         <option value="{{ key }}" {{ (selected ? ' selected' : '') }}>{{ value }}</option>
     {% endfor %}

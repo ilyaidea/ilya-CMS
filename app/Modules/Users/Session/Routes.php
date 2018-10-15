@@ -21,14 +21,14 @@ class Routes
 {
     public function __construct(DefaultRouter $router)
     {
-        $router->add(
-            '/',
-            [
-                'module' => 'session',
-                'controller' => 'index',
-                'action' => 'index'
-            ]
-        )->setName('home');
+//        $router->add(
+//            '/',
+//            [
+//                'module' => 'session',
+//                'controller' => 'index',
+//                'action' => 'index'
+//            ]
+//        )->setName('home');
 
         $router->add(
             '/logout',

@@ -4,9 +4,9 @@
         {{ helper.setContext('field_key', key) }}
 
         {% if (field['type'] is defined) and (field['type'] === 'blank') %}
-            {{ partial('form_spacer', ['form':form, 'columns': columns]) }}
+            {{ partial('form/spacer', ['form':form, 'columns': columns]) }}
         {% else %}
-            {{ partial('form_field_rows', ['form':form, 'columns': columns, 'field': field]) }}
+            {{ partial('form/field_rows', ['form':form, 'columns': columns, 'field': field]) }}
         {% endif %}
     {% endfor %}
 

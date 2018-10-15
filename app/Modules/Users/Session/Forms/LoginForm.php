@@ -28,7 +28,7 @@ class LoginForm extends Form
 {
     public function initialize()
     {
-        $this->setTitle('Login Form', [
+        $this->setTitleForm('Login Form', [
             'id' => 'login-form'
         ]);
 

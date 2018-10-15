@@ -19,8 +19,6 @@ use Phalcon\Validation\Validator\Identical;
 
 class Form extends \Phalcon\Forms\Form
 {
-    private $style = 'tall';
-
     private $titleInfo = [];
     private $token;
 
@@ -48,23 +46,7 @@ class Form extends \Phalcon\Forms\Form
         $this->add($csrf);
     }
 
-    /**
-     * @return string
-     */
-    public function getStyle()
-    {
-        return $this->style;
-    }
-
-    /**
-     * @param string $style
-     */
-    public function setStyle( $style )
-    {
-        $this->style = $style;
-    }
-
-    public function setTitle($title, $tags = [])
+    public function setTitleForm($title, $tags = [])
     {
         if($title)
         {
@@ -77,9 +59,13 @@ class Form extends \Phalcon\Forms\Form
         }
     }
 
-    public function getTitle()
+    public function getTitleForm()
     {
-        return $this->titleInfo;
+        return @$this->titleInfo['title'];
+    }
+    public function getTitleTags()
+    {
+        return @$this->titleInfo['title_tags'];
     }
 
     public function getToken()

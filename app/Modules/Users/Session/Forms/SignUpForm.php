@@ -49,7 +49,7 @@ class SignUpForm extends Form
      */
     public function initialize($entity = null, $options = null)
     {
-        $this->setTitle('Sign Up Form', [
+        $this->setTitleForm('Sign Up Form', [
             'id' => 'sign-up-form'
         ]);
 

@@ -56,7 +56,8 @@ class Bootstrap
             $response = $application->handle()->getContent();
 //            $response->send();
 
-            echo $this->process_data_alan($response);
+            echo $response;
+//            echo $this->process_data_alan($response);
         }
         catch (Exception $e)
         {

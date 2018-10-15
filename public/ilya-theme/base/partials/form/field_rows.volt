@@ -26,7 +26,7 @@
 {% endif %}
 
 {% if (columns > 1) or (field['label'] is not empty) %}
-    {{ partial('form_label', ['field':field, 'style': style, 'columns': columns, 'prefixed':prefixed, 'suffixed': suffixed, 'colspan': colspan]) }}
+    {{ partial('form/label', ['field':field, 'style': style, 'columns': columns, 'prefixed':prefixed, 'suffixed': suffixed, 'colspan': colspan]) }}
 {% endif %}
 
 {% if tworows is true %}
@@ -36,7 +36,7 @@
 
 {% if skipdata is false %}
     {% set showfield = (prefixed or suffixed) is not true %}
-    {{ partial('form_data', ['field':field, 'style': style, 'columns': columns,'showfield': showfield , 'colspan': colspan]) }}
+    {{ partial('form/data', ['field':field, 'style': style, 'columns': columns,'showfield': showfield , 'colspan': colspan]) }}
 {% endif %}
 
     </tr>

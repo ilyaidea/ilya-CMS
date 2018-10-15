@@ -1,13 +1,14 @@
 {# form(form) #}
+
 {% if form is not empty %}
 
-    {{ partial('form_title', ['part', form]) }}
+    {{ partial('form/title', ['part', form]) }}
 
     {% if form['tags'] is defined %}
         <form {{ form['tags'] }}>
     {% endif %}
 
-    {{ partial('form_body', ['form': form]) }}
+    {{ partial('form/body', ['form': form]) }}
 
     {% if form['tags'] is defined %}
         </form>

@@ -13,7 +13,7 @@
 
 {% if prefixed is true %}
     <label>
-    {{ partial('form_field', ['field': field, 'style': style]) }}
+    {{ partial('form/field', ['field': field, 'style': style]) }}
 {% endif %}
 
 {{ (field['label'] is defined) ? field['label'] : null }}
@@ -23,6 +23,6 @@
 {% endif %}
 
 {% if suffixed is true %}
-    {{ partial('form_field', ['field': field, 'style': style]) }}
+    {{ partial('form/field', ['field': field, 'style': style]) }}
 {% endif %}
 </td>

@@ -13,16 +13,16 @@
             <table class="ilya-form-{{ form['style'] }}-table">
     {% endif %}
 
-        {{ partial('form_ok', ['form':form, 'columns':columns]) }}
-        {{ partial('form_error', ['form':form, 'columns':columns]) }}
-        {{ partial('form_fields', ['form':form, 'columns':columns]) }}
-        {{ partial('form_buttons', ['form':form, 'columns':columns]) }}
+        {{ partial('form/ok', ['form':form, 'columns':columns]) }}
+        {{ partial('form/error', ['form':form, 'columns':columns]) }}
+        {{ partial('form/fields', ['form':form, 'columns':columns]) }}
+        {{ partial('form/buttons', ['form':form, 'columns':columns]) }}
 
     {% if columns is true %}
         </table>
     {% endif %}
 
-        {{ partial('form_hidden', ['form':form]) }}
+        {{ partial('form/hidden', ['form':form]) }}
 
 {% if form['boxed'] is defined %}
     </div>

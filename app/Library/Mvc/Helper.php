@@ -15,14 +15,13 @@
 namespace Lib\Mvc;
 
 use Lib\Common\ModuleName;
-use Lib\Mvc\Helper\Content;
+use Lib\Mvc\Helper\Content\ContentBuilder;
 use Lib\Mvc\Helper\HtmlTags;
 use Lib\Mvc\Helper\Locale;
 use Lib\Mvc\Helper\Meta;
 use Lib\Mvc\Helper\SidebarMenu;
 use Lib\Mvc\Helper\Title;
 use Lib\Widget\Proxy;
-use Phalcon\Forms\Form;
 use Phalcon\Mvc\User\Component;
 
 class Helper extends Component
@@ -100,9 +99,9 @@ class Helper extends Component
         return $html;
     }
 
-    public function content(Form $form = null)
+    public function content()
     {
-        return Content::getInstance($form);
+        return ContentBuilder::getInstance();
     }
 
     public function partDiv($key)

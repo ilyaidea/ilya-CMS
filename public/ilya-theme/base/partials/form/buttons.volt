@@ -11,10 +11,10 @@
         {{ helper.setContext('button_key', key) }}
 
         {% if button is empty %}
-            {{ partial('form_button_spacer', ['style': style]) }}
+            {{ partial('form/button_spacer', ['style': style]) }}
         {% else %}
-            {{ partial('form_button_data', ['button':button, 'key':key, 'style': style]) }}
-            {{ partial('form_button_note', ['button':button, 'style': style]) }}
+            {{ partial('form/button_data', ['button':button, 'key':key, 'style': style]) }}
+            {{ partial('form/button_note', ['button':button, 'style': style]) }}
         {% endif %}
     {% endfor %}
 
