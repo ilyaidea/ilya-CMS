@@ -20,6 +20,7 @@ use Lib\Mvc\View;
 use Lib\Mvc\View\Engine\Volt;
 use Lib\Plugins\Localization;
 use Phalcon\Crypt;
+use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Events\Manager;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\View\Engine\Php;
@@ -29,6 +30,11 @@ use Plugins\Acl;
 
 class Services extends \Lib\Di\FactoryDefault
 {
+    protected function initSharedManager()
+    {
+        return new Manager();
+    }
+
     /**
      * Summary Function initUrl
      *
@@ -89,13 +95,19 @@ class Services extends \Lib\Di\FactoryDefault
      */
     protected function initSharedDb()
     {
-
         $dbConf = $this->get('config')->database->toArray();
 
         $adapter = 'Phalcon\Db\Adapter\Pdo\\'. $dbConf['adapter'];
         unset($dbConf['adapter']);
 
-        return new $adapter($dbConf);
+        /** @var Mysql $connection */
+        $connection = new $adapter($dbConf);
+
+        /** @var Manager $eventManager */
+        $eventManager = $this->getShared('manager');
+
+        $connection->setEventsManager($eventManager);
+        return $connection;
     }
 
     protected function initSharedHelper()
@@ -136,11 +148,6 @@ class Services extends \Lib\Di\FactoryDefault
     protected function initAuth()
     {
         return new Auth();
-    }
-
-    protected function initSharedManager()
-    {
-        return new Manager();
     }
 
     protected function initSharedAcl()
