@@ -1,12 +1,9 @@
 <?php
 return [
     'guest' => [
-        'index' => 'index',
-        'login' => '*',
+        'index' => '*',
         'logout' => '*',
-        'signup' => '*',
     ],
     'member' => [
-        'login' => 'index'
     ]
 ];

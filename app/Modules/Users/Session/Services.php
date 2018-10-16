@@ -20,13 +20,4 @@ use Phalcon\Mvc\View;
 
 class Services extends ModuleServices
 {
-    public function initSharedView()
-    {
-        /** @var View $view */
-        $view = $this->getDI()->getShared('view');
-
-        $view->setViewsDir($this->config->module->path. '/views/');
-
-        return $view;
-    }
 }

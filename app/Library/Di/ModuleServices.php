@@ -20,6 +20,8 @@ use Lib\Module\ModuleManager;
 use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Acl\Role;
 use Phalcon\Config;
+use Phalcon\Db;
+use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Events\Manager;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\User\Component;
@@ -74,6 +76,19 @@ class ModuleServices extends Component
         $this->getDI()->setShared('dispatcher', $this->setDispatcher());
         $this->getDI()->setShared('view', $this->setView());
 
+        if(
+            isset($this->config->module->database) &&
+            isset($this->config->module->database->host) &&
+            isset($this->config->module->database->username) &&
+            isset($this->config->module->database->password) &&
+            isset($this->config->module->database->dbname) &&
+            isset($this->config->module->database->adapter)
+        )
+        {
+            $dbModuleName = 'db'. ucfirst($this->config->module->name);
+            $this->getDI()->set($dbModuleName, $this->setDbModule($dbModuleName));
+        }
+
         foreach (get_class_methods($this) as $method)
         {
             $this->condForUseSetOrSetSharedMethod($method);
@@ -121,6 +136,38 @@ class ModuleServices extends Component
         $view = $this->getDI()->getShared('view');
         $view->setViewsDir($this->path. '/views/');
         return $view;
+    }
+
+    private function setDbModule($dbModuleName)
+    {
+
+        $dbConf = $this->config->module->database->toArray();
+
+        $adapter = 'Phalcon\Db\Adapter\Pdo\\'.$dbConf[ 'adapter'];
+        unset($dbConf['adapter']);
+
+        $conn = mysqli_connect($this->config->module->database->host, $this->config->module->database->username, $this->config->module->database->password);
+
+        if(! $conn ) {
+            throw new \Exception('Could not connect: ' . mysqli_error());
+        }
+
+        $dbName = $dbConf['dbname'];
+        $sql = "CREATE DATABASE IF NOT EXISTS `$dbName`";
+
+        $retval = mysqli_query( $conn, $sql );
+
+        if(! $retval ) {
+            throw new \Exception('Could not create database: ' . mysqli_error());
+        }
+
+        mysqli_close($conn);
+
+        /** @var Mysql $connection */
+        $connection = new $adapter($dbConf);
+
+        $this->config->module->database->connection = $dbModuleName;
+        return $connection;
     }
 
     protected function condForUseSetOrSetSharedMethod($method)

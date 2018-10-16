@@ -27,6 +27,7 @@ use Phalcon\Mvc\View\Engine\Php;
 use Phalcon\Security;
 use Phalcon\Session\Adapter\Files;
 use Plugins\Acl;
+use Plugins\DbManagerPlugin;
 
 class Services extends \Lib\Di\FactoryDefault
 {
@@ -165,6 +166,7 @@ class Services extends \Lib\Di\FactoryDefault
 //        $eventManager->attach('dispatch:beforeException', new NotFoundPlugin());
 
         $eventManager->attach('dispatch:beforeDispatchLoop', function($eventManager, Dispatcher $dispatcher) use ($di){
+            new DbManagerPlugin();
             new Localization($dispatcher);
             new Acl($di->getShared('acl'), $dispatcher, $di->getShared('view'));
         });
