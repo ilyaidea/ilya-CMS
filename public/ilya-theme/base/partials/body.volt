@@ -1,11 +1,10 @@
-{#{{ partial('body/tags') }}#}
-<body>
-{#<body{{ body_tags(theme, fixed_topbar) }}>#}
+{{ partial('body/tags') }}
+<body{{ body_tags('base', '') }}>
 
-{{ partial('body_script') }}
-{#{{ partial('body_header') }}#}
-{{ partial('body_content') }}
-{#{{ partial('body_footer') }}#}
-{#{{ partial('body_hidden') }}#}
+{#{{ partial('body/header') }}#}
+{{ partial('body/content') }}
+{#{{ partial('body/footer') }}#}
+{#{{ partial('body/hidden') }}#}
+{{ partial('body/script') }}
 
 </body>

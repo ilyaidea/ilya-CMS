@@ -7,7 +7,7 @@ return [
                 new \Lib\Db\Column(
                     'id',
                     [
-                        'type'          => \Phalcon\Db\Column::TYPE_INTEGER,
+                        'type'          => \Lib\Db\Column::TYPE_INTEGER,
                         'size'          => 10,
                         'notNull'       => true,
                         'unsigned'      => true,
@@ -19,8 +19,9 @@ return [
                     'username',
                     [
                         'type'    => \Phalcon\Db\Column::TYPE_VARCHAR,
-                        'size'    => 70,
+                        'size'    => 50,
                         'notNull' => false,
+                        'rename' => 'username2'
                     ]
                 ),
                 new \Lib\Db\Column(

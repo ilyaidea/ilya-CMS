@@ -17,5 +17,11 @@ namespace Lib\Mvc;
 
 class Model extends \Phalcon\Mvc\Model
 {
-
+    public function initialize()
+    {
+        if(isset($this->getDI()->getShared('config')->module->database->connection))
+        {
+            $this->setConnectionService($this->getDI()->getShared('config')->module->database->connection);
+        }
+    }
 }

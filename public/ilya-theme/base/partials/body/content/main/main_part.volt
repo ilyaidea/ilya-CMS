@@ -8,6 +8,10 @@
     {{ partial('form', ['form': part]) }}
 {% endif %}
 
+{% if (strpos(key, 'datatable') === 0) %}
+    {{ partial('datatable/html', ['datatablekey': key,'datatable': part]) }}
+{% endif %}
+
 {% if helper.partDiv(key) %}
-</div>
+    </div>
 {% endif %}

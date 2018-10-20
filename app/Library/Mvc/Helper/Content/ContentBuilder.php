@@ -28,7 +28,7 @@ class ContentBuilder implements IContentBuilder
      */
     private static $content;
     private static $formKey = 'form';
-    private static $listKey = 'list';
+    private static $dtKey = 'datatable';
 
     /**
      * @var ContentBuilder
@@ -45,6 +45,24 @@ class ContentBuilder implements IContentBuilder
 
         return self::$instance;
     }
+
+    /**
+     * @return string
+     */
+    public function getDtKey()
+    {
+        return self::$dtKey;
+    }
+
+    /**
+     * @param string $dtKey
+     */
+    public function setDtKey()
+    {
+        self::$dtKey = Text::increment(self::$dtKey);
+    }
+
+
 
     public function addFormWide( \Lib\Forms\Form $form )
     {
@@ -64,11 +82,12 @@ class ContentBuilder implements IContentBuilder
         return $form;
     }
 
-    public function addList( \Lib\Forms\Form $form )
+    public function addDataTable( \Lib\DataTables\DataTable $dataTable )
     {
-        self::$listKey = Text::increment(self::$listKey);
+//        self::$dtKey = Text::increment(self::$dtKey);
 
-        self::$content->setParts(self::$listKey, new Form($form));
+        self::$content->setParts(self::$instance->getDtKey(), $dataTable->toArray());
+        return $dataTable;
     }
 
     public function getContent()

@@ -19,7 +19,7 @@ interface IContentBuilder
 
     public function addFormTall(\Lib\Forms\Form $form);
 
-    public function addList(\Lib\Forms\Form $form);
+    public function addDataTable(\Lib\DataTables\DataTable $dataTable);
 
     public function getContent();
 

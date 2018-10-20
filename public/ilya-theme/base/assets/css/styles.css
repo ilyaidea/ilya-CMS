@@ -1812,6 +1812,7 @@ input[type="submit"], button {
 }
 
 [class^="ilya-part-form"],
+[class^="ilya-part-datatable"],
 [class^="ilya-part-custom"] {
 	padding: 20px;
 	margin-bottom: 5px;

@@ -16,8 +16,12 @@ namespace Lib\Plugins;
 use Ilya\Models\Lang;
 use Lib\Mvc\Helper;
 use Lib\Mvc\Helper\CmsCache;
+use Modules\System\Native\DataTables\TranslatesDataTable;
+use Modules\System\Native\Models\Translate;
+use Phalcon\Loader;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\User\Plugin;
+use Phalcon\Translate\Adapter\NativeArray;
 
 /**
  * Summary Class Localization
@@ -54,9 +58,12 @@ class Localization extends Plugin
         }
 
         $this->helper->locale()->setLanguage($langParam);
-        $this->helper->locale()->setDirection($langDefault['direction']);
+        $this->helper->locale()->setDirection($languages[$langParam]['direction']);
 
-        // Set translate ...
+        $translates = CmsCache::getInstance()->get('translates')[$langParam];
+        $this->getDI()->setShared('translate', new NativeArray([
+            'content' => $translates
+        ]));
     }
 
     private function getLangDefault($languages)

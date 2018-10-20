@@ -15,12 +15,16 @@
 namespace Lib\Mvc;
 
 
+use Lib\Mvc\Helper\Content\ContentBuilder;
+
 class Controller extends \Phalcon\Mvc\Controller
 {
     public function initialize()
     {
         $this->tag->appendTitle("Ilya CMS | ");
         $this->tag->setTitleSeparator(" | ");
+
+        $this->addAssetsTheme();
     }
 
     public function setEnviroment($theme = 'frontend', $layout = null)
@@ -29,5 +33,21 @@ class Controller extends \Phalcon\Mvc\Controller
         $this->view->setLayoutsDir(THEME_PATH. $theme. '/layouts/');
         $this->view->setPartialsDir(THEME_PATH. $theme. '/partials/');
         $this->view->setLayout($layout);
+    }
+
+    public function addAssetsTheme()
+    {
+        if(file_exists(dirname($this->view->getMainView()). '/assets/css/styles.css'))
+        {
+            ContentBuilder::getInstance()->getContent()->addCss($this->url->getStaticBaseUri(). 'ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles.css');
+        }
+
+        if(
+            file_exists(dirname($this->view->getMainView()). '/assets/css/styles-rtl.css') &&
+            $this->helper->isRTL()
+        )
+        {
+            ContentBuilder::getInstance()->getContent()->addCss($this->url->getStaticBaseUri(). 'ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles-rtl.css');
+        }
     }
 }

@@ -24,6 +24,48 @@ abstract class AbstractContent
         $this->content[$key] = $value;
     }
 
+    public function addParts($key, $value)
+    {
+        $this->content[$key][] = $value;
+    }
+
+    public function addCss( $css )
+    {
+
+        $save = true;
+        if(!empty($this->content['css']))
+        {
+            foreach($this->content['css'] as $part)
+            {
+                if($css == $part)
+                {
+                    $save = false;
+                }
+            }
+        }
+
+        if($save)
+            $this->addParts('css', $css);
+    }
+
+    public function addJs( $js )
+    {
+        $save = true;
+        if(!empty($this->content['js']))
+        {
+            foreach($this->content['js'] as $part)
+            {
+                if($js == $part)
+                {
+                    $save = false;
+                }
+            }
+        }
+
+        if($save)
+            $this->addParts('js', $js);
+    }
+
     public function getParts()
     {
         return $this->content;

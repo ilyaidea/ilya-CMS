@@ -66,6 +66,7 @@ class Services extends \Lib\Di\FactoryDefault
         $view->setLayout('main');
         $view->setPartialsDir(THEME_PATH. 'base/partials/');
 
+
         // Volt
         $volt = new Volt($view, $this);
         $volt->setOptions([
@@ -168,7 +169,7 @@ class Services extends \Lib\Di\FactoryDefault
         $eventManager->attach('dispatch:beforeDispatchLoop', function($eventManager, Dispatcher $dispatcher) use ($di){
             new DbManagerPlugin();
             new Localization($dispatcher);
-            new Acl($di->getShared('acl'), $dispatcher, $di->getShared('view'));
+//            new Acl($di->getShared('acl'), $dispatcher, $di->getShared('view'));
         });
 
         $dispatcher->setEventsManager($eventManager);

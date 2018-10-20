@@ -27,6 +27,7 @@ use Phalcon\Mvc\User\Component;
 class Helper extends Component
 {
     private $context = [];
+    private $translate = null;
 
     public function isRTL()
     {
@@ -49,6 +50,14 @@ class Helper extends Component
     public function locale()
     {
         return Locale::getInstance();
+    }
+
+    public function t($string, $placeholders = null)
+    {
+        if (!$this->translate) {
+            $this->translate = $this->getDi()->getShared('translate');
+        }
+        return $this->translate->query($string, $placeholders);
     }
 
     public function sidebarMenu()
@@ -107,7 +116,8 @@ class Helper extends Component
     public function partDiv($key)
     {
         $partdiv = (
-            strpos($key, 'form') === 0
+            strpos($key, 'form') === 0 ||
+            strpos($key, 'datatable') === 0
         );
 
         return $partdiv;

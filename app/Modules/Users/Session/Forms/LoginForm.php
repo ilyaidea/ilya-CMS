@@ -17,11 +17,9 @@ namespace Modules\Users\Session\Forms;
 
 use Lib\Forms\Form;
 use Phalcon\Forms\Element\Check;
-use Phalcon\Forms\Element\Hidden;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Forms\Element\Submit;
 use Phalcon\Forms\Element\Text;
-use Phalcon\Validation\Validator\Identical;
 use Phalcon\Validation\Validator\PresenceOf;
 
 class LoginForm extends Form
@@ -39,7 +37,6 @@ class LoginForm extends Form
         $this->addPassword();
         $this->addRememberMe();
         $this->addSubmit();
-        $this->addCsrf();
     }
 
     private function addEmailOrUsername()
@@ -101,20 +98,4 @@ class LoginForm extends Form
         $this->add($submit);
     }
 
-    private function addCsrf()
-    {
-        $csrf = new Hidden('csrf', [
-            'value' => $this->getToken()
-        ]);
-        $csrf->addValidator(
-            new Identical(
-                [
-                    'value' => $this->security->getSessionToken(),
-                    'message' => ':field validation failed'
-                ]
-            )
-        );
-        $csrf->clear();
-        $this->add($csrf);
-    }
 }

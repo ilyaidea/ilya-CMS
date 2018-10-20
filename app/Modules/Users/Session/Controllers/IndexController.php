@@ -82,6 +82,9 @@ class IndexController extends \Lib\Mvc\Controller
                 }
             }
         }
+
+//        echo "<pre>";
+//        die(print_r($content->getContent()->getParts()));
     }
 
 //    public function testAction()

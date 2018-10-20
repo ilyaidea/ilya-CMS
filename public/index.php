@@ -35,6 +35,20 @@ if( isset( $_SERVER[ 'HTTP_HOST' ] ) )
 }
 define( 'APP_ENV', $applicationEnv );
 
+function dump($value)
+{
+    if(!is_array($value))
+    {
+        print $value;
+    }
+    else{
+        echo "<pre>";
+        print_r($value);
+    }
+
+    die;
+}
+
 require_once APP_PATH.'Bootstrap.php';
 
 $bootstrap = new \Ilya\Bootstrap();

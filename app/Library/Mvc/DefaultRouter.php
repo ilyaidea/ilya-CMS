@@ -14,6 +14,7 @@
 namespace Lib\Mvc;
 
 use Lib\Mvc\Helper\CmsCache;
+use Phalcon\Mvc\Router;
 
 class DefaultRouter extends \Phalcon\Mvc\Router
 {
@@ -27,46 +28,61 @@ class DefaultRouter extends \Phalcon\Mvc\Router
 
     private function setDefaultRoutes()
     {
-//        $this->setDefaultModule('session');
+//        dump(CmsCache::getInstance()->get('languages'));
+//        $languages = CmsCache::getInstance()->get('languages');
+
         $this->setDefaultController('index');
         $this->setDefaultAction('index');
 
-        $this->add('/:module/:controller/:action/:params(|/)', [
+        $this->addd(
+            '/:module/:controller/:action/:params(|/)',
+            [
             'module'     => 1,
             'controller' => 2,
             'action'     => 3,
             'params'     => 4
-        ])->setName('default');
+            ],
+            'default'
+        );
 
-        $this->add('/:module/:controller(|/)', [
+        $this->addd(
+            '/:module/:controller(|/)',
+            [
             'module'     => 1,
             'controller' => 2,
             'action'     => 'index'
-        ])->setName('default_action');
+            ],
+            'default_action'
+        );
 
-        $this->add('/:module(|/)', [
+        $this->addd(
+            '/:module(|/)',
+            [
             'module'     => 1,
             'controller' => 'index',
             'action'     => 'index'
-        ])->setName('default_controller');
+            ],
+            'default_controller'
+        );
     }
 
-    public function addForLang($pattern, $paths = null, $name)
-    {
-        $languages = CmsCache::getInstance()->get('languages');
 
-        foreach ($languages as $language)
+        public function addd($pattern, $paths = null, $name)
         {
-            if (isset($language['is_primary']) && $language['is_primary'])
+            $languages = CmsCache::getInstance()->get('languages');
+
+            foreach ($languages as $language)
             {
-                $this->add($pattern, $paths)->setName(self::LANG_PREFIX. $name. '_'. $language['value']);
-            }
-            else
-            {
-                $newPattern = '/'. $language['value']. $pattern;
-                $paths['lang'] = $language['value'];
-                $this->add($newPattern, $paths)->setName(self::LANG_PREFIX. $name. '_'. $language['value']);
+                $paths['lang'] = $language['iso'];
+                if (isset($language['is_primary']) && $language['is_primary'])
+                {
+                    $this->add($pattern, $paths)->setName($name. '__'. $language['iso']);
+                }
+                else
+                {
+                    $newPattern = '/'. $language['iso']. $pattern;
+                    $this->add($newPattern, $paths)->setName($name. '__'. $language['iso']);
+                }
             }
         }
-    }
 }
