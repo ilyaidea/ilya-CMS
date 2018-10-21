@@ -20,6 +20,17 @@ class TranslateController extends Controller
         $content->addDataTable( new TranslatesDataTable() );
     }
 
+    /**
+     * Summary Function addAction
+     *
+     * Description Function addAction
+     *
+     * @author Ali Mansoori
+     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
+     * @version 1.0.0
+     * @example Desc <code></code>
+     */
     public function addAction()
     {
         $content = $this->helper->content();
@@ -28,28 +39,45 @@ class TranslateController extends Controller
 
         if( $langForm->isValid() )
         {
-            $translateModel              = new Translate();
-            $translateModel->phrase      = @$this->request->getPost( 'phrase' );
-            $translateModel->translation = @$this->request->getPost( 'translation' );
-            $translateModel->language = $this->helper->locale()->getLanguage();
-
-            if( !$translateModel->create() )
+            foreach(CmsCache::getInstance()->get('languages') as $language)
             {
-                foreach( $translateModel->getMessages() as $message )
-                    $langForm->setError( $message );
-            }
-            else
-            {
-                CmsCache::getInstance()->save('translates', Translate::buildCmsTranslatesCache());
-                $langForm->setOk( "Savedddd success" );
-
-                // Redirect to Show page
-                return $this->response->redirect([
-                    'for' => 'default_action__'. $this->helper->locale()->getLanguage(),
-                    'module' => $this->config->module->name,
-                    'controller' => $this->dispatcher->getControllerName()
+                $translateIsAlreadyExisted = Translate::findFirst([
+                    'conditions' => 'phrase = :phrase: AND language = :lang:',
+                    'bind' => [
+                        'phrase' => $this->request->getPost( 'phrase' ),
+                        'lang' => $language['iso']
+                    ]
                 ]);
+
+                if($translateIsAlreadyExisted)
+                    continue;
+
+                $translateModel              = new Translate();
+                $translateModel->phrase      = @$this->request->getPost( 'phrase' );
+
+                $translateModel->translation = null;
+                if($language['iso'] == $this->helper->locale()->getLanguage())
+                    $translateModel->translation = @$this->request->getPost( 'translation' );
+
+                $translateModel->language    = $language['iso'];
+
+                if( !$translateModel->create() )
+                {
+                    foreach( $translateModel->getMessages() as $message )
+                        $langForm->setError( $language['iso']. ' => '. $message );
+                }
+                else
+                {
+                    $langForm->setOk( "Saved for => ".$language['iso'] );
+                }
             }
+
+            // Redirect to Show page
+            return $this->response->redirect([
+                'for' => 'default_action__'. $this->helper->locale()->getLanguage(),
+                'module' => $this->config->module->name,
+                'controller' => $this->dispatcher->getControllerName()
+            ]);
         }
     }
 
@@ -76,50 +104,72 @@ class TranslateController extends Controller
             die( 'this lang not exist' );
         }
 
+        $oldPhrase = $translate->phrase;
+
         $form = new TranslateForm( $translate, [ 'edit' => true ] );
 
         $langForm = $content->addFormWide( $form );
 
         if( $langForm->isValid() )
         {
-            $translate->phrase       = $this->request->getPost('phrase');
-            $translate->translation  = $this->request->getPost('translation');
-
-            if($translate->update())
+            if($oldPhrase !== $this->request->getPost('phrase'))
             {
-                $this->flash->success('Success Edit');
-                CmsCache::getInstance()->save('translates', Translate::buildCmsTranslatesCache());
+                $translates = Translate::findByPhrase($oldPhrase);
 
-                // Redirect to Show page
-                return $this->response->redirect([
-                    'for' => 'default_action__'. $this->helper->locale()->getLanguage(),
-                    'module' => $this->config->module->name,
-                    'controller' => $this->dispatcher->getControllerName()
-                ]);
+                foreach($translates as $translate)
+                {
+                    $translate->phrase = $this->request->getPost('phrase');
+                    $translate->update();
+                }
             }
             else
             {
-                foreach($translate->getMessages() as $message)
+                $translate->phrase       = $this->request->getPost('phrase');
+                $translate->translation  = $this->request->getPost('translation');
+
+                if($translate->update())
                 {
-                    $this->flash->error('Error Edit => '. $message);
+                    $this->flash->success('Success Edit');
+
+                    // Redirect to Show page
+                    return $this->response->redirect([
+                        'for' => 'default_action__'. $this->helper->locale()->getLanguage(),
+                        'module' => $this->config->module->name,
+                        'controller' => $this->dispatcher->getControllerName()
+                    ]);
+                }
+                else
+                {
+                    foreach($translate->getMessages() as $message)
+                    {
+                        $this->flash->error('Error Edit => '. $message);
+                    }
                 }
             }
         }
     }
 
-    public function deleteAction( $ids )
+    public function deleteAction( $id )
     {
-        if( isset($ids) && is_numeric( $ids ) )
+        if( isset($id) && is_numeric( $id ) )
         {
             /** @var Translate $translate */
-            $translate = Translate::findFirst( $ids );
+            $translate = Translate::findFirst( [
+                'conditions' => 'id = :id:',
+                'columns' => 'phrase',
+                'bind' => [
+                    'id' => $id
+                ]
+            ] );
+
 
             if( $translate )
             {
-                if($translate->delete())
+                $translates = Translate::findByPhrase($translate->phrase);
+
+                if($translates->delete())
                 {
                     $this->flash->success('Success Delete');
-                    CmsCache::getInstance()->save('translates', Translate::buildCmsTranslatesCache());
                 }
                 else
                     $this->flash->error('Primary lang can not delete');
@@ -134,7 +184,11 @@ class TranslateController extends Controller
             $this->flash->error('Error Delete 2 ');
         }
 
-        // Redirect to previous page
-        return $this->response->redirect($_SERVER['HTTP_REFERER']);
+        // Redirect to Show page
+        return $this->response->redirect([
+            'for' => 'default_action__'. $this->helper->locale()->getLanguage(),
+            'module' => $this->config->module->name,
+            'controller' => $this->dispatcher->getControllerName()
+        ]);
     }
 }

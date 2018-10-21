@@ -13,15 +13,11 @@
  */
 namespace Lib\Plugins;
 
-use Ilya\Models\Lang;
 use Lib\Mvc\Helper;
 use Lib\Mvc\Helper\CmsCache;
-use Modules\System\Native\DataTables\TranslatesDataTable;
-use Modules\System\Native\Models\Translate;
-use Phalcon\Loader;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\User\Plugin;
-use Phalcon\Translate\Adapter\NativeArray;
+use Lib\Translate\Adapter\NativeArray;
 
 /**
  * Summary Class Localization

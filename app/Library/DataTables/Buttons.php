@@ -73,7 +73,7 @@ class Buttons extends Component
         $this->buttons[$this->key]['text'] = $title;
         $this->buttons[$this->key]['action'] = "function (e, dt, node, config){".
             "var id = dt.row( { selected: true } ).data().id;".
-            "window.location.href = '".$url."/'+id;".
+            "window.location.href = '".$url."'+id;".
             "return false;".
             " },";
         $this->buttons[$this->key]['enabled'] = false;
@@ -99,7 +99,7 @@ class Buttons extends Component
         $this->buttons[$this->key]['text'] = $title;
         $this->buttons[$this->key]['action'] = "function (e, dt, node, config){".
             "var id = dt.row( { selected: true } ).data().id;".
-            "window.location.href = '".$url."/'+id;".
+            "window.location.href = '".$url."'+id;".
             "return false;".
             " },";
         $this->buttons[$this->key]['enabled'] = false;

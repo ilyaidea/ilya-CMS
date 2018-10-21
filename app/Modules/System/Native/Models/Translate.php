@@ -34,6 +34,16 @@ class Translate extends Model
         parent::initialize();
     }
 
+    public function afterSave()
+    {
+        CmsCache::getInstance()->save('translates', self::buildCmsTranslatesCache());
+    }
+
+    public function afterDelete()
+    {
+        CmsCache::getInstance()->save('translates', self::buildCmsTranslatesCache());
+    }
+
     public static function translates()
     {
         return CmsCache::getInstance()->get('translates');
