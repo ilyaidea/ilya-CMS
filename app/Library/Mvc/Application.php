@@ -17,6 +17,7 @@ namespace Lib\Mvc;
 use Phalcon\Events\Event;
 use Phalcon\Events\Manager;
 use Phalcon\Mvc\Dispatcher;
+use Phalcon\Text;
 
 class Application extends \Phalcon\Mvc\Application
 {
@@ -46,7 +47,7 @@ class Application extends \Phalcon\Mvc\Application
         {
             foreach (\Lib\Common\Directory::getSubDirs($modulePath. '/*') as $module)
             {
-                $modules[strtolower(basename($module))] = [
+                $modules[Text::uncamelize(basename($module), '-')] = [
                     'className' => 'Modules\\'. ucfirst(basename($modulePath)). "\\". ucfirst(basename($module)). '\Module',
                     'path'      => $module. '/Module.php'
                 ];

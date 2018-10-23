@@ -19,25 +19,21 @@ class Proxy extends \Phalcon\Mvc\User\Component
 {
     private $object;
     private $namespace;
-    private $moduleName;
-    private $catModule;
 
-    public function __construct($catModule, $moduleName, $params = [])
+    public function __construct($namespace, $params = [])
     {
-        $this->moduleName = $moduleName;
-        $this->catModule = ucfirst($catModule);
-        ucfirst($moduleName);
-        $this->namespace = 'Modules\\'.$catModule.'\\'.$moduleName . '\\Widget';
+        $this->namespace = $namespace;
 
         $loader = new Loader();
-        $loader->registerNamespaces([
-            $this->namespace => APP_PATH. 'modules/'.strtolower($catModule).'/' . strtolower($moduleName). '/widget'
+        $loader->registerClasses([
+            $this->namespace => APP_PATH. str_replace('\\', '/', $namespace). '.php'
         ])->register();
 
-        $class = $this->namespace . '\\' . $moduleName . 'Widget';
-        $this->object = new $class();
-        $this->object->setModule($moduleName);
-        $this->object->setCategory($this->catModule);
+        $namespace = '\\'. $this->namespace;
+
+        $modulePath = dirname(dirname(APP_PATH. str_replace('\\', '/', $namespace). '.php'));
+        $this->object = new $namespace();
+        $this->object->setModule($modulePath. '/');
     }
 
     public function __call($method, array $params)
@@ -52,5 +48,6 @@ class Proxy extends \Phalcon\Mvc\User\Component
         $results = ob_get_contents();
         ob_end_clean();
         return $results;
+
     }
 }

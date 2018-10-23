@@ -13,10 +13,15 @@
  */
 namespace Lib\Translate\Adapter;
 
+
+use Phalcon\Text;
+
 class NativeArray extends \Phalcon\Translate\Adapter\NativeArray
 {
     public function query( $index, $placeholders = null )
     {
+        $index = Text::lower(Text::underscore($index));
+
         $translation = parent::query( $index, $placeholders );
 
         if(!$translation)

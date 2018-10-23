@@ -42,7 +42,7 @@ function dump($value)
         print $value;
     }
     else{
-        echo "<pre>";
+        echo "<pre style='direction: ltr'>";
         print_r($value);
     }
 

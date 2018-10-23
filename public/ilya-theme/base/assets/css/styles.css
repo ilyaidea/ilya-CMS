@@ -22,7 +22,7 @@
 	*zoom: 1;
 }
 
-.ilya-main:after, .ilya-main-wrapper:after, .ilya-body-wrapper:after, .ilya-sidepanel:after,
+.ilya-main:after, .ilya-main-wrapper:after, .ilya-body-wrapper:after, .ilya-sidepanel-right:after, .ilya-sidepanel-left:after,
 .clearfix:after, .ilya-q-item-clear:after,
 .ilya-nav-main-list:after, .ilya-nav-sub:after,
 .ilya-page-links:after, .ilya-page-links-list:after,
@@ -42,11 +42,11 @@
 /*------[ icon font ]------*/
 @font-face {
 	font-family: "fontello";
-	src: url("fonts/fontello.eot?70015067") format("embedded-opentype"),
-	url("fonts/fontello.eot?70015067#iefix") format("embedded-opentype"),
-	url("fonts/fontello.woff?70015067") format("woff"),
-	url("fonts/fontello.ttf?70015067") format("truetype"),
-	url("fonts/fontello.svg?70015067#fontello") format("svg");
+	src: url("../fonts/fontello.eot?70015067") format("embedded-opentype"),
+	url("../fonts/fontello.eot?70015067#iefix") format("embedded-opentype"),
+	url("../fonts/fontello.woff?70015067") format("woff"),
+	url("../fonts/fontello.ttf?70015067") format("truetype"),
+	url("../fonts/fontello.svg?70015067#fontello") format("svg");
 	font-weight: normal;
 	font-style: normal;
 }
@@ -247,7 +247,7 @@ blockquote p {
 	height: 36px;
 	margin: 0 !important;
 	text-indent: -9999px;
-	background: #bdc3c7 url('images/search-icon-white.png') center no-repeat;
+	background: #bdc3c7 url('../images/search-icon-white.png') center no-repeat;
 	border: none;
 	outline: none;
 }
@@ -319,7 +319,7 @@ blockquote p {
 	width: 24px;
 	height: 24px;
 	display: block;
-	background: transparent url('images/icons/close-black.png') no-repeat center;
+	background: transparent url('../images/icons/close-black.png') no-repeat center;
 	text-indent: -9999px;
 	border: none;
 	outline: none;
@@ -327,7 +327,7 @@ blockquote p {
 	transition: background-image 0.5s;
 }
 .ilya-notice-close-button:hover, .ilya-notice-close-button:focus {
-	background: transparent url('images/icons/close-red.png'); /* override generic input styles */
+	background: transparent url('../images/icons/close-red.png'); /* override generic input styles */
 	outline: none;
 	border: none;
 }
@@ -885,7 +885,7 @@ blockquote p {
 
 
 .ilya-waiting {
-	background: url('images/spinner-icon-14x14.gif?1410117644') no-repeat center;
+	background: url('../images/spinner-icon-14x14.gif?1410117644') no-repeat center;
 	display: inline-block;
 	font-size: 0;
 	height: 14px;
@@ -908,7 +908,7 @@ blockquote p {
 }
 
 .ilya-favorite-button, .ilya-unfavorite-button {
-	background-image: url('images/star.png');
+	background-image: url('../images/star.png');
 	background-repeat: no-repeat;
 	width: 38px;
 	height: 38px;
@@ -1061,7 +1061,7 @@ blockquote p {
 
 .ilya-vote-up-button, .ilya-vote-down-button, .ilya-voted-up-button, .ilya-voted-down-button, .ilya-vote-up-disabled, .ilya-vote-down-disabled {
 	text-indent: -9999px;
-	background: url('images/vote-buttons-2.png') no-repeat;
+	background: url('../images/vote-buttons-2.png') no-repeat;
 	width: 16px;
 	height: 10px;
 	border: none;
@@ -1252,7 +1252,7 @@ blockquote p {
 	width: 17px;
 	height: 100%;
 	display: block;
-	content: url('images/favorite-light-icon-15x15.png');
+	content: url('../images/favorite-light-icon-15x15.png');
 }
 .ilya-q-item-meta .ilya-user-link.ilya-user-favorited {
 	position: relative;
@@ -1265,7 +1265,7 @@ blockquote p {
 	width: 17px;
 	height: 100%;
 	display: block;
-	content: url('images/favorite-light-icon-15x15.png');
+	content: url('../images/favorite-light-icon-15x15.png');
 }
 
 .ilya-q-item-when-data {
@@ -1320,7 +1320,7 @@ blockquote p {
 	width: 17px;
 	height: 100%;
 	display: block;
-	content: url('images/star14.png');
+	content: url('../images/star14.png');
 	background-color: #b94a00;
 }
 
@@ -1538,7 +1538,7 @@ blockquote p {
 }
 
 .ilya-top-users-label .ilya-user-link.ilya-user-favorited {
-	background-image: url('images/icons/fev-star.png');
+	background-image: url('../images/icons/fev-star.png');
 	background-repeat: no-repeat;
 	background-position: 2px center;
 	padding-left: 22px;
@@ -2045,7 +2045,7 @@ input[type="submit"], button {
 }
 
 #level .ilya-form-wide-static a:first-child {
-	background: #27ae60 url('images/icons/mail-white.png') no-repeat 5px center;
+	background: #27ae60 url('../images/icons/mail-white.png') no-repeat 5px center;
 	padding: 2px 5px 2px 25px;
 	border: 1px solid #1e8449;
 	display: inline-block;
@@ -2053,7 +2053,7 @@ input[type="submit"], button {
 }
 #level .ilya-form-wide-static a:hover:first-child, #level .ilya-form-wide-static a:focus:first-child {
 	background-color: #2ecc71;
-	background-image: url('images/icons/mail-white.png');
+	background-image: url('../images/icons/mail-white.png');
 	border: 1px solid #25a25a;
 	color: #fff;
 	text-decoration: none;
@@ -2129,7 +2129,7 @@ input[type="submit"], button {
 	display: inline-block;
 	width: 16px;
 	height: 16px;
-	background: #ecf0f1 url('images/favorite-icon-15x15.png');
+	background: #ecf0f1 url('../images/favorite-icon-15x15.png');
 }
 
 .ilya-suggest-next {
@@ -2175,56 +2175,56 @@ input[type="submit"], button {
 }
 
 .ilya-form-light-button-edit, .ilya-form-light-button-retagcat {
-	background-image: url('images/icons/edit-white.png');
+	background-image: url('../images/icons/edit-white.png');
 }
 .ilya-form-light-button-flag {
-	background-image: url('images/icons/flag-white.png');
+	background-image: url('../images/icons/flag-white.png');
 }
 .ilya-form-light-button-unflag {
 	background-color: #812b2b;
-	background-image: url('images/icons/flag-white.png');
+	background-image: url('../images/icons/flag-white.png');
 }
 .ilya-form-light-button-clearflags {
-	background-image: url('images/icons/un-flag-white.png');
+	background-image: url('../images/icons/un-flag-white.png');
 }
 .ilya-form-light-button-hide {
-	background-image: url('images/icons/hide-white.png');
+	background-image: url('../images/icons/hide-white.png');
 }
 .ilya-form-light-button-follow {
-	background-image: url('images/icons/link-white.png');
+	background-image: url('../images/icons/link-white.png');
 }
 .ilya-form-light-button-reshow {
-	background-image: url('images/icons/show-white.png');
+	background-image: url('../images/icons/show-white.png');
 }
 .ilya-form-light-button-claim {
-	background-image: url('images/icons/claim-white.png');
+	background-image: url('../images/icons/claim-white.png');
 }
 .ilya-form-light-button-delete {
-	background-image: url('images/icons/delete-white.png');
+	background-image: url('../images/icons/delete-white.png');
 }
 .ilya-form-light-button-approve {
-	background-image: url('images/icons/approve-white.png');
+	background-image: url('../images/icons/approve-white.png');
 	padding-left: 18px;
 }
 .ilya-form-light-button-reject {
-	background-image: url('images/icons/rejected-white.png');
+	background-image: url('../images/icons/rejected-white.png');
 }
 .ilya-form-light-button-close {
-	background-image: url('images/icons/close-white.png');
+	background-image: url('../images/icons/close-white.png');
 }
 .ilya-form-light-button-reopen {
-	background-image: url('images/icons/open-white.png');
+	background-image: url('../images/icons/open-white.png');
 }
 .ilya-form-light-button-block {
-	background-image: url('images/icons/rejected-white.png');
+	background-image: url('../images/icons/rejected-white.png');
 }
 .ilya-form-light-button-reply {
-	background-image: url('images/icons/reply-white.png');
+	background-image: url('../images/icons/reply-white.png');
 }
 
 .ilya-form-light-button-answer {
 	background-image: #27ae60;
-	background-image: url('images/icons/answer-white.png');
+	background-image: url('../images/icons/answer-white.png');
 	float: left;
 	margin: 0 5px 0 0;
 }
@@ -2233,7 +2233,7 @@ input[type="submit"], button {
 }
 
 .ilya-form-light-button-comment {
-	background-image: url('images/icons/comment-white.png');
+	background-image: url('../images/icons/comment-white.png');
 	float: left;
 	margin: 0;
 }
@@ -2362,7 +2362,7 @@ input[type="submit"], button {
 	width: 44px;
 	text-align: center;
 	display: block;
-	content: url('images/icons/closed-note.png');
+	content: url('../images/icons/closed-note.png');
 }
 .ilya-q-view-closed:hover {
 	padding: 10px 10px 10px 54px;
@@ -2381,7 +2381,7 @@ input[type="submit"], button {
 }
 .ilya-q-view-closed:hover:before {
 	background-color: #c0392b;
-	content: url('images/icons/closed-note-white.png');
+	content: url('../images/icons/closed-note-white.png');
 }
 
 .ilya-q-view-closed-content {
@@ -2547,7 +2547,7 @@ input[type="submit"], button {
 	display: block;
 	margin: 0;
 	position: relative;
-	background: url('images/answer-select.png') no-repeat center;
+	background: url('../images/answer-select.png') no-repeat center;
 	-webkit-transition: all 0.5s;
 	transition: all 0.5s;
 }
@@ -2735,50 +2735,50 @@ input[type="submit"], button {
 	color: #34495e;
 }
 .ilya-c-list-item .ilya-form-light-button-comment {
-	background-image: url('images/icons/comment.png');
+	background-image: url('../images/icons/comment.png');
 	float: left;
 	margin: 0;
 }
 .ilya-c-list-item .ilya-form-light-button-edit, .ilya-c-list-item .ilya-form-light-button-retagcat {
-	background-image: url('images/icons/edit.png');
+	background-image: url('../images/icons/edit.png');
 }
 .ilya-c-list-item .ilya-form-light-button-flag {
-	background-image: url('images/icons/flag.png');
+	background-image: url('../images/icons/flag.png');
 }
 .ilya-c-list-item .ilya-form-light-button-unflag {
 	background-color: #e4afaf;
-	background-image: url('images/icons/flag.png');
+	background-image: url('../images/icons/flag.png');
 }
 .ilya-c-list-item .ilya-form-light-button-clearflags {
-	background-image: url('images/icons/un-flag.png');
+	background-image: url('../images/icons/un-flag.png');
 }
 .ilya-c-list-item .ilya-form-light-button-hide {
-	background-image: url('images/icons/hide.png');
+	background-image: url('../images/icons/hide.png');
 }
 .ilya-c-list-item .ilya-form-light-button-follow {
-	background-image: url('images/icons/link.png');
+	background-image: url('../images/icons/link.png');
 }
 .ilya-c-list-item .ilya-form-light-button-reshow {
-	background-image: url('images/icons/show.png');
+	background-image: url('../images/icons/show.png');
 }
 .ilya-c-list-item .ilya-form-light-button-claim {
-	background-image: url('images/icons/claim.png');
+	background-image: url('../images/icons/claim.png');
 }
 .ilya-c-list-item .ilya-form-light-button-delete {
-	background-image: url('images/icons/delete.png');
+	background-image: url('../images/icons/delete.png');
 }
 .ilya-c-list-item .ilya-form-light-button-approve {
-	background-image: url('images/icons/approve.png');
+	background-image: url('../images/icons/approve.png');
 	padding-left: 18px;
 }
 .ilya-c-list-item .ilya-form-light-button-reject {
-	background-image: url('images/icons/rejected.png');
+	background-image: url('../images/icons/rejected.png');
 }
 .ilya-c-list-item .ilya-form-light-button-close {
-	background-image: url('images/icons/close.png');
+	background-image: url('../images/icons/close.png');
 }
 .ilya-c-list-item .ilya-form-light-button-reopen {
-	background-image: url('images/icons/open.png');
+	background-image: url('../images/icons/open.png');
 }
 
 .ilya-c-item-avatar-meta {
@@ -2852,12 +2852,12 @@ input[type="submit"], button {
 	display: none;
 }
 
-#qam-sidepanel-toggle {
+#qam-sidepanel-right-toggle {
 	display: none;
 }
 
 @media (min-width: 980px) {
-	.ilya-sidepanel {
+	.ilya-sidepanel-right {
 		width: 25%;
 		padding: 0;
 		float: right;
@@ -2866,7 +2866,7 @@ input[type="submit"], button {
 }
 
 @media (max-width: 979px) {
-	#qam-sidepanel-toggle {
+	#qam-sidepanel-right-toggle {
 		display: block;
 		position: fixed;
 		bottom: 10px;
@@ -2880,13 +2880,13 @@ input[type="submit"], button {
 		opacity: 0.5;
 		z-index: 999;
 	}
-	#qam-sidepanel-toggle.active {
+	#qam-sidepanel-right-toggle.active {
 		opacity: 1;
 		color: #34495e;
 		right: 280px;
 		box-shadow: -5px 0 15px 0 rgba(0, 0, 0, 0.5);
 	}
-	#qam-sidepanel-toggle [class^="icon-"]:before, #qam-sidepanel-toggle [class*=" icon-"]:before {
+	#qam-sidepanel-right-toggle [class^="icon-"]:before, #qam-sidepanel-right-toggle [class*=" icon-"]:before {
 		line-height: 40px;
 		width: 30px;
 		height: 40px;
@@ -2894,7 +2894,7 @@ input[type="submit"], button {
 		color: #fff;
 	}
 
-	.ilya-sidepanel {
+	.ilya-sidepanel-right {
 		width: 280px;
 		height: 100%;
 		position: fixed;
@@ -2906,7 +2906,7 @@ input[type="submit"], button {
 		transition: all 0.15s ease;
 		box-shadow: 0 0 0 0 transparent;
 	}
-	.ilya-sidepanel.open {
+	.ilya-sidepanel-right.open {
 		right: 0 !important;
 		transition: all 0.15s ease;
 		box-shadow: -5px 0 15px 0 rgba(0, 0, 0, 0.5);
@@ -2919,13 +2919,25 @@ input[type="submit"], button {
 	transition: all 0.15s ease;
 }
 
-.ilya-sidepanel {
+.ilya-sidepanel-right {
 	word-wrap: break-word;
 }
-.ilya-sidepanel h1, .ilya-sidepanel h2, .ilya-sidepanel h3, .ilya-sidepanel h4, .ilya-sidepanel h5, .ilya-sidepanel h6 {
+.ilya-sidepanel-left {
+	word-wrap: break-word;
+}
+.ilya-sidepanel-right h1, .ilya-sidepanel-right h2, .ilya-sidepanel-right h3, .ilya-sidepanel-right h4, .ilya-sidepanel-right h5, .ilya-sidepanel-right h6 {
 	margin-top: 0;
 }
-.ilya-sidepanel .ilya-widget-side {
+.ilya-sidepanel-left h1, .ilya-sidepanel-left h2, .ilya-sidepanel-left h3, .ilya-sidepanel-left h4, .ilya-sidepanel-left h5, .ilya-sidepanel-left h6 {
+	margin-top: 0;
+}
+.ilya-sidepanel-right .ilya-widget-side {
+	padding: 20px;
+	margin-bottom: 5px;
+	background: #fff;
+}
+
+.ilya-sidepanel-left .ilya-widget-side {
 	padding: 20px;
 	margin-bottom: 5px;
 	background: #fff;
@@ -3098,7 +3110,7 @@ input[type="submit"], button {
 	width: 17px;
 	height: 100%;
 	display: block;
-	content: url('images/favorite-icon-15x15.png');
+	content: url('../images/favorite-icon-15x15.png');
 }
 
 .ilya-nav-cat-note {
@@ -3337,14 +3349,14 @@ input[type="submit"], button {
 	}
 
 	.qam-search-mobile {
-		background: #1abc9c url('images/icons/search-mobile.png') no-repeat center;
+		background: #1abc9c url('../images/icons/search-mobile.png') no-repeat center;
 		width: 64px;
 		display: table-cell;
 		border-left: 1px solid #1dd2af;
 		cursor: pointer;
 	}
 	.qam-search-mobile.active {
-		background-image: url('images/icons/search-mobile-collaps.png');
+		background-image: url('../images/icons/search-mobile-collaps.png');
 	}
 	.qam-search-mobile.orange {
 		background-color: #ea940c;
@@ -3581,3 +3593,87 @@ input[type="submit"], button {
 .icon-reply:before { content: '\e823'; }
 .icon-power:before { content: '\e824'; }
 .icon-link:before { content: '\e825'; }
+
+/*Add Me*/
+@media (min-width: 1044px) {
+	.ilya-body-wrapper {
+		width: 1200px;
+	}
+}
+
+@media (min-width: 980px) {
+	.ilya-main{
+		width: 50%;
+		float: left;
+		padding: 0;
+	}
+	.ilya-sidepanel-left, .ilya-sidepanel-right {
+		width: 25%;
+		float: left;
+		padding: 0;
+	}
+	.ilya-widgets-main,
+	[class^="ilya-part-form"],
+	[class^="ilya-part-datatable"],
+	[class^="ilya-part-custom"] {
+		margin-right: 5px;
+		margin-left: 5px;
+	}
+}
+
+#qam-sidepanel-left-toggle {
+	display: none;
+}
+.ilya-widgets-main, .ilya-widget-full {
+	padding: 20px;
+	margin-bottom: 5px;
+	background: #fff;
+}
+
+@media (max-width: 979px) {
+	#qam-sidepanel-left-toggle {
+		display: block;
+		position: fixed;
+		bottom: 10px;
+		left: 0;
+		text-align: center;
+		font-size: 24px;
+		background: #9b59b6;
+		cursor: pointer;
+		transition: all 0.15s ease;
+		color: #95a5a6;
+		opacity: 0.5;
+		z-index: 999;
+	}
+	#qam-sidepanel-left-toggle.active {
+		opacity: 1;
+		color: #34495e;
+		left: 280px;
+		box-shadow: -5px 0 15px 0 rgba(0, 0, 0, 0.5);
+	}
+	#qam-sidepanel-left-toggle [class^="icon-"]:before, #qam-sidepanel-left-toggle [class*=" icon-"]:before {
+		line-height: 40px;
+		width: 30px;
+		height: 40px;
+		text-align: center;
+		color: #fff;
+	}
+
+	.ilya-sidepanel-left {
+		width: 280px;
+		height: 100%;
+		position: fixed;
+		left: -280px;
+		top: 0;
+		overflow-y: auto;
+		z-index: 99999;
+		background: #fff;
+		transition: all 0.15s ease;
+		box-shadow: 0 0 0 0 transparent;
+	}
+	.ilya-sidepanel-left.open {
+		left: 0 !important;
+		transition: all 0.15s ease;
+		box-shadow: -5px 0 15px 0 rgba(0, 0, 0, 0.5);
+	}
+}

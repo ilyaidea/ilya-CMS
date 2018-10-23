@@ -15,7 +15,9 @@
 namespace Lib\Module;
 
 
+use Lib\Common\UtilMetaData;
 use Lib\Di\ModuleServices;
+use Lib\Mvc\Application;
 use Phalcon\Loader;
 use Phalcon\Mvc\User\Module;
 use Phalcon\Text;
@@ -114,5 +116,34 @@ class ModuleManager extends Module
         $controllerClass  = $namespace. '\Controllers\\'. $controller;
 
         return $controllerClass;
+    }
+
+    public static function listWidgetsInfo()
+    {
+        $widgets = [];
+
+        $metadataUtil = new UtilMetaData();
+        foreach(Application::getAllModules() as $module)
+        {
+            $namespace = substr($module['className'],0,strrpos($module['className'],'\\'));
+            if(!file_exists(dirname($module['path']). '/Widgets'))
+                continue;
+
+            foreach(glob(dirname($module['path']). '/Widgets/*.php') as $widgetPath)
+            {
+                $widgetName = str_replace('.php', '', substr($widgetPath, strrpos($widgetPath, '/') + 1));
+                $widgetNamespace = $namespace. '\Widgets\\'. $widgetName;
+                $widgets[$widgetNamespace]['namespace'] = $widgetNamespace;
+                $widgets[$widgetNamespace]['path'] = $widgetPath;
+
+                // limit plugin parsing to first 8kB
+                $contents = file_get_contents($widgetPath, false, null, 0, 8192);
+                $metadata = $metadataUtil->addonMetadata($contents, 'Widget');
+
+                $widgets[$widgetNamespace] = array_merge($widgets[$widgetNamespace], $metadata);
+            }
+        }
+
+        return $widgets;
     }
 }

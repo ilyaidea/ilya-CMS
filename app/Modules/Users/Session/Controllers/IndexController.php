@@ -33,6 +33,7 @@ class IndexController extends \Lib\Mvc\Controller
 {
     public function indexAction()
     {
+        $this->helper->setTemplate('session-template', 'Session Template');
         // Check user is logged in
         if ($this->auth->isLoggedIn())
         {
@@ -43,6 +44,11 @@ class IndexController extends \Lib\Mvc\Controller
 
         $loginForm = $content->addFormWide(new LoginForm());
         $signupForm = $content->addFormTall(new SignUpForm());
+
+        $content->getTheme()->noLeftMasterPage();
+//        $content->getTheme()->noRightMasterPage();
+//        $content->getTheme()->noLeftRightMasterPage();
+//        $content->getTheme()->viewMasterPage();
 
         if($loginForm->isValid())
         {
@@ -83,8 +89,9 @@ class IndexController extends \Lib\Mvc\Controller
             }
         }
 
-//        echo "<pre>";
-//        die(print_r($content->getContent()->getParts()));
+        $content->create();
+
+//        dump($content->getContent()->getParts());
     }
 
 //    public function testAction()

@@ -28,6 +28,7 @@ class Helper extends Component
 {
     private $context = [];
     private $translate = null;
+    private $template = [];
 
     public function isRTL()
     {
@@ -65,22 +66,26 @@ class Helper extends Component
         return SidebarMenu::getInstance();
     }
 
-    public function widget($catModule, $moduleName, $params = [])
+    public function widget($namespace, $params = [])
     {
-        return new Proxy($catModule, $moduleName, $params);
+        return new Proxy($namespace, $params);
     }
 
-    public function modulePartial($template, $data, $category, $module = null)
+    public function modulePartial($template, $data, $module = null)
     {
-        $view = clone $this->getDi()->get('view');
+        /** @var View $view */
+        $view = $this->getDI()->getShared('view');
+        $oldPartialsDir = $view->getPartialsDir();
         $partialsDir = '';
         if ($module) {
-            $moduleName = ModuleName::camelize($module);
-            $partialsDir = APP_PATH. 'modules/'.strtolower($category).'/' . $moduleName . '/views/';
+            $partialsDir = $module. 'views/widgets/';
         }
+
         $view->setPartialsDir($partialsDir);
 
-        return $view->partial($template, $data);
+        $view->partial($template, $data);
+
+        $view->setPartialsDir($oldPartialsDir);
     }
 
     public function htmlTags()
@@ -147,4 +152,25 @@ class Helper extends Component
     {
         unset($this->context[$key]);
     }
+
+    /**
+     * @return array
+     */
+    public function getTemplate()
+    {
+        return $this->content()->getContent()->getParts('template');
+    }
+
+    /**
+     * @param array $template
+     */
+    public function setTemplate( $templateName, $translate )
+    {
+        $this->content()->getContent()->setParts('template', [
+            'name' => $templateName,
+            'translate' => $translate
+        ]);
+    }
+
+
 }

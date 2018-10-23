@@ -142,6 +142,12 @@ class Services extends \Lib\Di\FactoryDefault
         return $crypt;
     }
 
+    protected function initSharedAssets()
+    {
+        $assets = new \Lib\Assets\Manager();
+        return $assets;
+    }
+
     protected function initSecurity()
     {
         return new Security();

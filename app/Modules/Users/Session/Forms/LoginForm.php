@@ -24,8 +24,10 @@ use Phalcon\Validation\Validator\PresenceOf;
 
 class LoginForm extends Form
 {
-    public function initialize()
+    public function initialize($entity = null, $options = [])
     {
+        parent::initialize($entity = null, $options = []);
+
         $this->setTitleForm('Login Form', [
             'id' => 'login-form'
         ]);

@@ -15,7 +15,9 @@
 namespace Lib\Common;
 
 
-class UtilMetaData
+use Phalcon\Mvc\User\Component;
+
+class UtilMetaData extends Component
 {
     const METADATA_FILE_JSON = 'metadata.json';
 
@@ -65,17 +67,17 @@ class UtilMetaData
         return is_array($result) ? $result : array();
     }
 
-    function AddonMetadata($contents, $type, $versiononly = false)
+    function addonMetadata($contents, $type, $versiononly = false)
     {
         $fields = array(
-            'min_q2a' => 'Minimum Question2Answer Version',
+            'min_ilya' => 'Minimum ILYA-CMS Version',
             'min_php' => 'Minimum PHP Version',
         );
         if (!$versiononly) {
             $fields = array_merge($fields, $fields = array(
-                'name' => 'Name',
+                'name' => $this->helper->t('Name'),
                 'uri' => 'URI',
-                'description' => 'Description',
+                'description' => $this->helper->t('Description'),
                 'version' => 'Version',
                 'date' => 'Date',
                 'author' => 'Author',
@@ -85,12 +87,14 @@ class UtilMetaData
             ));
         }
 
-        $metadata = array();
+        $metadata = [];
         foreach ($fields as $key => $field) {
             // prepend 'Theme'/'Plugin' and search for key data
             $fieldregex = str_replace(' ', '[ \t]*', preg_quote("$type $field", '/'));
             if (preg_match('/' . $fieldregex . ':[ \t]*([^\n\f]*)[\n\f]/i', $contents, $matches))
-                $metadata[$key] = trim($matches[1]);
+                $metadata[$key] = ($key == 'name' || $key == 'description') ? $this->helper->t(trim($matches[1])): trim($matches[1]);
+            else
+                $metadata[$key] = $field;
         }
 
         return $metadata;

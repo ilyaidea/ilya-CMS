@@ -441,7 +441,7 @@ h1 {
 	.ilya-main {
 		float: right;
 	}
-	.ilya-sidepanel {
+	.ilya-sidepanel-right {
 		float: left;
 	}
 
@@ -456,4 +456,34 @@ h1 {
 .ilya-netvote-count-data {
 	direction: ltr;
 	display: inline-block;
+}
+
+/*ADD me*/
+@media (min-width: 980px) {
+	.ilya-main{
+		float: right;
+	}
+	.ilya-sidepanel-left, .ilya-sidepanel-right {
+		float: right;
+	}
+}
+
+@media (max-width: 979px) {
+	#qam-sidepanel-left-toggle {
+		right: 0;
+		left: auto;
+	}
+	#qam-sidepanel-left-toggle.active {
+		right: 280px;
+		left: auto;
+	}
+
+	.ilya-sidepanel-left {
+		right: -280px;
+		left: auto;
+	}
+	.ilya-sidepanel-left.open {
+		right: 0 !important;
+		left: auto;
+	}
 }

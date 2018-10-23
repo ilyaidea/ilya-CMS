@@ -66,8 +66,18 @@ abstract class AbstractContent
             $this->addParts('js', $js);
     }
 
-    public function getParts()
+    public function getParts($key = null)
     {
+        if($key)
+        {
+            if(!isset($this->content[$key]))
+            {
+                return [];
+            }
+
+            return $this->content[$key];
+        }
+
         return $this->content;
     }
 }
