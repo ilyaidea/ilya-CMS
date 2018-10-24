@@ -17,7 +17,11 @@ class TranslateController extends Controller
     public function indexAction()
     {
         $content = $this->helper->content();
+
+        $content->setTemplate('translate-list', 'Translate List');
         $content->addDataTable( new TranslatesDataTable() );
+
+        $content->create();
     }
 
     /**
@@ -34,6 +38,7 @@ class TranslateController extends Controller
     public function addAction()
     {
         $content = $this->helper->content();
+        $content->setTemplate('translate-add', 'Translate Add');
 
         $langForm = $content->addFormWide( new TranslateForm() );
 
@@ -79,11 +84,14 @@ class TranslateController extends Controller
                 'controller' => $this->dispatcher->getControllerName()
             ]);
         }
+
+        $content->create();
     }
 
     public function editAction( $editId = null )
     {
         $content = $this->helper->content();
+        $content->setTemplate('translate-edit', 'Translate Edit');
 
         if( !isset( $editId ) || !is_numeric( $editId ) )
         {
@@ -147,6 +155,8 @@ class TranslateController extends Controller
                 }
             }
         }
+
+        $content->create();
     }
 
     public function deleteAction( $id )

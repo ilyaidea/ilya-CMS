@@ -14,5 +14,10 @@ class IndexController extends Controller
 {
     public function indexAction()
     {
+        $content = $this->helper->content();
+
+        $content->setTemplate('native index', 'Native index');
+
+        $content->create();
     }
 }

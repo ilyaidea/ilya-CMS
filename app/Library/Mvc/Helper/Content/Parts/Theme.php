@@ -67,7 +67,7 @@ class Theme extends Component
             }
 TAG;
 
-        self::$instance->assets->addInlineCss($css);
+        self::$instance->helper->content()->getContent()->addCss($css);
     }
 
     public function noLeftMasterPage($fill = true)
@@ -85,7 +85,7 @@ TAG;
                         width: 70%;
                     }
                     .ilya-sidepanel-left, .ilya-sidepanel-right {
-                        width: 30%;
+                        width: 30%; 
                     }
                 }
 TAG;
@@ -118,7 +118,8 @@ TAG;
                     }
 TAG;
             }
-            self::$instance->assets->addInlineCss($css);
+
+            self::$instance->helper->content()->getContent()->addCss($css);
         }
     }
 
@@ -172,7 +173,8 @@ TAG;
                     }
 TAG;
             }
-            self::$instance->assets->addInlineCss($css);
+
+            self::$instance->helper->content()->getContent()->addCss($css);
         }
     }
 
@@ -200,7 +202,7 @@ TAG;
                     }
                 }
 TAG;
-            self::$instance->assets->addInlineCss($css);
+            self::$instance->helper->content()->getContent()->addCss($css);
         }
     }
 

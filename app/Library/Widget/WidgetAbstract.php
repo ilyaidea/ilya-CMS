@@ -29,7 +29,7 @@ class WidgetAbstract extends \Phalcon\Mvc\User\Component
             str_replace('Widget', '', substr(get_class($this), strrpos(get_class($this), '\\') + 1)),
             '-'
         );
-        $this->widgetPartial( $partial, $this->init($params));
+        $this->widgetPartial( $partial, $this->inititialize($params));
     }
 
     public function widgetPartial($template, $data = [])
@@ -42,7 +42,7 @@ class WidgetAbstract extends \Phalcon\Mvc\User\Component
         $this->module = $module;
     }
 
-    protected function init()
+    protected function inititialize()
     {
         return [];
     }

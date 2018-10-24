@@ -40,11 +40,13 @@ class DataTable extends Component
             die;
         }
 
+        $content = $this->helper->content();
+        $key = $content->getContent()->getParts('key');
         $this->helper->content()->setDtKey();
 
-        $this->addCss( $this->url->getStaticBaseUri().'assets/DataTables/DataTables-1.10.18/css/jquery.dataTables.min.css' );
-        $this->addJs( 'https://code.jquery.com/jquery-3.3.1.min.js' );
-        $this->addJs( $this->url->getStaticBaseUri().'assets/DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js' );
+        $content->getContent()->addCss('assets/DataTables/DataTables-1.10.18/css/jquery.dataTables.min.css');
+        $content->getContent()->addJs('https://code.jquery.com/jquery-3.3.1.min.js');
+        $content->getContent()->addJs('assets/DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js' );
 
         $this->action = $this->security->hash( get_class( $this ) );
 
@@ -82,6 +84,8 @@ class DataTable extends Component
 
     public function toArray()
     {
+        $content = $this->helper->content()->getContent();
+        $key = $this->helper->content()->getContent()->getParts('key');
         $data = ( [
             'dom'    => $this->dom->toArray(),
             'ajax'    => $this->ajax->toArray( [ 'action' => $this->action ] ),
@@ -91,15 +95,8 @@ class DataTable extends Component
 
         if(!empty($this->buttons->toArray()))
         {
-            $this->addCss(
-                $this->url->getStaticBaseUri().
-                'assets/DataTables/Buttons-1.5.4/css/buttons.dataTables.min.css'
-            );
-
-            $this->addJs(
-                $this->url->getStaticBaseUri().
-                'assets/DataTables/Buttons-1.5.4/js/dataTables.buttons.min.js'
-            );
+            $content->addCss('assets/DataTables/Buttons-1.5.4/css/buttons.dataTables.min.css');
+            $content->addJs('assets/DataTables/Buttons-1.5.4/js/dataTables.buttons.min.js');
 
             $data['buttons'] = $this->buttons->toArray();
         }
@@ -111,15 +108,9 @@ class DataTable extends Component
 
         if(!empty($this->select->toArray()))
         {
-            $this->addCss(
-                $this->url->getStaticBaseUri().
-                'assets/DataTables/Select-1.2.6/css/select.dataTables.min.css'
-            );
+            $content->addCss('assets/DataTables/Select-1.2.6/css/select.dataTables.min.css');
 
-            $this->addJs(
-                $this->url->getStaticBaseUri().
-                'assets/DataTables/Select-1.2.6/js/dataTables.select.min.js'
-            );
+            $content->addJs('assets/DataTables/Select-1.2.6/js/dataTables.select.min.js');
 
             $data['select'] = $this->select->toArray();
         }
@@ -127,16 +118,6 @@ class DataTable extends Component
 
 
         return ($data);
-    }
-
-    public function addCss( $css )
-    {
-        ContentBuilder::getInstance()->getContent()->addCss( $css );
-    }
-
-    public function addJs( $js )
-    {
-        ContentBuilder::getInstance()->getContent()->addJs( $js );
     }
 
     protected function isAjax()

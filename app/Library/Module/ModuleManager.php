@@ -42,11 +42,11 @@ class ModuleManager extends Module
     {
         $loader = new Loader();
         $loader->registerNamespaces([
-            $this->moduleNamespace                  => $this->modulePath,
             $this->moduleNamespace. '\\Controllers' => $this->modulePath.'/Controllers/',
             $this->moduleNamespace. '\\Models'      => $this->modulePath.'/Models/',
             $this->moduleNamespace. '\\Forms'       => $this->modulePath.'/Forms/',
             $this->moduleNamespace. '\\Lib'         => $this->modulePath.'/Lib/',
+            $this->moduleNamespace                  => $this->modulePath,
         ])->register();
 
         return $loader;

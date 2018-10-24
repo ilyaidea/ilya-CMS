@@ -18,6 +18,8 @@ namespace Lib\Mvc\Helper\Content\Parts;
 abstract class AbstractContent
 {
     private $content = [];
+    private $css = [];
+    private $js = [];
 
     public function setParts($key, $value)
     {
@@ -26,48 +28,24 @@ abstract class AbstractContent
 
     public function addParts($key, $value)
     {
-        $this->content[$key][] = $value;
+        $this->content[$key][$value] = $value;
     }
 
-    public function addCss( $css )
+    public function addCss($value)
     {
-
-        $save = true;
-        if(!empty($this->content['css']))
-        {
-            foreach($this->content['css'] as $part)
-            {
-                if($css == $part)
-                {
-                    $save = false;
-                }
-            }
-        }
-
-        if($save)
-            $this->addParts('css', $css);
+        $this->css[$value] = $value;
     }
 
-    public function addJs( $js )
+    public function addJs($value)
     {
-        $save = true;
-        if(!empty($this->content['js']))
-        {
-            foreach($this->content['js'] as $part)
-            {
-                if($js == $part)
-                {
-                    $save = false;
-                }
-            }
-        }
-
-        if($save)
-            $this->addParts('js', $js);
+        $this->js[$value] = $value;
     }
 
     public function getParts($key = null)
     {
+        $this->content['css'] = array_values($this->css);
+        $this->content['js'] = array_values($this->js);
+
         if($key)
         {
             if(!isset($this->content[$key]))

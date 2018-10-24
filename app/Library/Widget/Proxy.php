@@ -24,6 +24,10 @@ class Proxy extends \Phalcon\Mvc\User\Component
     {
         $this->namespace = $namespace;
 
+        if(!file_exists(APP_PATH. str_replace('\\', '/', $namespace). '.php'))
+        {
+            return null;
+        }
         $loader = new Loader();
         $loader->registerClasses([
             $this->namespace => APP_PATH. str_replace('\\', '/', $namespace). '.php'
@@ -38,6 +42,10 @@ class Proxy extends \Phalcon\Mvc\User\Component
 
     public function __call($method, array $params)
     {
+        if(!file_exists(APP_PATH. str_replace('\\', '/', $this->namespace). '.php'))
+        {
+            return null;
+        }
         return $this->getResults($method, $params);
     }
 

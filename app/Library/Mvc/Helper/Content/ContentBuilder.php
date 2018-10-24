@@ -16,13 +16,23 @@ namespace Lib\Mvc\Helper\Content;
 
 
 use Ilya\Models\ModelWidgets;
+use Lib\Assets\Filters\Cssmin;
+use Lib\Assets\Filters\Jsmin;
+use Lib\Mvc\Helper\CmsCache;
 use Lib\Mvc\Helper\Content\Parts\Content;
 use Lib\Mvc\Helper\Content\Parts\FormTall;
 use Lib\Mvc\Helper\Content\Parts\FormWide;
 use Lib\Mvc\Helper\Content\Parts\Theme;
+use Lib\Assets\Minify\CSS;
+use Lib\Assets\Minify\JS;
+use Phalcon\Mvc\Url;
 use Phalcon\Mvc\User\Component;
 use Phalcon\Text;
 
+/**
+ * @property CSS cssmin
+ * @property JS jsmin
+ */
 class ContentBuilder extends Component implements IContentBuilder
 {
     /**
@@ -31,6 +41,7 @@ class ContentBuilder extends Component implements IContentBuilder
     private static $content;
     private static $formKey = 'form';
     private static $dtKey = 'datatable';
+    private static $template;
 
     /**
      * @var Theme
@@ -49,6 +60,7 @@ class ContentBuilder extends Component implements IContentBuilder
             self::$content = new Content();
             self::$theme = Theme::getInstance();
             self::$instance = new ContentBuilder();
+            self::$content->setParts('key', self::$instance->getHashKey());
         }
 
         return self::$instance;
@@ -99,7 +111,7 @@ class ContentBuilder extends Component implements IContentBuilder
     public function widgets()
     {
         $like = null;
-        if(self::$content->getParts('template')['name'])
+        if(isset(self::$content->getParts('template')['name']))
         {
             $like = self::$content->getParts('template')['name'];
         }
@@ -108,9 +120,9 @@ class ContentBuilder extends Component implements IContentBuilder
             'conditions' => "tags = 'all' OR tags LIKE '%".$like."%'",
         ])->toArray();
 
-        if(!self::$content->getParts('template'))
+        if(!isset(self::$content->getParts('template')['name']))
         {
-            self::$content->setParts(
+            return self::$content->setParts(
                 'widgets',
                 $widgets
             );
@@ -173,11 +185,21 @@ class ContentBuilder extends Component implements IContentBuilder
         return self::$theme;
     }
 
+    public function setTemplate($name, $label)
+    {
+        self::$content->setParts('template', [
+            'name' => $name,
+            'label' => $label
+        ]);
+    }
+
     public function create()
     {
         self::$instance->widgets();
 
         self::$content->setParts('theme', self::$theme->result());
+
+        self::$instance->createAssets();
 
         self::$instance->view->content = self::$content->getParts();
     }
@@ -185,5 +207,80 @@ class ContentBuilder extends Component implements IContentBuilder
     public function getContent()
     {
         return self::$content;
+    }
+
+    private function createAssets()
+    {
+        $key = self::$content->getParts('key');
+
+        $cssSize = 0;
+        if(self::$content->getParts('css'))
+        {
+            foreach(self::$content->getParts('css') as $css )
+            {
+                if (filter_var($css, FILTER_VALIDATE_URL) == true) {
+                    self::$instance->assets->addCss($css, false);
+                    continue;
+                }
+                if(!file_exists($css))
+                {
+                    $cssSize += strlen($css);
+                }
+                else
+                {
+                    $cssSize += filesize($css);
+                }
+
+                self::$instance->cssmin->add($css);
+            }
+        }
+
+        if($cssSize !== CmsCache::getInstance()->get($key. '.css'))
+        {
+            self::$instance->cssmin->minify('tmp/'. $key.'.css');
+            CmsCache::getInstance()->save($key.'.css', $cssSize);
+        }
+
+        $jsSize = 0;
+        if(self::$content->getParts('js'))
+        {
+            foreach(self::$content->getParts('js') as $js )
+            {
+                if (filter_var($js, FILTER_VALIDATE_URL) == true) {
+                    self::$instance->assets->addJs($js, false);
+                    continue;
+                }
+                if(!file_exists($js))
+                {
+                    $jsSize += strlen($js);
+                }
+                else
+                {
+                    $jsSize += filesize($js);
+                }
+
+                self::$instance->jsmin->add($js);
+            }
+        }
+
+        if($jsSize !== CmsCache::getInstance()->get($key. '.js'))
+        {
+            self::$instance->jsmin->minify('tmp/'. $key.'.js');
+            CmsCache::getInstance()->save($key.'.js', $jsSize);
+        }
+
+        self::$instance->assets->addCss('tmp/'. $key.'.css');
+        self::$instance->assets->addJs('tmp/'. $key.'.js');
+    }
+
+    protected function getHashKey()
+    {
+        return
+            HOST_HASH.
+            self::$instance->dispatcher->getParam('lang').
+            md5(
+                self::$instance->dispatcher->getControllerClass().
+                '\\'.
+                self::$instance->dispatcher->getActionName());
     }
 }

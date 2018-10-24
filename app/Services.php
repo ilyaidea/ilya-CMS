@@ -19,6 +19,8 @@ use Lib\Mvc\Helper;
 use Lib\Mvc\View;
 use Lib\Mvc\View\Engine\Volt;
 use Lib\Plugins\Localization;
+use Lib\Assets\Minify\CSS;
+use Lib\Assets\Minify\JS;
 use Phalcon\Crypt;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Events\Manager;
@@ -146,6 +148,18 @@ class Services extends \Lib\Di\FactoryDefault
     {
         $assets = new \Lib\Assets\Manager();
         return $assets;
+    }
+
+    protected function initSharedCssmin()
+    {
+        $cssMin = new CSS();
+        return $cssMin;
+    }
+
+    protected function initSharedJsmin()
+    {
+        $jsMin = new JS();
+        return $jsMin;
     }
 
     protected function initSecurity()

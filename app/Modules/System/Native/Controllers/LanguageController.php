@@ -17,12 +17,15 @@ class LanguageController extends Controller
     public function indexAction()
     {
         $content = $this->helper->content();
+        $content->setTemplate('languages-list', 'Lang List');
         $content->addDataTable( new LanguagesDataTable() );
+        $content->create();
     }
 
     public function addAction()
     {
         $content = $this->helper->content();
+        $content->setTemplate('languages-add', 'Lang Add');
 
         $langForm = $content->addFormWide( new LanguageForm() );
 
@@ -52,11 +55,14 @@ class LanguageController extends Controller
                 ]);
             }
         }
+
+        $content->create();
     }
 
     public function editAction( $editId = null )
     {
         $content = $this->helper->content();
+        $content->setTemplate('languages-edit', 'Lang Edit');
 
         if( !isset( $editId ) || !is_numeric( $editId ) )
         {
@@ -106,6 +112,8 @@ class LanguageController extends Controller
                 }
             }
         }
+
+        $content->create();
     }
 
     public function deleteAction( $ids )

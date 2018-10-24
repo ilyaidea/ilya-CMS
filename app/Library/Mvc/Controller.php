@@ -14,9 +14,12 @@
 
 namespace Lib\Mvc;
 
+use Lib\Assets\Minify\CSS;
 
-use Lib\Mvc\Helper\Content\ContentBuilder;
-
+/**
+ * @property CSS cssmin
+ * @property Helper helper
+ */
 class Controller extends \Phalcon\Mvc\Controller
 {
     public function initialize()
@@ -37,9 +40,12 @@ class Controller extends \Phalcon\Mvc\Controller
 
     public function addAssetsTheme()
     {
+        $this->config->module->themePath = dirname($this->view->getMainView()). '/';
+        $content = $this->helper->content()->getContent();
+        $key = $content->getParts('key');
         if(file_exists(dirname($this->view->getMainView()). '/assets/css/styles.css'))
         {
-            ContentBuilder::getInstance()->getContent()->addCss($this->url->getStaticBaseUri(). 'ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles.css');
+            $content->addCss('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles.css');
         }
 
         if(
@@ -47,7 +53,18 @@ class Controller extends \Phalcon\Mvc\Controller
             $this->helper->isRTL()
         )
         {
-            ContentBuilder::getInstance()->getContent()->addCss($this->url->getStaticBaseUri(). 'ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles-rtl.css');
+            $content->addCss('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles-rtl.css');
         }
+    }
+
+    protected function getHashKey()
+    {
+        return
+            HOST_HASH.
+            $this->dispatcher->getParam('lang').
+            md5(
+            $this->dispatcher->getControllerClass().
+            '\\'.
+            $this->dispatcher->getActionName());
     }
 }
