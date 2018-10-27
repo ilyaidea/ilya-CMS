@@ -32,7 +32,7 @@ use Lib\Widget\WidgetAbstract;
 
 class WidgetLanguageSelector extends WidgetAbstract
 {
-    public function initailize($params = null)
+    public function initialize($params = null)
     {
         return [
             'region' => $params['region'],

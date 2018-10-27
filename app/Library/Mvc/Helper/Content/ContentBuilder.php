@@ -209,7 +209,7 @@ class ContentBuilder extends Component implements IContentBuilder
         return self::$content;
     }
 
-    private function createAssets()
+    public function createAssets()
     {
         $key = self::$content->getParts('key');
 
