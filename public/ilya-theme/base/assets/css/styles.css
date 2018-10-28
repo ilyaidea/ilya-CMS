@@ -1813,6 +1813,7 @@ input[type="submit"], button {
 
 [class^="ilya-part-form"],
 [class^="ilya-part-datatable"],
+[class^="ilya-part-treemenu"],
 [class^="ilya-part-custom"] {
 	padding: 20px;
 	margin-bottom: 5px;
@@ -3615,6 +3616,7 @@ input[type="submit"], button {
 	.ilya-widgets-main,
 	[class^="ilya-part-form"],
 	[class^="ilya-part-datatable"],
+	[class^="ilya-part-treemenu"],
 	[class^="ilya-part-custom"] {
 		margin-right: 5px;
 		margin-left: 5px;

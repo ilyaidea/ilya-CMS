@@ -25,6 +25,7 @@ use Lib\Mvc\Helper\Content\Parts\FormWide;
 use Lib\Mvc\Helper\Content\Parts\Theme;
 use Lib\Assets\Minify\CSS;
 use Lib\Assets\Minify\JS;
+use Lib\TreeMenus\TreeMenu;
 use Phalcon\Mvc\Url;
 use Phalcon\Mvc\User\Component;
 use Phalcon\Text;
@@ -41,7 +42,8 @@ class ContentBuilder extends Component implements IContentBuilder
     private static $content;
     private static $formKey = 'form';
     private static $dtKey = 'datatable';
-    private static $template;
+    private static $menuKey = 'treemenu';
+    private static $storage = [];
 
     /**
      * @var Theme
@@ -106,6 +108,16 @@ class ContentBuilder extends Component implements IContentBuilder
 
         self::$content->setParts(self::$instance->getDtKey(), $dataTable->toArray());
         return $dataTable;
+    }
+
+    public function addTreeMenu(TreeMenu $treeMenu)
+    {
+        self::$menuKey = Text::increment(self::$menuKey);
+
+        $treeMenu->setKey(self::$menuKey);
+        self::$storage[self::$menuKey] = $treeMenu;
+
+        return $treeMenu;
     }
 
     public function widgets()
@@ -195,12 +207,19 @@ class ContentBuilder extends Component implements IContentBuilder
 
     public function create()
     {
+        foreach(self::$storage as $key => $obj)
+        {
+            self::$content->setParts($key, $obj->toArray());
+        }
+
         self::$instance->widgets();
 
         self::$content->setParts('theme', self::$theme->result());
 
         self::$instance->createAssets();
 
+//        dump(self::$content->getParts('css'));
+//
         self::$instance->view->content = self::$content->getParts();
     }
 
@@ -237,7 +256,7 @@ class ContentBuilder extends Component implements IContentBuilder
 
         if($cssSize !== CmsCache::getInstance()->get($key. '.css'))
         {
-            self::$instance->cssmin->minify('tmp/'. $key.'.css');
+            self::$instance->cssmin->minify($key.'.css');
             CmsCache::getInstance()->save($key.'.css', $cssSize);
         }
 
@@ -265,12 +284,12 @@ class ContentBuilder extends Component implements IContentBuilder
 
         if($jsSize !== CmsCache::getInstance()->get($key. '.js'))
         {
-            self::$instance->jsmin->minify('tmp/'. $key.'.js');
+            self::$instance->jsmin->minify( $key.'.js');
             CmsCache::getInstance()->save($key.'.js', $jsSize);
         }
 
-        self::$instance->assets->addCss('tmp/'. $key.'.css');
-        self::$instance->assets->addJs('tmp/'. $key.'.js');
+        self::$instance->assets->addCss($key.'.css');
+        self::$instance->assets->addJs($key.'.js');
     }
 
     protected function getHashKey()

@@ -12,6 +12,10 @@
     {{ partial('datatable/html', ['datatablekey': key,'datatable': part]) }}
 {% endif %}
 
+{% if (strpos(key, 'treemenu') === 0) %}
+    {{ partial('treemenu', ['key': key,'data': part]) }}
+{% endif %}
+
 {% if helper.partDiv(key) %}
     </div>
 {% endif %}

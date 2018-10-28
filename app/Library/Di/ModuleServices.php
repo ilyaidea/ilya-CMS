@@ -39,7 +39,7 @@ class ModuleServices extends Component
 
         $this->namespace = $namespace;
 
-        $this->moduleName = strtolower(basename(($this->path)));
+        $this->moduleName = Text::uncamelize(basename(($this->path)), '-');
         $this->getDI()->setShared('config', $this->setConfig($path));
 
         $this->bindServices();

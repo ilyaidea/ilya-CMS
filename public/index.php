@@ -37,13 +37,13 @@ define( 'APP_ENV', $applicationEnv );
 
 function dump($value)
 {
-    if(!is_array($value))
+    if(is_array($value) || is_object($value))
     {
-        print $value;
-    }
-    else{
         echo "<pre style='direction: ltr'>";
         print_r($value);
+    }
+    else{
+        print $value;
     }
 
     die;

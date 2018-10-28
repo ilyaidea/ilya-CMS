@@ -122,7 +122,8 @@ class Helper extends Component
     {
         $partdiv = (
             strpos($key, 'form') === 0 ||
-            strpos($key, 'datatable') === 0
+            strpos($key, 'datatable') === 0 ||
+            strpos($key, 'treemenu') === 0
         );
 
         return $partdiv;

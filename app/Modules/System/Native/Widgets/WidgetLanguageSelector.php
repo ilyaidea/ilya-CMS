@@ -39,4 +39,8 @@ class WidgetLanguageSelector extends WidgetAbstract
             'place' => $params['place']
         ];
     }
+
+    private function addCss($params)
+    {
+    }
 }

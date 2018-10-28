@@ -28,7 +28,6 @@ use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\View\Engine\Php;
 use Phalcon\Security;
 use Phalcon\Session\Adapter\Files;
-use Plugins\Acl;
 use Plugins\DbManagerPlugin;
 
 class Services extends \Lib\Di\FactoryDefault
