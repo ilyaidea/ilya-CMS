@@ -44,6 +44,8 @@ class ModuleCache extends Component
     {
         if ( is_file( $this->file( $key ) ) )
             return true;
+
+        return false;
     }
 
     public function get ( $key )
@@ -51,6 +53,8 @@ class ModuleCache extends Component
         $file = $this->file( $key );
         if ( is_file( $file ) )
             return json_decode( file_get_contents( $file ), true );
+
+        return null;
     }
 
     public function save ( $key, $data )

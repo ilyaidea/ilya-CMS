@@ -9,7 +9,7 @@ public/final.css
 public/final.js
 /vendor/
 
-composer\.json
+composer*
 
 composer\.lock
 

@@ -20,7 +20,16 @@ use Phalcon\Validation\Validator\Identical;
 class Form extends \Phalcon\Forms\Form implements IForm
 {
     private $titleInfo = [];
-    private $token;
+    private $style = 'wide';
+    protected $key;
+
+    private $fields = [];
+    private $extra = [];
+    private $buttons = [];
+    private $hiddens = [];
+    private $errors = [];
+    protected $error;
+    private $ok;
 
     /**
      * @var Hidden $id
@@ -29,28 +38,11 @@ class Form extends \Phalcon\Forms\Form implements IForm
     protected $entity;
     protected $editMode;
 
+    protected $_name;
+
     public function __construct ( $entity = null, array $userOptions = null )
     {
         parent::__construct( $entity, $userOptions );
-
-        $action = new Hidden('action', [
-            'value' => $this->security->hash(get_class($this))
-        ]);
-        $this->add($action);
-
-        $csrf = new Hidden('csrf', [
-            'value' => $this->getToken()
-        ]);
-        $csrf->addValidator(
-            new Identical(
-                [
-                    'value' => $this->security->getSessionToken(),
-                    'message' => ':field validation failed'
-                ]
-            )
-        );
-        $csrf->clear();
-        $this->add($csrf);
     }
 
     public function initialize($entity = null, $options = [])
@@ -58,14 +50,14 @@ class Form extends \Phalcon\Forms\Form implements IForm
         $this->entity = $entity;
         if(isset($options['edit']) && isset($entity))
         {
-            $this->setTitleForm('Edit Language Form');
+            $this->setTitleForm('Edit Form');
             $this->id = new Hidden('id');
 
             $this->editMode = true;
         }
         else
         {
-            $this->setTitleForm('Add Language Form');
+            $this->setTitleForm('Add Form');
         }
 
         $this->initElements();
@@ -95,21 +87,10 @@ class Form extends \Phalcon\Forms\Form implements IForm
     {
         return @$this->titleInfo['title'];
     }
+
     public function getTitleTags()
     {
         return @$this->titleInfo['title_tags'];
-    }
-
-    public function getToken()
-    {
-        if(!$this->security->getSessionToken())
-        {
-            return $this->security->getToken();
-        }
-        else
-        {
-            return $this->security->getSessionToken();
-        }
     }
 
     public function initElements()
@@ -155,4 +136,54 @@ class Form extends \Phalcon\Forms\Form implements IForm
         if( $this->editMode )
             $this->add( $this->id );
     }
+
+    /**
+     * @return string
+     */
+    public function getStyle()
+    {
+        return $this->style;
+    }
+
+    /**
+     * @param string $style
+     */
+    public function setStyle( $style )
+    {
+        $this->style = $style;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * @param mixed $key
+     */
+    public function setKey( $key )
+    {
+        $this->key = $key;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNameForm()
+    {
+        return $this->_name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setNameForm( $name )
+    {
+        $this->_name = $name;
+    }
+
+
 }

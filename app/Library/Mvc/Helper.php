@@ -118,6 +118,21 @@ class Helper extends Component
         return ContentBuilder::getInstance();
     }
 
+    /**
+     * Static method to instantiate a new instance of a class (shorthand of
+     * 'instantiate').
+     *
+     * This method performs exactly the same actions as the 'instantiate'
+     * static method, but is simply shorter and easier to type!
+     * @return \Lib\Contents\ContentBuilder class
+     * @static
+     * @throws \ReflectionException
+     */
+    public function contentBuilder()
+    {
+        return \Lib\Contents\ContentBuilder::instantiate('test');
+    }
+
     public function partDiv($key)
     {
         $partdiv = (

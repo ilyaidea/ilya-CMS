@@ -16,12 +16,18 @@ namespace Lib\Module;
 
 
 use Lib\Common\UtilMetaData;
+use Lib\Contents\Classes\Form;
 use Lib\Di\ModuleServices;
 use Lib\Mvc\Application;
+use Lib\Mvc\Helper;
+use Modules\Others\Course\Forms\CoursesForm;
 use Phalcon\Loader;
 use Phalcon\Mvc\User\Module;
 use Phalcon\Text;
 
+/**
+ * @property Helper helper
+ */
 class ModuleManager extends Module
 {
     private $modulePath;

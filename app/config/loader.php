@@ -16,4 +16,6 @@ $loader->registerDirs(
     [
         BASE_PATH. 'vendor/autoload.php'
     ]
-)->register();
+)->registerClasses([
+    'Modules\System\Native\Models\Language' => MODULE_PATH. 'System/Native/Models/Language.php'
+])->register();

@@ -18,6 +18,18 @@ return new \Phalcon\Config(
             'pluginsDir' => APP_PATH.'Plugins/',
             'themesDir'  => BASE_PATH.'public/ilya-theme/',
             'cryptSalt'  => 'eEAfR\|_&G\&f\,+v\U]:\jF\!!A&\\\+71w1M\\\s9~8_4L!<@[N@DyaI\\P_2My|:\\\+.u>/6m,$D'
-        ]
+        ],
+
+        'memcache'  => [
+            'host' => 'localhost',
+            'port' => 11211,
+        ],
+
+        'memcached'  => [
+            'host' => 'localhost',
+            'port' => 11211,
+        ],
+
+        'cache'     => 'memcached', // memcache, memcached
     ]
 );

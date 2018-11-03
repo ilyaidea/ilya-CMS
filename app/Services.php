@@ -15,12 +15,17 @@ namespace Ilya;
 
 use Lib\Acl\DefaultAcl;
 use Lib\Authenticates\Auth;
+use Lib\Filter;
 use Lib\Mvc\Helper;
 use Lib\Mvc\View;
 use Lib\Mvc\View\Engine\Volt;
 use Lib\Plugins\Localization;
 use Lib\Assets\Minify\CSS;
 use Lib\Assets\Minify\JS;
+use Phalcon\Cache\Backend\File;
+use Phalcon\Cache\Backend\Libmemcached;
+use Phalcon\Cache\Backend\Memcache;
+use Phalcon\Cache\Frontend\Data;
 use Phalcon\Crypt;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Events\Manager;
@@ -51,9 +56,9 @@ class Services extends \Lib\Di\FactoryDefault
     protected function initUrl()
     {
         $url = new \Phalcon\Mvc\Url();
-        $url->setBaseUri($this->get('config')->app->baseUri);
-        $url->setStaticBaseUri($this->get('config')->app->baseUri);
-        $url->setBasePath($this->get('config')->app->baseUri);
+        $url->setBaseUri($this->getShared('config')->app->baseUri);
+        $url->setStaticBaseUri($this->getShared('config')->app->baseUri);
+        $url->setBasePath($this->getShared('config')->app->baseUri);
         return $url;
     }
 
@@ -98,7 +103,7 @@ class Services extends \Lib\Di\FactoryDefault
      */
     protected function initSharedDb()
     {
-        $dbConf = $this->get('config')->database->toArray();
+        $dbConf = $this->getShared('config')->database->toArray();
 
         $adapter = 'Phalcon\Db\Adapter\Pdo\\'. $dbConf['adapter'];
         unset($dbConf['adapter']);
@@ -139,7 +144,7 @@ class Services extends \Lib\Di\FactoryDefault
     {
         $crypt = new Crypt();
         $crypt->setCipher('aes-256-ctr');
-        $crypt->setKey($this->get('config')->app->cryptSalt);
+        $crypt->setKey($this->getShared('config')->app->cryptSalt);
         return $crypt;
     }
 
@@ -164,6 +169,51 @@ class Services extends \Lib\Di\FactoryDefault
     protected function initSecurity()
     {
         return new Security();
+    }
+
+    protected function initSharedFilter()
+    {
+        return new Filter();
+    }
+
+    protected function initSharedModelsCache()
+    {
+        $config = $this->getShared('config');
+        $frontendCache = new Data([
+            'lifetime' => 60,
+            'prefix'   => HOST_HASH
+        ]);
+
+        $cache = null;
+
+        switch($config->cache)
+        {
+            case "file":
+                $cache = new File($frontendCache, [
+                    'cacheDir' => BASE_PATH. 'data/cache/backend/'
+                ]);
+                break;
+            case "memcache":
+                $cache = new Memcache(
+                    $frontendCache,
+                    [
+                        'host' => $config->memcache->host,
+                        'port' => $config->memcache->port,
+                    ]
+                );
+                break;
+            case "memcached":
+                $cache = new Libmemcached(
+                    $frontendCache,
+                    [
+                        'host' => $config->memcache->host,
+                        'port' => $config->memcache->port,
+                    ]
+                );
+                break;
+        }
+
+        return $cache;
     }
 
     protected function initAuth()

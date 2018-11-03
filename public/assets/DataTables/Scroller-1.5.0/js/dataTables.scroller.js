@@ -83,7 +83,7 @@ var DataTable = $.fn.dataTable;
  *  @global
  *  @param {object} dt DataTables settings object or API instance
  *  @param {object} [opts={}] Configuration object for FixedColumns. Options 
- *    are defined by {@link Scroller.defaults}
+ *    are defined by
  *
  *  @requires jQuery 1.7+
  *  @requires DataTables 1.10.0+

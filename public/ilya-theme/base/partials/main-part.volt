@@ -1,7 +1,10 @@
+{# main-part(key, part) #}
+
 {% if helper.partDiv(key) %}
     {% set class = 'ilya-part-'~ strtr(key, '_', '-') %}
+    {% set id = key %}
 
-    <div class="{{ class }}">
+    <div class="{{ class }}" id="{{ id }}">
 {% endif %}
 
 {% if (strpos(key, 'form') === 0) %}
@@ -13,7 +16,7 @@
 {% endif %}
 
 {% if (strpos(key, 'treemenu') === 0) %}
-    {{ partial('treemenu', ['key': key,'data': part]) }}
+    {{ partial('treemenu-view', ['key': key,'data': part]) }}
 {% endif %}
 
 {% if helper.partDiv(key) %}
