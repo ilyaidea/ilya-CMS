@@ -1,13 +1,13 @@
 {# form_field(field, style) #}
 {{ partial('form-prefix', ['field': field, 'style': style]) }}
 
-{% if field['html_prefix'] is defined %}
-    {{ field['html_prefix'] }}
+{% if field.getUserOption('html_prefix') !== null %}
+    {{ field.getUserOption('html_prefix') }}
 {% endif %}
 
-{% if field['type'] is defined %}
-    {% switch field['type'] %}
-        {% case "check" %}
+{% if field.getAttributes('type') is not null %}
+    {% switch field.getAttributes('type') %}
+        {% case "checkbox" %}
             {{ partial('form-checkbox', ['field':field, 'style': style]) }}
             {% break %}
 
@@ -40,11 +40,11 @@
             {% break %}
 
         {% case "custom" %}
-                {{ helper.output_raw(field['html']) }}
+                {{ helper.output_raw(field.getUserOption('html')) }}
             {% break %}
 
         {% default %}
-                {% if field['type'] == 'textarea' or ( field['rows'] is defined and field['rows'] > 1) %}
+                {% if (field.getAttributes('type') == 'textarea' or ( field.getAttributes('rows') !== null and field.getAttributes('rows') > 1)) %}
                     {{ partial('form-text-multi-row', ['field':field, 'style': style]) }}
                 {% else %}
                     {{ partial('form-text-single-row', ['field':field, 'style': style]) }}

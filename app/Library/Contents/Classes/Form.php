@@ -16,6 +16,7 @@ namespace Lib\Contents\Classes;
 
 use Lib\Contents\CB;
 use Lib\Forms\Element\Hidden;
+use Phalcon\Text;
 use Phalcon\Validation\Validator\Identical;
 
 class Form extends CB
@@ -56,6 +57,16 @@ class Form extends CB
     /** @var string */
     private $_name = null;
 
+    /** @var string */
+    private $_key;
+    private $_position;
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * static parameters
+	 */
+
+    private static $formKey = 'form';
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Public methods
 	 */
@@ -66,23 +77,12 @@ class Form extends CB
             return $this->_form;
         }
 
-        if( isset( $_ ) && ( $_ instanceof \Phalcon\Forms\Form ) )
+        if( isset( $_ ) && ( $_ instanceof \Lib\Forms\Form ) )
         {
             $this->_form = $_;
 
-            if( $this->_name )
-            {
-                $this->_form->setNameForm( $this->_name );
-                // Add action element hidden
-                $this->_form->add(new Hidden(
-                    'action',
-                    [
-                        'value' => $this->getHash(get_class($this->_form), $this->_name)
-                    ]
-                ));
-                // Add csrf element hidden
-                $this->_form->add($this->el_csrf());
-            }
+            $this->setKey();
+            $this->setPosition();
         }
 
         return $this;
@@ -96,23 +96,12 @@ class Form extends CB
      */
     public function setForm( $_ = null )
     {
-        if( isset( $_ ) && ( $_ instanceof \Phalcon\Forms\Form ) )
+        if( isset( $_ ) && ( $_ instanceof \Lib\Forms\Form ) )
         {
             $this->_form = $_;
 
-            if( $this->_name )
-            {
-                $this->_form->setNameForm( $this->_name );
-                // Add action element hidden
-                $this->_form->add(new Hidden(
-                    'action',
-                    [
-                        'value' => $this->getHash(get_class($this->_form), $this->_name)
-                    ]
-                ));
-                // Add csrf element hidden
-                $this->_form->add($this->el_csrf());
-            }
+            $this->setKey();
+            $this->setPosition();
         }
 
         return $this;
@@ -139,33 +128,27 @@ class Form extends CB
         return $this->_getSet( $this->_name, $_ );
     }
 
-    public function getToken()
+    public function getKey()
     {
-        if(!$this->security->getSessionToken())
-        {
-            return $this->security->getToken();
-        }
-        else
-        {
-            return $this->security->getSessionToken();
-        }
+        return $this->_getSet( $this->_key, null );
     }
 
-    protected function el_csrf()
+    private function setKey()
     {
-        $csrf = new Hidden('csrf', [
-            'value' => $this->getToken()
-        ]);
-        $csrf->addValidator(
-            new Identical(
-                [
-                    'value' => $this->security->getSessionToken(),
-                    'message' => ':field validation failed'
-                ]
-            )
-        );
-        $csrf->clear();
+        self::$formKey = Text::increment(self::$formKey);
+        $this->_form->prefix = self::$formKey;
+        $this->_form->initialize();
+        return $this->_getSet( $this->_key, self::$formKey );
+    }
 
-        return $csrf;
+    private function setPosition()
+    {
+        self::$position = self::$position + 1;
+        return $this->_getSet( $this->_position, self::$position );
+    }
+
+    public function getPosition()
+    {
+        return $this->_position;
     }
 }

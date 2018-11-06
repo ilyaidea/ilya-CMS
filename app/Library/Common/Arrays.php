@@ -15,20 +15,26 @@ namespace Lib\Common;
 
 class Arrays
 {
-    public static function arrayToStringTags( $array )
+    /**
+     * @param array $array
+     * @return null|string
+     * @example
+     *    Desc
+     *    <code>
+     * ```php
+     * $array = [
+     *    'id' => 'id-elem',
+     *    'class' => 'class-elem'
+     * ];
+     * Lib\Common\Arrays::arrayToStringTags( $array )
+     * ```
+     *    </code>
+     */
+    public static function arrayToStringTags(array $array )
     {
-        $tags = '';
+        if(is_array($array) && !empty($array))
+            return str_replace("=", '="', http_build_query($array, null, '" ', PHP_QUERY_RFC3986)).'"';
 
-        if(!(is_array($array) && !empty($array)))
-        {
-            return $tags;
-        }
-
-        foreach($array as $key => $value)
-        {
-            $tags .= $key. '="'. $value. '" ';
-        }
-
-        return $tags;
+        return null;
     }
 }

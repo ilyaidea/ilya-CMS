@@ -15,7 +15,7 @@ namespace Lib\Forms\Element;
 
 use Lib\Forms\Design;
 
-class Email extends \Phalcon\Forms\Element\Email
+class Radio extends \Phalcon\Forms\Element\Radio
 {
     /** @var Design $design */
     public $design;
@@ -38,7 +38,7 @@ class Email extends \Phalcon\Forms\Element\Email
 
         $attrs = array_merge(
             [
-                'type' => 'email'
+                'type' => 'radio'
             ],
             $attrs
         );

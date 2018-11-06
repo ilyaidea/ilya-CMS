@@ -53,11 +53,11 @@ class Bootstrap
         try
         {
             // Handle the request
-            $response = $application->handle();
-            $response->send();
+            $response = $application->handle()->getContent();
+//            $response->send();
 
 //            echo $response;
-//            echo $this->process_data_alan($response);
+            echo $this->process_data_alan($response);
         }
         catch (Exception $e)
         {

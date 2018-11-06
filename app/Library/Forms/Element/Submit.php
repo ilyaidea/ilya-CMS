@@ -15,7 +15,7 @@ namespace Lib\Forms\Element;
 
 use Lib\Forms\Design;
 
-class Email extends \Phalcon\Forms\Element\Email
+class Submit extends \Phalcon\Forms\Element\Submit
 {
     /** @var Design $design */
     public $design;
@@ -38,7 +38,7 @@ class Email extends \Phalcon\Forms\Element\Email
 
         $attrs = array_merge(
             [
-                'type' => 'email'
+                'type' => 'submit'
             ],
             $attrs
         );

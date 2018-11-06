@@ -5,4 +5,4 @@
 
 {{ assets.outputJs() }}
 
-{{ partial('datatable/script') }}
+{#{{ partial('datatable/script') }}#}

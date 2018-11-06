@@ -1,8 +1,9 @@
-{# form_ok(form, columns) #}
-{% if form['error'] is not empty %}
+{# form-error(form) #}
+
+{% if form.validate.hasError() %}
     <tr>
-        <td colspan="{{ columns }}" class="ilya-form-error">
-            {{ form['error'] }}
+        <td colspan="{{ form.design.getColumns() }}" class="ilya-form-{{ form.design.getStyle() }}-error">
+            {{ form.validate.getErrorMsg() }}
         </td>
     </tr>
 {% endif %}

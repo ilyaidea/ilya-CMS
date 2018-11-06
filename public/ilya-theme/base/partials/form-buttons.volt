@@ -1,26 +1,26 @@
 {# form_buttons(form, columns) #}
-{% if form['buttons'] is not empty %}
-    {% set style = (form['style'] is defined) ? form['style'] : null %}
+{% if form.elements.hasButton() is true %}
+    {% set style = (form.design.getStyle() !== null) ? form.design.getStyle() : null %}
 
-    {% if columns is true %}
+    {% if form.design.getColumns() is true %}
         <tr>
-        <td colspan="{{ columns }}" class="ilya-form-{{ style }}-buttons">
+        <td colspan="{{ form.design.getColumns() }}" class="ilya-form-{{ style }}-buttons">
     {% endif %}
 
-    {% for key, button in form['buttons'] %}
+    {% for button in form.elements.getButtons() %}
         {{ helper.setContext('button_key', key) }}
 
         {% if button is empty %}
             {{ partial('form-button-spacer', ['style': style]) }}
         {% else %}
-            {{ partial('form-button-data', ['button':button, 'key':key, 'style': style]) }}
+            {{ partial('form-button-data', ['button':button, 'style': style]) }}
             {{ partial('form-button-note', ['button':button, 'style': style]) }}
         {% endif %}
     {% endfor %}
 
     {{ helper.clearContext('button_key') }}
 
-    {% if columns is true %}
+    {% if form.design.getColumns() is true %}
         </td>
             </tr>
     {% endif %}

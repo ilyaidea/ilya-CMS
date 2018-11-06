@@ -1,4 +1,7 @@
 {# form_select(field, style) #}
+{% set class = 'ilya-form-'~ style ~'-select' %}
+{{ field.render(['class': class]) }}
+{#
 <select {{ ((field['tags'] is defined) ? field['tags'] : '') }} class="ilya-form-{{ style }}-select">
 
     {% set matchbykey = (field['match_by'] is defined) and field['match_by'] === 'key' %}
@@ -11,4 +14,4 @@
 
         <option value="{{ key }}" {{ (selected ? ' selected' : '') }}>{{ value }}</option>
     {% endfor %}
-</select>
+</select>#}

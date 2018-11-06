@@ -15,13 +15,13 @@ namespace Lib\Forms\Element;
 
 use Lib\Forms\Design;
 
-class Email extends \Phalcon\Forms\Element\Email
+class Select extends \Phalcon\Forms\Element\Select
 {
     /** @var Design $design */
     public $design;
-    public function __construct( $name, array $attributes = null )
+    public function __construct( string $name, $options = null, ?array $attributes = null )
     {
-        parent::__construct( $name, $attributes );
+        parent::__construct( $name, $options, $attributes );
 
         $this->design = new Design($this);
     }
@@ -38,7 +38,7 @@ class Email extends \Phalcon\Forms\Element\Email
 
         $attrs = array_merge(
             [
-                'type' => 'email'
+                'type' => 'select'
             ],
             $attrs
         );

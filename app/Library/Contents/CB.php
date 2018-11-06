@@ -31,6 +31,7 @@ class CB extends Component
     protected static $instance;
 
     protected static $oldArgs = [];
+    protected static $position = 0;
 
     /**
      * Static method to instantiate a new instance of a class (shorthand of
@@ -105,9 +106,14 @@ class CB extends Component
         // Set
         if ( $array ) {
             // Property is an array, merge or add to array
-            is_array( $val ) ?
-                $prop = array_merge( $prop, $val ) :
-                $prop[] = $val;
+            if(is_array( $val ))
+            {
+                $prop = array_merge( $prop, $val );
+            }
+            else
+            {
+                    $prop[] = $val;
+            }
         }
         else {
             // Property is just a value

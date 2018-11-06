@@ -5,7 +5,6 @@
 
 <html{{ helper.htmlTags().get() }}>
 {{ attribution }}
-
 {{ partial('head') }}
 {{ partial('body') }}
 

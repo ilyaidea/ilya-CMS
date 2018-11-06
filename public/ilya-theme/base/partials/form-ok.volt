@@ -1,8 +1,9 @@
-{# form_ok(form, columns) #}
-{% if form['ok'] is not empty %}
+{# form-ok(form) #}
+
+{% if form.validate.isOk() %}
     <tr>
-        <td colspan="{{ columns }}" class="ilya-form-{{ form['style'] }}-ok">
-            {{ form['ok'] }}
+        <td colspan="{{ form.design.getColumns() }}" class="ilya-form-{{ form.design.getStyle() }}-ok">
+            {{ form.validate.getOkMsg() }}
         </td>
     </tr>
 {% endif %}

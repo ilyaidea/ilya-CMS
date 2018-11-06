@@ -1,3 +1,4 @@
 {# form_image(field, style) #}
-
-<div class="ilya-form-{{ style }}-image">{{ field['html'] }}</div>
+{% set class = 'ilya-form-'~ style ~'-image' %}
+{{ field.render(['class': class]) }}
+{#<div class="ilya-form-{{ style }}-image">{{ field['html'] }}</div>#}

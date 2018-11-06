@@ -41,6 +41,8 @@ class ContentBuilder extends CB
     /** @var Form[]|\Lib\Forms\Form[] */
     private $_forms = [];
 
+    private $_fields = [];
+
     /** @var array */
     private $_out = [];
 
@@ -61,7 +63,7 @@ class ContentBuilder extends CB
      *        * `string` - Get a specific form instance whose 'name' matches the
      *           field passed in
      *        of fields.
-     * @return Form|Form[]
+     * @return \Lib\Forms\Form
      *      the Editor instance for chaining, depending on the input parameter.
      * @throws \Exception UnknownColumnTypeException form error
      */
@@ -69,47 +71,53 @@ class ContentBuilder extends CB
     {
         if( is_string( $_ ) )
         {
-            for( $i = 0, $ien = count( $this->_forms ); $i < $ien; $i++ )
+            foreach( $this->_forms as $form )
             {
-                if( $this->_forms[ $i ]->name() === $_ )
+                if( $form->name() === $_ )
                 {
-                    return $this->_forms[ $i ];
+                    return $form->getForm();
                 }
             }
 
             throw new \Exception( 'Unknown form: '.$_ );
         }
 
-        if( $_ !== null && !is_array( $_ ) )
+        if( $_ !== null && !is_array( $_ ) && $_ instanceof Form)
         {
             $_ = func_get_args();
+            /** @var Form $arg */
+            foreach($_ as $arg)
+            {
+                $this->_fields['form_'. $arg->getPosition()] = $arg->getForm();
+            }
         }
 
-
-        return $this->_getSet( $this->_forms, $_, true );
+        return $this->_getSet($this->_forms, $_, true);
     }
 
-    /**
-     * Get / set form instances.
-     *
-     * @param Form $_ ... Instances of the class, given as a single
-     *    instance of , an array of  instances, or multiple
-     *    instance parameters for the function.
-     * @return Form[]|self Array of forms, or self if used as a setter.
-     * @see for field documentation.
-     */
     public function forms( $_ = null )
     {
-        if( $_ !== null && !is_array( $_ ) )
+        if( $_ !== null && !is_array( $_ ) && $_ instanceof Form)
         {
             $_ = func_get_args();
+            /** @var Form $arg */
+            foreach($_ as $arg)
+            {
+                $this->_fields['form_'. $arg->getPosition()] = $arg->getForm();
+            }
         }
-        return $this->_getSet( $this->_forms, $_, true );
+
+        return $this->_getSet($this->_forms, $_, true);
+    }
+
+    public function fields()
+    {
+        return $this->_fields;
     }
 
     public function toArray( $print = true )
     {
-
+        $this->view->content = $this->fields();
     }
 
     /**

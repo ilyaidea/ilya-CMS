@@ -1,2 +1,4 @@
 {# form_checkbox(field, style) #}
-<input {{ field['tags'] }} type="checkbox" value="1"{{ (field['value']) ? 'checked' : '' }} class="ilya-form-{{ style }}-checkbox"/>
+{% set class = 'ilya-form-'~ style ~'-checkbox' %}
+{{ field.render(['class': class]) }}
+{#<input {{ field['tags'] }} type="checkbox" value="1"{{ (field['value']) ? 'checked' : '' }} class="ilya-form-{{ style }}-checkbox"/>#}
