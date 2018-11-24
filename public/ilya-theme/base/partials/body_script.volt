@@ -4,5 +4,6 @@
 </script>
 
 {{ assets.outputJs() }}
+{{ assets.outputInlineJs() }}
 
 {#{{ partial('datatable/script') }}#}

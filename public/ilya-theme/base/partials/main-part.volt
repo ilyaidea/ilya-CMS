@@ -1,8 +1,7 @@
 {# main-part(key, part) #}
-
 {% if helper.partDiv(key) %}
     {% set class = 'ilya-part-'~ strtr(key, '_', '-') %}
-    {% set id = key %}
+    {% set id = 'part_'~key %}
 
     <div class="{{ class }}" id="{{ id }}">
 {% endif %}
@@ -11,12 +10,8 @@
     {{ partial('form', ['form': part]) }}
 {% endif %}
 
-{% if (strpos(key, 'datatable') === 0) %}
-    {{ partial('datatable/html', ['datatablekey': key,'datatable': part]) }}
-{% endif %}
-
-{% if (strpos(key, 'treemenu') === 0) %}
-    {{ partial('treemenu-view', ['key': key,'data': part]) }}
+{% if (strpos(key, 'dt') === 0) %}
+    {{ partial('datatable', ['key': key,'datatable': part]) }}
 {% endif %}
 
 {% if helper.partDiv(key) %}

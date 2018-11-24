@@ -15,6 +15,7 @@ namespace Ilya;
 
 use Lib\Acl\DefaultAcl;
 use Lib\Authenticates\Auth;
+use Lib\Contents\ContentBuilder;
 use Lib\Filter;
 use Lib\Mvc\Helper;
 use Lib\Mvc\View;
@@ -43,7 +44,7 @@ class Services extends \Lib\Di\FactoryDefault
     }
 
     /**
-     * Summary Function initUrl
+     * Summary Function initUrl test
      *
      * Description Function initUrl
      *
@@ -133,7 +134,7 @@ class Services extends \Lib\Di\FactoryDefault
         ]);
     }
 
-    protected function initSession()
+    protected function initSharedSession()
     {
         $session = new Files();
         $session->start();

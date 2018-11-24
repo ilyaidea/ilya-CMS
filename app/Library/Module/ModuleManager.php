@@ -49,6 +49,7 @@ class ModuleManager extends Module
         $loader = new Loader();
         $loader->registerNamespaces([
             $this->moduleNamespace. '\\Controllers' => $this->modulePath.'/Controllers/',
+            $this->moduleNamespace. '\\DataTables'  => $this->modulePath.'/DataTables/',
             $this->moduleNamespace. '\\Models'      => $this->modulePath.'/Models/',
             $this->moduleNamespace. '\\Forms'       => $this->modulePath.'/Forms/',
             $this->moduleNamespace. '\\Lib'         => $this->modulePath.'/Lib/',

@@ -6,6 +6,13 @@
             {{ partial('form-field', ['field':field, 'style': style]) }}
         {% endif %}
 
+        {% if field.getMessages().count() !== 0 %}
+            {% for msg in field.getMessages() %}
+                {{ partial('form-field-error', ['msg':msg, 'style': style, 'columns': columns]) }}
+                {% break %}
+            {% endfor %}
+        {% endif %}
+
         {% if field.getUserOption('error') !== null %}
             {% if field.getUserOption('note_force') !== null %}
                 {{ partial('form-note', ['note':field.getUserOption('note_force'), 'style': style, 'columns': columns]) }}

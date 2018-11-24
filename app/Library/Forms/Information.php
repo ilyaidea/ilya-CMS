@@ -33,11 +33,6 @@ class Information
         $this->title = new Title();
     }
 
-    public function ggg()
-    {
-        return $this->form->getElements();
-    }
-
     /**
      * @param bool $toAttr
      * @return string|array
@@ -46,6 +41,8 @@ class Information
     {
         if($this->form->getAction())
             $this->appendTag('action', $this->form->getAction());
+
+        $this->appendTag('method', 'post');
 
         if($toAttr == true)
             return Arrays::arrayToStringTags($this->tags);

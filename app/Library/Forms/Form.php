@@ -15,6 +15,7 @@ namespace Lib\Forms;
 
 use Lib\Common\TraitSecurity;
 use Lib\Forms\Element\Hidden;
+use Phalcon\Forms\Element\Text;
 use Phalcon\Validation\Message;
 use Phalcon\Validation\Validator\Identical;
 
@@ -52,6 +53,7 @@ class Form extends \Phalcon\Forms\Form
                 'value' => $actionCode
             ]
         );
+        $action->clear();
         $this->add($action);
 
         $csrf = new Hidden('csrf', [

@@ -15,8 +15,10 @@
 namespace Lib\Contents;
 
 
+use Lib\Assets\Asset;
+use Lib\Contents\Classes\DataTable;
 use Lib\Contents\Classes\Form;
-use Phalcon\Exception\Db\UnknownColumnTypeException;
+use Lib\Contents\Classes\Theme;
 
 class ContentBuilder extends CB
 {
@@ -25,6 +27,8 @@ class ContentBuilder extends CB
      */
     public function __construct()
     {
+        $this->assets = new Asset();
+        $this->theme = new Theme($this);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -34,12 +38,21 @@ class ContentBuilder extends CB
     /** @var string */
     public $version = '1.0.0';
 
+    /** @var Asset $assets */
+    public $assets;
+
+    /** @var Theme $theme */
+    public $theme;
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Private properties
 	 */
 
     /** @var Form[]|\Lib\Forms\Form[] */
     private $_forms = [];
+
+    /** @var DataTable[]|\Lib\DataTables\DataTable[] */
+    private $_dataTables = [];
 
     private $_fields = [];
 
@@ -110,60 +123,85 @@ class ContentBuilder extends CB
         return $this->_getSet($this->_forms, $_, true);
     }
 
+    /**
+     * Get / set dataTable instance.
+     *
+     * The list of fields designates which columns in the table that Editor will work
+     * with (both get and set).
+     * @param DataTable|string $_ ... This parameter effects the return value of the
+     *      function:
+     *
+     *      * `null` - Get an array of all fields assigned to the instance
+     *        * `string` - Get a specific form instance whose 'name' matches the
+     *           field passed in
+     *        of fields.
+     * @return \Lib\DataTables\DataTable
+     *      the Editor instance for chaining, depending on the input parameter.
+     * @throws \Exception UnknownColumnTypeException form error
+     */
+    public function dataTable( $_ = null )
+    {
+        if( is_string( $_ ) )
+        {
+            foreach( $this->_dataTables as $dt )
+            {
+                if( $dt->name() === $_ )
+                {
+                    return $dt->getDT();
+                }
+            }
+
+            throw new \Exception( 'Unknown form: '.$_ );
+        }
+
+        if( $_ !== null && !is_array( $_ ) && $_ instanceof DataTable)
+        {
+            $_ = func_get_args();
+            /** @var DataTable $arg */
+            foreach($_ as $arg)
+            {
+                $this->_fields['dt_'. $arg->getPosition()] = $arg->getDT();
+            }
+        }
+
+        return $this->_getSet($this->_dataTables, $_, true);
+    }
+
+    public function dataTables( $_ = null )
+    {
+        if( $_ !== null && !is_array( $_ ) && $_ instanceof DataTable)
+        {
+            $_ = func_get_args();
+            /** @var DataTable $arg */
+            foreach($_ as $arg)
+            {
+                $this->_fields['dt_'. $arg->getPosition()] = $arg->getDT();
+            }
+        }
+
+        return $this->_getSet($this->_dataTables, $_, true);
+    }
+
     public function fields()
     {
         return $this->_fields;
     }
 
-    public function toArray( $print = true )
-    {
-        $this->view->content = $this->fields();
-    }
-
     /**
      * Process a request from the Editor client-side to get / set data.
-     *
-     *  @param array $data Typically $_POST or $_GET as required by what is sent
-     *  by Editor
-     *  @return self
      */
-    public function process ( $data )
+    public function process ()
     {
-//        if ( $this->_debug ) {
-//            $debugInfo = &$this->_debugInfo;
-//            $debugVal = $this->_db->debug( function ( $mess ) use ( &$debugInfo ) {
-//                $debugInfo[] = $mess;
-//            } );
-//        }
-
-        if ( $this->_tryCatch ) {
-            try {
-                $this->_process( $data );
-            }
-            catch (\Exception $e) {
-                // Error feedback
-                $this->_out['error'] = $e->getMessage();
-
-                if ( $this->_transaction ) {
-                    $this->_db->rollback();
-                }
+        if(!empty($this->fields()))
+        {
+            foreach($this->fields() as $field)
+            {
+                $field->process();
             }
         }
-        else {
-            $this->_process( $data );
-        }
 
-        if ( $this->_debug ) {
-            $this->_out['debug'] = $this->_debugInfo;
-
-            // Save to a log file
-            if ( $this->_debugLog ) {
-                file_put_contents( $this->_debugLog, json_encode( $this->_debugInfo )."\n", FILE_APPEND );
-            }
-
-            $this->_db->debug( false );
-        }
-
-        return $this;
+        $this->assets->process();
+        $this->view->content = $this->fields();
+        $this->view->theme = $this->theme;
     }
 }

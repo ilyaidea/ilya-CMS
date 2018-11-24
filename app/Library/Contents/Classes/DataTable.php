@@ -1,25 +1,25 @@
 <?php
 /**
- * Summary File Form
+ * Summary File DataTable
  *
- * Description File Form
+ * Description File DataTable
  *
  * ILYA CMS Created by ILYA-IDEA Company.
  * @author Ali Mansoori
- * Date: 10/31/2018
- * Time: 10:26 AM
+ * Date: 11/18/2018
+ * Time: 7:20 PM
  * @version 1.0.0
  * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
  */
 
 namespace Lib\Contents\Classes;
 
-use Lib\Contents\CB;
-use Lib\Forms\Element\Hidden;
-use Phalcon\Text;
-use Phalcon\Validation\Validator\Identical;
 
-class Form extends CB
+use Lib\Contents\CB;
+use Lib\DataTables\DataTablecopy;
+use Phalcon\Text;
+
+class DataTable extends CB
 {
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Constructor
@@ -27,23 +27,23 @@ class Form extends CB
 
     /**
      * Form instance constructor.
-     * @param \Lib\Forms\Form $form An instance of the Form class.
-     * @param string $name Name to use for Form
+     * @param \Lib\DataTables\DataTable $dt An instance of the DataTable class.
+     * @param string $name Name to use for DataTable
      * @param |null $position
      */
-    function __construct( \Lib\Forms\Form $form = null, $name = null, $position = null)
+    function __construct( \Lib\DataTables\DataTable $dt = null, $name = null, $position = null)
     {
-        if( $form !== null && $name === null )
+        if( $dt !== null && $name === null )
         {
             // Allow just a single parameter to be passed - each can be
             // overridden if needed later using the API.
-            $this->name( get_class( $form ) );
-            $this->getSetForm( $form );
+            $this->name( get_class( $dt ) );
+            $this->getSetDT( $dt );
         }
         else
         {
             $this->name( $name );
-            $this->getSetForm( $form );
+            $this->getSetDT( $dt );
         }
     }
 
@@ -51,35 +51,48 @@ class Form extends CB
 	 * Private parameters
 	 */
 
-    /** @var \Lib\Forms\Form */
-    private $_form = null;
+    /** @var \Lib\DataTables\DataTable */
+    private $_dt = null;
 
     /** @var string */
     private $_name = null;
 
-    /** @var string */
+    /** @var string $_key */
     private $_key;
+    /** @var integer $_position */
     private $_position;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * static parameters
 	 */
 
-    private static $formKey = 'form';
+    private static $dtKey = 'dt';
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Public methods
 	 */
 
-    public function getSetForm( $_ = null )
+    /**
+     * Summary Function getSetDT
+     *
+     * Description Function getSetDT
+     *
+     * @author Ali Mansoori
+     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
+     * @param null $_
+     * @return $this|\Lib\DataTables\DataTable
+     * @version 1.0.0
+     * @example Desc <code></code>
+     */
+    public function getSetDT( $_ = null )
     {
         if ( $_ === null ) {
-            return $this->_form;
+            return $this->_dt;
         }
 
-        if( isset( $_ ) && ( $_ instanceof \Lib\Forms\Form ) )
+        if( isset( $_ ) && ( $_ instanceof \Lib\DataTables\DataTable ) )
         {
-            $this->_form = $_;
+            $this->_dt = $_;
 
             $this->setKey();
             $this->setPosition();
@@ -89,16 +102,16 @@ class Form extends CB
     }
 
     /**
-     * Set the form.
+     * Set the datatable.
      *
-     * @param \Lib\Forms\Form $_ Form value to set.
+     * @param \Lib\DataTables\DataTable $_ DataTable value to set.
      * @return self
      */
-    public function setForm( $_ = null )
+    public function setDT( $_ = null )
     {
-        if( isset( $_ ) && ( $_ instanceof \Lib\Forms\Form ) )
+        if( isset( $_ ) && ( $_ instanceof \Lib\DataTables\DataTable ) )
         {
-            $this->_form = $_;
+            $this->_dt = $_;
 
             $this->setKey();
             $this->setPosition();
@@ -108,17 +121,17 @@ class Form extends CB
     }
 
     /**
-     * Get the form.
+     * Get the dataTable.
      *
-     * @return \Lib\Forms\Form|null
+     * @return \Lib\DataTables\DataTable|null
      */
-    public function getForm()
+    public function getDT()
     {
-        return $this->_form;
+        return $this->_dt;
     }
 
     /**
-     * Get / set the 'name' property of the form.
+     * Get / set the 'name' property of the dataTable.
      * @param string $_ Value to set if using as a setter.
      * @return string|self The name property if no parameter is given, or self
      *    if used as a setter.
@@ -135,10 +148,9 @@ class Form extends CB
 
     private function setKey()
     {
-        self::$formKey = Text::increment(self::$formKey);
-        $this->_form->prefix = self::$formKey;
-//        $this->_form->initialize();
-        return $this->_getSet( $this->_key, self::$formKey );
+        self::$dtKey = Text::increment(self::$dtKey);
+        $this->_dt->prefix = self::$dtKey;
+        return $this->_getSet( $this->_key, self::$dtKey );
     }
 
     private function setPosition()
@@ -151,4 +163,5 @@ class Form extends CB
     {
         return $this->_position;
     }
+
 }

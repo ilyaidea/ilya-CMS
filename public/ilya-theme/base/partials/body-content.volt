@@ -21,9 +21,9 @@
     ]
 ) }}#}
     <div class="ilya-main-wrapper">
-        {#{{ partial('sidepanel-left') }}#}
+        {{ partial('sidepanel-left') }}
         {{ partial('main') }}
-        {#{{ partial('sidepanel-right') }}#}
+        {{ partial('sidepanel-right') }}
     </div> <!-- END main-wrapper -->
 
     {#{{ partial(

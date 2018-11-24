@@ -19,61 +19,121 @@ use Phalcon\Mvc\User\Component;
 
 class Columns extends Component
 {
-    private $columns = [];
-    private $titles = [];
-    private $state;
+    /** @var DataTable $_dataTable */
+    protected $_dataTable;
 
-    private $data;
+    protected $_name;
 
-    public function __construct($data)
+    protected $_data;
+
+    protected $_title;
+
+    protected $_label;
+
+    protected $_visible = true;
+
+    protected $_attributes = [];
+
+    public function __construct($name, $attributes = null, DataTable $dataTable)
     {
-        $this->data = $data;
+        $this->_dataTable = $dataTable;
+        $this->setName($name);
+        $this->_data = $name;
+        $this->setLabel($name);
+        $this->setAttributes($attributes);
     }
 
     /**
-     * @param \stdClass $columns
+     * @return mixed
      */
-    public function setData( $data )
+    public function getName()
     {
-        $this->columns[$data]['data'] = $data;
-        $this->titles[$data] = $data;
-        $this->state = $data;
+        return $this->_name;
+    }
 
-        foreach($this->data as $value)
+    /**
+     * @param mixed $name
+     */
+    public function setName( $name ): void
+    {
+        $this->_name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAttributes()
+    {
+        return $this->_attributes;
+    }
+
+    public function getAttribute(string $attribute)
+    {
+        if(isset($this->_attributes[$attribute]))
+            return $this->_attributes[$attribute];
+        return null;
+    }
+
+    /**
+     * @param mixed $attributes
+     */
+    public function setAttributes( $attributes ): void
+    {
+        $this->_attributes = $attributes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLabel()
+    {
+        return $this->_label;
+    }
+
+    /**
+     * @param mixed $label
+     */
+    public function setLabel( $label ): void
+    {
+        $this->_label = $label;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVisible(): bool
+    {
+        return $this->_visible;
+    }
+
+    /**
+     * @param bool $visible
+     */
+    public function setVisible( bool $visible ): void
+    {
+        $this->_visible = $visible;
+    }
+
+    public function add()
+    {
+        $this->_dataTable->isCustom(false);
+
+        $column = [
+            'title' => $this->getLabel(),
+            'data'  => $this->_data,
+//            'name'  => $this->getName()
+        ];
+
+        $column['visible'] = $this->isVisible();
+
+        if(
+            array_search($this->_data, $this->_dataTable->data->getDataKeys()) === 0 ||
+            is_numeric(array_search($this->_data, $this->_dataTable->data->getDataKeys()))
+        )
         {
-            if(isset($value[$data]['display']) && isset($value[$data]['value']))
-            {
-                $this->columns[$data]['render']['_'] = 'display';
-                $this->columns[$data]['render']['sort'] = 'value';
-            }
-            break;
+            $column['target'] = array_search($this->_data, $this->_dataTable->data->getDataKeys()) + 1;
+
+            array_push($this->_dataTable->options['columns'], $column);
         }
-
-        return $this;
-    }
-
-    public function setTitle( $title )
-    {
-        if($this->state)
-        {
-            $this->titles[$this->state] = $title;
-            return $this;
-        }
-    }
-
-    /**
-     * @return array
-     */
-    public function getColumns()
-    {
-        return array_values($this->columns);
-    }
-
-    /**
-     * @return array
-     */
-    public function getTitles()
-    {
-        return array_values($this->titles);
     }
 }

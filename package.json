@@ -1,0 +1,28 @@
+{
+  "name": "cms",
+  "version": "1.0.0",
+  "description": "Ilya CMS - Open source content management system (CMS). Written in Phalcon PHP Framework (version 3.x supported)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "^1.0.3",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-sass": "^1.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilyaidea/ilya-CMS.git"
+  },
+  "author": "Ali mansoori",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ilyaidea/ilya-CMS/issues"
+  },
+  "homepage": "https://github.com/ilyaidea/ilya-CMS#readme"
+}

@@ -15,7 +15,9 @@
 namespace Lib\Forms;
 
 
-class Validate
+use Phalcon\Mvc\User\Component;
+
+class Validate extends Component
 {
     /** @var Form $form */
     private $form;
@@ -34,8 +36,18 @@ class Validate
      */
     public function isOk(): bool
     {
-        if(!is_null($this->ok))
-            return true;
+        if($this->request->isPost() && $this->request->getPost('action') !== null)
+        {
+            if($this->security->checkHash(get_class($this->form), $this->request->getPost('action')))
+            {
+                if($this->form->isValid($this->request->getPost()))
+                {
+                    return true;
+                }
+            }
+        }
+//        if($this->ok !== null)
+//            return true;
 
         return false;
     }
