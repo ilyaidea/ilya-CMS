@@ -1,26 +1,6 @@
 <?php
-/**
- * JavaScript minifier
- *
- * Please report bugs on https://github.com/matthiasmullie/minify/issues
- *
- * @author Matthias Mullie <minify@mullie.eu>
- * @copyright Copyright (c) 2012, Matthias Mullie. All rights reserved
- * @license MIT License
- */
 namespace Lib\Assets\Minify;
 
-/**
- * JavaScript Minifier Class
- *
- * Please report bugs on https://github.com/matthiasmullie/minify/issues
- *
- * @package Minify
- * @author Matthias Mullie <minify@mullie.eu>
- * @author Tijs Verkoyen <minify@verkoyen.eu>
- * @copyright Copyright (c) 2012, Matthias Mullie. All rights reserved
- * @license MIT License
- */
 class JS extends Minify
 {
     /**
@@ -140,7 +120,7 @@ class JS extends Minify
      * Minify the data.
      * Perform JS optimizations.
      *
-     * @param string[optional] $path Path to write the data to
+     * @param string $path Path to write the data to
      *
      * @return string The minified data
      */
@@ -285,7 +265,6 @@ class JS extends Minify
         // 1 more edge case: a regex can be followed by a lot more operators or
         // keywords if there's a newline (ASI) in between, where the operator
         // actually starts a new statement
-        // (https://github.com/matthiasmullie/minify/issues/56)
         $operators = $this->getOperatorsForRegex($this->operatorsBefore, '/');
         $operators += $this->getOperatorsForRegex($this->keywordsReserved, '/');
         $after = '(?=\s*\n\s*('.implode('|', $operators).'))';
@@ -407,8 +386,6 @@ class JS extends Minify
          * useless and probably shouldn't be in the code in the first place, we
          * shouldn't be stripping the `;` that follows it as it breaks the code.
          * We can just remove those useless else-statements completely.
-         *
-         * @see https://github.com/matthiasmullie/minify/issues/91
          */
         $content = preg_replace('/else;/s', '', $content);
 

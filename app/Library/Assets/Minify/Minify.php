@@ -1,28 +1,9 @@
 <?php
-/**
- * Abstract minifier class
- *
- * Please report bugs on https://github.com/matthiasmullie/minify/issues
- *
- * @author Matthias Mullie <minify@mullie.eu>
- * @copyright Copyright (c) 2012, Matthias Mullie. All rights reserved
- * @license MIT License
- */
 namespace Lib\Assets\Minify;
 
 use Lib\Assets\Minify\Exceptions\IOException;
 use Psr\Cache\CacheItemInterface;
 
-/**
- * Abstract minifier class.
- *
- * Please report bugs on https://github.com/matthiasmullie/minify/issues
- *
- * @package Minify
- * @author Matthias Mullie <minify@mullie.eu>
- * @copyright Copyright (c) 2012, Matthias Mullie. All rights reserved
- * @license MIT License
- */
 abstract class Minify
 {
     /**
@@ -89,7 +70,6 @@ abstract class Minify
             $key = ($data != $value) ? $data : count($this->data);
 
             // replace CR linefeeds etc.
-            // @see https://github.com/matthiasmullie/minify/pull/139
             $value = str_replace(array("\r\n", "\r"), "\n", $value);
 
             // store data
@@ -102,7 +82,7 @@ abstract class Minify
     /**
      * Minify the data & (optionally) saves it to a file.
      *
-     * @param string[optional] $path Path to write the data to
+     * @param string $path Path to write the data to
      *
      * @return string The minified data
      */
@@ -121,8 +101,8 @@ abstract class Minify
     /**
      * Minify & gzip the data & (optionally) saves it to a file.
      *
-     * @param string[optional] $path  Path to write the data to
-     * @param int[optional]    $level Compression level, from 0 to 9
+     * @param string $path  Path to write the data to
+     * @param int    $level Compression level, from 0 to 9
      *
      * @return string The minified & gzipped data
      */
@@ -157,7 +137,7 @@ abstract class Minify
     /**
      * Minify the data.
      *
-     * @param string[optional] $path Path to write the data to
+     * @param string $path Path to write the data to
      *
      * @return string The minified data
      */
@@ -337,8 +317,8 @@ abstract class Minify
      * and after doing all other minifying, we can restore the original content
      * via restoreStrings().
      *
-     * @param string[optional] $chars
-     * @param string[optional] $placeholderPrefix
+     * @param string $chars
+     * @param string $placeholderPrefix
      */
     protected function extractStrings($chars = '\'"', $placeholderPrefix = '')
     {

@@ -13,6 +13,7 @@
  */
 namespace Lib\TreeMenus;
 
+use Lib\Forms\Form;
 use Lib\Mvc\Helper;
 use Phalcon\Mvc\User\Component;
 
@@ -22,8 +23,11 @@ use Phalcon\Mvc\User\Component;
 class TreeMenu extends Component implements ITreeMenu
 {
     private $storage = [];
-    private $content;
+    protected $content;
     private $ajaxUrl;
+
+    private $extra = [];
+    private $buttons;
 
     // Maps
     private $textMap;
@@ -33,7 +37,7 @@ class TreeMenu extends Component implements ITreeMenu
 
     public function __construct()
     {
-        $this->content = $this->helper->content()->getContent();
+        $this->content = $this->helper->content();
         $this->neccessaryFiles();
         $this->setAjaxUrl();
     }
@@ -41,8 +45,6 @@ class TreeMenu extends Component implements ITreeMenu
     protected function neccessaryFiles()
     {
         $this->content->addCss('ilya-theme/base/assets/jstree/dist/themes/default/style.css');
-        $this->content->addJs(
-            $this->config->module->themePath. 'assets/js/jquery.min.js');
         $this->content->addJs('ilya-theme/base/assets/jstree/dist/jstree.min.js');
     }
 
@@ -70,7 +72,7 @@ class TreeMenu extends Component implements ITreeMenu
         if( isset( $key ) )
         {
             $js = '$(function () {
-                        $("#'.$key.'").jstree({';
+                        $("#ilya_body_'.$key.'").jstree({';
 
             $js .= '
                 "core" : {
@@ -78,7 +80,7 @@ class TreeMenu extends Component implements ITreeMenu
                         "url" : "'.$this->ajaxUrl.'",
                         "dataType" : "json" ,
                         "type" : "post" ,
-                        "data": {action: "wwww"}
+                        "data": {action: "'.$key.'"}
                     }
 		        }            
             ';
@@ -104,7 +106,26 @@ class TreeMenu extends Component implements ITreeMenu
         $this->initialize();
         $this->create();
 
-        return $this->storage;
+
+        if($this->buttons)
+        {
+            $this->extra['buttons'] = $this->buttons->getStorage();
+        }
+
+        $extra = [];
+        foreach($this->extra as $key => $value)
+        {
+            if(is_object($value))
+            {
+                $extra[$key] = $value->toArray();
+            }
+            else
+            {
+                $extra[$key] = $value;
+            }
+        }
+
+        return array_merge($this->storage, $extra);
     }
 
     public function data()
@@ -135,7 +156,7 @@ class TreeMenu extends Component implements ITreeMenu
         return $data;
     }
 
-    private function tree($arrays, $parent = null, $parentLabel = 'parent_id')
+    protected function tree($arrays, $parent = null, $parentLabel = 'parent_id')
     {
         $result = [];
         foreach($arrays as $array)
@@ -154,16 +175,44 @@ class TreeMenu extends Component implements ITreeMenu
 
     protected function isAjax()
     {
-        if($this->request->isAjax())
+        if($this->request->isAjax() && ($this->request->getPost('action') == $this->storage['key']))
         {
-            die(json_encode(
-                $this->tree(
-                    $this->prepareDataForJsTree(
-                        $this->data()
+            dump(json_encode(
+                    $this->tree(
+                        $this->prepareDataForJsTree(
+                            $this->data()
+                        )
                     )
                 )
-            )
             );
         }
+    }
+
+    //
+
+    public function addForm($form, $internal = false)
+    {
+        if($internal)
+        {
+            $form = $this->content->addForm($form, true, $this->getKey());
+            $this->extra[$form->getKey()] = $form;
+        }
+        else
+            $form = $this->content->addForm($form, false, $this->getKey());
+
+        return $form;
+    }
+
+    public function buttons()
+    {
+        $buttons = Buttons::getInstance();
+
+        $this->buttons = $buttons;
+        return $buttons;
+    }
+
+    public function addExtra($key, $value)
+    {
+        $this->extra[$key] = $value;
     }
 }

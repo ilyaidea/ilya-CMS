@@ -48,15 +48,16 @@ class Bootstrap
     {
         $this->registerAutoLoaders();
 
-        $application = new \Lib\Mvc\Application(new Services($this->config));
+        $services = new Services($this->config);
+        $application = new \Lib\Mvc\Application($services);
 
         try
         {
             // Handle the request
-            $response = $application->handle();
-            $response->send();
+            $response = $application->handle()->getContent();
+//            $response->send();
 
-//            echo $response;
+            echo $response;
 //            echo $this->process_data_alan($response);
         }
         catch (Exception $e)

@@ -14,13 +14,19 @@
 namespace Lib\Mvc\Helper\Content\Parts;
 
 use Lib\Common\Arrays;
+use Lib\Mvc\Helper;
 use Phalcon\Forms\Element;
 
 class Form extends AbstractForm
 {
     protected $form;
+    /**
+     * @var Helper\Content\ContentBuilder $content
+     */
+    protected $content;
     protected $formKey;
     private $style = 'tall';
+    private $display = true;
     private $fields = [];
     private $extra = [];
     private $buttons = [];
@@ -29,10 +35,11 @@ class Form extends AbstractForm
     protected $error;
     private $ok;
 
-    public function __construct(\Lib\Forms\Form $form, $formKey = null)
+    public function __construct(\Lib\Forms\Form $form, $formKey = null, $content = null)
     {
         $this->form = $form;
         $this->formKey = $formKey;
+        $this->content = $content;
 
         $this->validation();
         $this->init();
@@ -154,6 +161,8 @@ class Form extends AbstractForm
         $formResult = [];
 
         $formResult['style'] = $this->style;
+        $formResult['display'] = $this->display;
+        $formResult['id'] = $this->getKey();
 
         $formResult['ok'] = $this->ok;
 
@@ -229,4 +238,34 @@ class Form extends AbstractForm
             $this->toArray()
         );
     }
+
+    /**
+     * @return null
+     */
+    public function getKey()
+    {
+        return $this->formKey;
+    }
+
+    public function defaultDisplay($display = true)
+    {
+        if($this->error == true)
+        {
+            $this->content->addJs( /** @lang JavaScript */
+                '
+        $("#'.$this->getKey().'").show();
+');
+        }
+        elseif($display == false)
+        {
+            $this->content->addJs( /** @lang JavaScript */
+'
+        $("#'.$this->getKey().'").hide();
+');
+        }
+
+        $this->display = $display;
+    }
+
+
 }

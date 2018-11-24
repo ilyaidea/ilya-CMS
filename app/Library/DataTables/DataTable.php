@@ -14,8 +14,8 @@
 
 namespace Lib\DataTables;
 
+use Lib\Contents\ContentBuilder;
 use Lib\Mvc\Helper;
-use Lib\Mvc\Helper\Content\ContentBuilder;
 use Phalcon\Mvc\User\Component;
 
 /**
@@ -23,115 +23,316 @@ use Phalcon\Mvc\User\Component;
  */
 class DataTable extends Component
 {
-    protected $query;
-    protected $action;
-    private $ajax;
-    private $columns;
-    private $buttons;
-    private $select;
-    private $dom;
-    private $event = [];
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Public parameters
+	 */
+
+    public $prefix;
+    /** @var ContentBuilder $content */
+    public $content;
+    /** @var Data $data */
+    public $data;
+    /** @var Ajax $ajax */
+    public $ajax;
+    /** @var array $options */
+    public $options = [
+        'columns' => []
+    ];
+
+    public static $timeout = 0;
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Private parameters
+	 */
+
+    private $treeView = false;
+    private $custom = true;
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Constructor
+	 */
 
     public function __construct()
     {
-        if($this->isAjax())
+        $this->content = ContentBuilder::instantiate();
+        $this->ajax = new Ajax($this);
+        $this->data = new Data($this);
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Public methods
+	 */
+
+    public function process()
+    {
+        $this->installBaseAssets();
+
+        if(method_exists($this, 'initialize'))
+            $this->initialize();
+
+        $this->addColumnTreeView();
+
+        $this->data->process();
+        $this->ajax->process();
+
+        // responsive datatable
+        $this->content->assets->addCss(
+            'assets/datatables-responsive/css/responsive.dataTables.min.css'
+        );
+        $this->content->assets->addJs(
+            'assets/datatables-responsive/js/dataTables.responsive.js'
+        );
+
+        $this->options['responsive']['details']['display'] = "||$.fn.dataTable.Responsive.display.childRowImmediate||";
+        $this->options['responsive']['details']['type'] = "";
+        //
+
+//        dump($this->data->getData());
+//        dump($this->options);
+        $options = $this->prepareStrForJs(json_encode($this->options));
+
+//        $this->content->assets->addJs( /** @lang JavaScript */
+//            "$.fn.dataTableExt.sErrMode = 'throw';"
+//        );
+
+        $timeout = self::$timeout;
+        $jsInitDt = "setTimeout(function () { ";
+
+        $jsInitDt .= "var $this->prefix = $('#$this->prefix').DataTable(".$options.");";
+
+        if($this->isTreeView())
         {
-            echo json_encode($this->query);
-            die;
+            $parentIndex = $this->data->getParentIndex();
+            $jsInitDt .= /** @lang JavaScript */
+                "
+$('#$this->prefix').on('init.dt', function () {
+        $this->prefix.columns([$parentIndex]).search('^(0)$', true, false).draw();
+    });
+    var displayed = new Set([]);
+    $('#$this->prefix tbody').on('click', 'tr td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = $this->prefix.row(tr);
+        var id = row.data().id;
+        if (displayed.has(id)) {
+            displayed.delete(id);
+            tr.removeClass('details');
+        } else {
+            displayed.add(id);
+            tr.addClass('details');
         }
+        var regex = \"^(0\";
+        displayed.forEach(function (value) {
+            regex = regex + \"|\" + value;
+        });
+        regex = regex + \")$\";
+        $this->prefix.columns([$parentIndex]).search(regex, true, false).draw();
+    });
+    
+    		$('#".$this->prefix."_filter input[type=\'search\']').on('keyup', function () {
+        		var value = $(this).val();
+            
+        		if (value === '') {
+        		    $this->prefix.columns([$parentIndex]).search('^(0)$', true, false).draw();
+                }
+        		else {
+                    $this->prefix.columns([$parentIndex]).search('^([0-9]*)$', true, false).draw();
+        		}
+        		
+            $this->prefix.search(value).draw();
+        });
+";
+        }
+        $jsInitDt .= "}, $timeout);";
 
-        $content = $this->helper->content();
-        $key = $content->getContent()->getParts('key');
-        $this->helper->content()->setDtKey();
-
-        $content->getContent()->addCss('assets/DataTables/DataTables-1.10.18/css/jquery.dataTables.min.css');
-        $content->getContent()->addJs('https://code.jquery.com/jquery-3.3.1.min.js');
-        $content->getContent()->addJs('assets/DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js' );
-
-        $this->action = $this->security->hash( get_class( $this ) );
-
-        $this->ajax = new Ajax();
-        $this->columns = new Columns($this->query['data']);
-        $this->buttons = new Buttons($this->helper->content()->getDtKey());
-        $this->select = new Select();
-        $this->dom = new Dom();
+        $this->content->assets->addJs($jsInitDt);
+        self::$timeout = self::$timeout + 1000;
     }
 
-    public function ajax()
+    /**
+     * @return bool
+     */
+    public function isTreeView()
     {
-        return $this->ajax;
+        return $this->treeView;
     }
 
-    public function columns()
+    /**
+     * @param bool $treeView
+     */
+    public function setTreeView( bool $treeView ): void
     {
-        return $this->columns;
+        $this->treeView = $treeView;
     }
 
-    public function buttons()
+    public function column($name, $attributs = null)
     {
-        return $this->buttons;
+        return new Columns($name, $attributs, $this);
     }
 
-    public function select()
+    public function add($obj)
     {
-        return $this->select;
+        if(is_object($obj))
+            $obj->add();
     }
 
-    public function dom()
+    /**
+     * Get / Set isCustom
+     */
+    public function isCustom( $isCustom = null )
     {
-        return $this->dom;
+        if($isCustom === null)
+            return $this->custom;
+
+        if($isCustom === true)
+            $this->custom = true;
+        elseif($isCustom === false)
+            $this->custom = false;
     }
 
-    public function toArray()
-    {
-        $content = $this->helper->content()->getContent();
-        $key = $this->helper->content()->getContent()->getParts('key');
-        $data = ( [
-            'dom'    => $this->dom->toArray(),
-            'ajax'    => $this->ajax->toArray( [ 'action' => $this->action ] ),
-            'columns' => $this->columns->getColumns(),
-            'titles'  => $this->columns->getTitles(),
-        ] );
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Protected methods
+	 */
 
-        if(!empty($this->buttons->toArray()))
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Private methods
+	 */
+    private function installBaseAssets()
+    {
+        $this->content->assets->addCss(
+            'assets/datatables.net-dt/css/jquery.dataTables.min.css'
+        );
+
+        $this->content->assets->addJs(
+            'assets/jquery/dist/jquery.min.js'
+        );
+
+        $this->content->assets->addJs(
+            'assets/datatables.net/js/jquery.dataTables.min.js'
+        );
+    }
+
+    private function prepareStrForJs($str)
+    {
+        $str = str_replace('"||', '', $str);
+        $str = str_replace('||"', '', $str);
+        return $str;
+    }
+
+    private function addColumnTreeView()
+    {
+        if($this->isTreeView())
         {
-            $content->addCss('assets/DataTables/Buttons-1.5.4/css/buttons.dataTables.min.css');
-            $content->addJs('assets/DataTables/Buttons-1.5.4/js/dataTables.buttons.min.js');
+            $parentField = $this->data->getParentField();
+            $this->content->assets->addCss( /** @lang CSS */
+                <<<TAG
+td.details-control {
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAANbY1E9YMgAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAMDSURBVHjarFXdS5NRGH/eufyK2ZZWvqKiyZQQpQ9hNKVIHZLzpq7Ey8SbQhG66R+IPqCuCqKLrsK8kbCMhcOwNdimglZ24WSVHyxzVjqZQ9+P0/Mcz1upE7vwjB/nnOfjt3Oej/NKkHqYEGmIA4h0saahITYQiljr2x2lFHszIgthQeQgDgpSEGQJRByxikgiVARLdSoiy0QcRVR2dHRc8fv9nmg0OqvrukagNclIRzbCNjPFwbiATlWAcPT39z9VFGWD7TJIRzZkK3y2kEriSvmyLJ+LRCIfySmpJZk3Nsiuf+pmLaGLrDnYxLonO9mr7wMsoSY4MdmSD/oeExySJBJAsSoOBoN3HQ5H07KyDI+/PoI3S0M8OGTEpM1I0VR7uA6ull6D3PQ8CAQCHqfTeQPFMxRXI5O2rq6uhvb29k4NNOlO+DYMx4bRH386gv0DXYeZ5AxE1iJw4Ug9FBcWl8VisYnR0dFZSpJJEB5qbW29JEmS6d2SD3wxH2gaUmsqqLoG3roh8NYO8T1mB1TUjf0Yg7f4p+TT1tZ2WdzSbBBml5eXn6SAeqKvQVWRTFdBUdFZVf9kjuRch4QKknu+ebi8oqKCfLMpjmZRtOlWqzWXlFPxKXRQ8LISBFyBLaXgq/fz2ek9y+fPq1/4bLFYrEYDmLfXD8WMTrazsv4OVVN5qtaVjc0ywWsbOrPRTvF4/JfNZsuTM2SYW53nKT01cJrP4y3j3NjYi7xDQU4Bl6PvT9FFmkn05Vo4HJ4gpSvfxeO2GS+VJ8AYioghnZDWjXIjl09PT38gDjIxCFd6enr6sCz05sJmqLJWcSIOdDzRV8nBsy5kdosdWorcVEp6b2/vc9HfSppxh1AoFHe73faSopKyM3k1EF4J49XnttSizvgOqm3VcKvmJsjZMoyMjAxibz9Bjph4LFK33mJykT2YfMgaXrrY8Wd2Voo4/6Ke3Xt/n0UT0e2tl2+03n49Dlm7vTg7nq+FhYV5g4jWez1f//vAZgj9+l4PrLTfn4DfAgwAXP8AAdHdgRsAAAAASUVORK5CYII=') no-repeat center left;
+    cursor: pointer;
+    background-origin:content-box;
+}
+tr.details td.details-control {
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAANbY1E9YMgAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALbSURBVHjarFVNTFNBEJ4tFVuw0gaj1Jhe5OdgJV5Iaw+CGAMKIdET4Sgh4SIHDcYLN07oiZOGqyFcjOECISEhwRpoGxLExAMVAi9NadIgWNLW8t7bdWa7L0Ap6oFtvsy+3Zlvd2ZnpnYoP2yICsQFRKWa0zARhwhdzXmpob3km6k1J8KFuIyoVqSgyLKIDOIAkUcYCFHuVkTmQFxF3BoYGHgWDodnk8mkxjk3CTSnNdojHaXrULanyOhW1xGB6enpD7quH4ozBu2RDukqmxOkTLlU5/V6721sbHwjI57Pi9z8vNgdHhY7PT0i1d0tdl+8FNmZGcGzWUlMumSDttcUB2PqAShWvuXl5bFAINDB9/chMzEBuYWF4rGMgsSACQECTRyhENQMDkJFbS0sLS3NhkKh16i1TXG1XtIzNDT0oL+//zmYJtt7Mwa5xc+Al0AmDlwKJKMfrunaNhibm+Bsa4MbPt/NdDq9GovFNHokmyKs6e3tfcIYs+XDYciGvwA3TQnT5EXJaW6qdQ65lRU8dBHIpq+v76ny0m4RVjU2Nt4h7w7m5qRhKY4OOALp0mhqaiLbKoqjXSVtpdvtrqXNfDwuldE3qMcblBs/WlulLGxtSelyudxWAZQmtkx90zTgb8M0DPlQTNeLaYJuH68UWU6ZTGbP4/FcqfB64XciIZ/2e/CuSixVCMeErAJvnfxG25+qikybqsvc+vr6qrx+e7uKkXEEQ8WNcxXPorx0v10SxuPxNeIgLovw1+Tk5EfKZ3dHBzj8/qIxt0gUkUWMh1TW14Pn8SNKIz41NfVJ1bd+IrGj0ejblpaWhwVNA210FA6iEfSPFV203EZnq5ubwTcyAs6GBohEInPBYPAVbmiKtHzpHabTIvnuvVjr6hIx/20R9fvF185OkRgfF4WdndLSq7NK77yag/OsjnOqfaVSqYRFRPN/tS/2nw32otov/KvBsvP+C/gjwAC23ACdhngbNwAAAABJRU5ErkJggg==') no-repeat center left;
+    background-origin:content-box;
+}
+td.details-control.level-1 {
+    padding-left:30px;
+}
+tr.details td.details-control.level-1 {
+    padding-left:30px;
+}
+td.details-control.level-2 {
+    padding-left:50px;
+}
+tr.details td.details-control.level-2 {
+    padding-left:50px;
+}
+td.details-control.level-3 {
+    padding-left:70px;
+}
+tr.details td.details-control.level-3 {
+    padding-left:70px;
+}
+TAG
+            );
 
-            $data['buttons'] = $this->buttons->toArray();
-        }
-
-        if(!empty($this->buttons->event()))
-        {
-            $data['event'] = array_merge($this->event, $this->buttons->event());
-        }
-
-        if(!empty($this->select->toArray()))
-        {
-            $content->addCss('assets/DataTables/Select-1.2.6/css/select.dataTables.min.css');
-
-            $content->addJs('assets/DataTables/Select-1.2.6/js/dataTables.select.min.js');
-
-            $data['select'] = $this->select->toArray();
-        }
-
-
-
-        return ($data);
+            $this->content->assets->addJs(
+            /** @lang JavaScript */
+                <<<TAG
+function compareObjectDesc(a, b) {
+    if (a.id !== b.id) {
+        return ((a.value < b.value) ? 1 : ((a.value > b.value) ? -1 : 0));
+    } else if (typeof a.child === 'undefined' && typeof b.child === 'undefined') {
+        return ((a.value < b.value) ? 1 : ((a.value > b.value) ? -1 : 0));
+    } else if (typeof a.child !== 'undefined' && typeof b.child !== 'undefined') {
+        return compareObjectDesc(a.child, b.child);
+    } else {
+        return typeof a.child !== 'undefined' ? 1 : -1;
     }
+}
 
-    protected function isAjax()
-    {
-        if($this->request->isAjax() && $this->security->checkHash(get_class($this), $this->request->getPost('action')))
-        {
-            return true;
+function compareObjectAsc(a, b) {
+    if (a.id !== b.id) {
+        return ((a.value < b.value) ? -1 : ((a.value > b.value) ? 1 : 0));
+    } else if (typeof a.child === 'undefined' && typeof b.child === 'undefined') {
+        return ((a.value < b.value) ? -1 : ((a.value > b.value) ? 1 : 0));
+    } else if (typeof a.child !== 'undefined' && typeof b.child !== 'undefined') {
+        return compareObjectAsc(a.child, b.child);
+    } else {
+        return typeof a.child !== 'undefined' ? 1 : -1;
+    }
+}
+
+jQuery.fn.dataTableExt.oSort['custom-asc'] = function (a, b) {
+    return compareObjectAsc(a, b);
+};
+
+jQuery.fn.dataTableExt.oSort['custom-desc'] = function (a, b) {
+    return compareObjectDesc(a, b);
+};
+
+function buildOrderObject(dt, id, column) {
+    var rowData = dt.row("#" + id).data();
+    if (typeof rowData === 'undefined') {
+        return {};
+    } else {
+        var object = buildOrderObject(dt, rowData[$parentField], column);
+        var a = object;
+        while (typeof a.child !== 'undefined') {
+            a = a.child;
         }
-        return false;
+        a.child = {};
+        a.child.id = rowData['id'];
+        a.child.value = rowData[column];
+        return object;
     }
+};
+TAG
 
-    public function setDtKey($dtKey)
-    {
-        $this->dtKey = $dtKey;
+            );
+
+            array_unshift(
+                $this->options['columns'],
+                [
+                    'class' => 'details-control',
+                    'data' => null,
+                    'orderable' => false,
+                    'defaultContent' => "",
+                    'width' => 50,
+                    'target' => 0,
+                    'createdCell' => "||".
+                        "function (td, cellData, rowData, row, col) {".
+                        "if (rowData._children === 0) { ".
+                        "var space = '&nbsp;';".
+                        "for(var i=0;i<rowData.level;i++){space = space+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}".
+                        "td.className = ''; $(td).append(space+'_'); ".
+                        "}".
+                        "if (rowData.level > 0) { ".
+                        "td.className = td.className + ' level-' + rowData.level; ".
+                        "}".
+                        "}".
+                        "||"
+                ]
+            );
+        }
     }
-
 }

@@ -16,12 +16,18 @@ namespace Lib\Module;
 
 
 use Lib\Common\UtilMetaData;
+use Lib\Contents\Classes\Form;
 use Lib\Di\ModuleServices;
 use Lib\Mvc\Application;
+use Lib\Mvc\Helper;
+use Modules\Others\Course\Forms\CoursesForm;
 use Phalcon\Loader;
 use Phalcon\Mvc\User\Module;
 use Phalcon\Text;
 
+/**
+ * @property Helper helper
+ */
 class ModuleManager extends Module
 {
     private $modulePath;
@@ -43,6 +49,7 @@ class ModuleManager extends Module
         $loader = new Loader();
         $loader->registerNamespaces([
             $this->moduleNamespace. '\\Controllers' => $this->modulePath.'/Controllers/',
+            $this->moduleNamespace. '\\DataTables'  => $this->modulePath.'/DataTables/',
             $this->moduleNamespace. '\\Models'      => $this->modulePath.'/Models/',
             $this->moduleNamespace. '\\Forms'       => $this->modulePath.'/Forms/',
             $this->moduleNamespace. '\\Lib'         => $this->modulePath.'/Lib/',

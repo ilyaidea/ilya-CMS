@@ -20,6 +20,7 @@ use Lib\Assets\Filters\Cssmin;
 use Lib\Assets\Filters\Jsmin;
 use Lib\Mvc\Helper\CmsCache;
 use Lib\Mvc\Helper\Content\Parts\Content;
+use Lib\Mvc\Helper\Content\Parts\Form;
 use Lib\Mvc\Helper\Content\Parts\FormTall;
 use Lib\Mvc\Helper\Content\Parts\FormWide;
 use Lib\Mvc\Helper\Content\Parts\Theme;
@@ -84,12 +85,35 @@ class ContentBuilder extends Component implements IContentBuilder
         self::$dtKey = Text::increment(self::$dtKey);
     }
 
+    public function addForm( \Lib\Forms\Form $form, $internal = false, $internalKey = null)
+    {
+        self::$formKey = Text::increment(self::$formKey);
+
+        $form->setKey(self::$formKey);
+        $form->setStyle('tall');
+        $form = new Form($form, self::$formKey, self::$content);
+
+        if($internal && $internalKey)
+        {
+//            dump(self::$storage[$internalKey]);
+            self::$storage[$internalKey]->addExtra(self::$formKey, $form);
+        }
+        else
+            self::$storage[self::$formKey] = $form;
+
+        return $form;
+    }
+
     public function addFormWide( \Lib\Forms\Form $form )
     {
         self::$formKey = Text::increment(self::$formKey);
 
+        $form->setKey(self::$formKey);
+        $form->setStyle('tall');
         $form = new FormWide($form, self::$formKey);
-        self::$content->setParts(self::$formKey, $form->toArray());
+
+        self::$storage[self::$formKey] = $form;
+
         return $form;
     }
 
@@ -97,9 +121,13 @@ class ContentBuilder extends Component implements IContentBuilder
     {
         self::$formKey = Text::increment(self::$formKey);
 
+        $form->setKey(self::$formKey);
+        $form->setStyle('tall');
         $form = new FormTall($form, self::$formKey);
-        self::$content->setParts(self::$formKey, $form->toArray());
+        self::$storage[self::$formKey] = $form;
+
         return $form;
+
     }
 
     public function addDataTable( \Lib\DataTables\DataTable $dataTable )
@@ -218,14 +246,22 @@ class ContentBuilder extends Component implements IContentBuilder
 
         self::$instance->createAssets();
 
-//        dump(self::$content->getParts('css'));
-//
         self::$instance->view->content = self::$content->getParts();
     }
 
     public function getContent()
     {
         return self::$content;
+    }
+
+    public function addCss($value)
+    {
+        self::$content->addCss($value);
+    }
+
+    public function addJs($value)
+    {
+        self::$content->addJs($value);
     }
 
     public function createAssets()
@@ -256,7 +292,7 @@ class ContentBuilder extends Component implements IContentBuilder
 
         if($cssSize !== CmsCache::getInstance()->get($key. '.css'))
         {
-            self::$instance->cssmin->minify($key.'.css');
+            self::$instance->cssmin->minify('tmp/'. $key.'.css');
             CmsCache::getInstance()->save($key.'.css', $cssSize);
         }
 
@@ -284,12 +320,12 @@ class ContentBuilder extends Component implements IContentBuilder
 
         if($jsSize !== CmsCache::getInstance()->get($key. '.js'))
         {
-            self::$instance->jsmin->minify( $key.'.js');
+            self::$instance->jsmin->minify( 'tmp/'. $key.'.js');
             CmsCache::getInstance()->save($key.'.js', $jsSize);
         }
 
-        self::$instance->assets->addCss($key.'.css');
-        self::$instance->assets->addJs($key.'.js');
+        self::$instance->assets->addCss('tmp/'. $key.'.css');
+        self::$instance->assets->addJs('tmp/'. $key.'.js');
     }
 
     protected function getHashKey()
@@ -301,5 +337,13 @@ class ContentBuilder extends Component implements IContentBuilder
                 self::$instance->dispatcher->getControllerClass().
                 '\\'.
                 self::$instance->dispatcher->getActionName());
+    }
+
+    /**
+     * @return array
+     */
+    public function getStorage()
+    {
+        return self::$storage;
     }
 }

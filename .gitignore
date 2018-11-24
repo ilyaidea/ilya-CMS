@@ -9,8 +9,15 @@ public/final.css
 public/final.js
 /vendor/
 
-composer\.json
+composer*
 
 composer\.lock
 
 app/config/env/production\.php
+
+logs
+
+docs/*
+/docs
+node_modules
+package-lock.json

@@ -19,67 +19,120 @@ use Phalcon\Mvc\User\Component;
 
 class Ajax extends Component
 {
-    private $ajaxUrl;
-    private $dataSrc = 'data';
-    private $data = [];
-    private $type = 'post';
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Private parameters
+	 */
 
-    public function __construct()
+    /** @var DataTable $dataTable */
+    private $dataTable;
+
+    private $currentUrl;
+
+    private $isAjax = true;
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Const
+	 */
+
+    const POST_DATA = 'POST';
+    const GET_DATA = 'GET';
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Constructor
+	 */
+
+    public function __construct(DataTable $dataTable)
     {
-        $this->ajaxUrl = rtrim($this->url->getBaseUri(), '/'). $this->router->getRewriteUri();
+        $this->dataTable = $dataTable;
+        $this->setUrl();
     }
 
-    public function toArray($data = [])
-    {
-        $result = [
-            'url' => $this->ajaxUrl,
-            'dataSrc' => $this->dataSrc,
-            'type' => $this->type,
-        ];
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Public methods
+	 */
 
-        if(!empty($data))
+    public function process()
+    {
+        $this->dataTable->options['ajax']['dataSrc'] = 'data_'.$this->dataTable->prefix;
+
+        $this->dataTable->options['ajax']['data']['action_'.$this->dataTable->prefix] =
+            $this->security->hash(
+                get_class($this->dataTable). $this->dataTable->prefix
+            );
+    }
+
+    public function setType($type = self::GET_DATA)
+    {
+        if(!$this->isAjax)
+            return null;
+
+        $this->dataTable->options['ajax']['type'] = $type;
+    }
+
+    public function getType()
+    {
+        if(!$this->isAjax)
+            return null;
+
+        if(isset($this->dataTable->options['ajax']['type']))
         {
-            foreach($data as $key => $val)
-            {
-                $result['data'][$key] = $val;
-            }
+            return $this->dataTable->options['ajax']['type'];
         }
-        return $result;
+
+        return 'GET';
     }
 
-    /**
-     * @return mixed
-     */
+    public function setUrl($url = null)
+    {
+        if(!$this->isAjax)
+            return null;
+
+        if($url === null)
+        {
+            $this->currentUrl = $this->url->get([
+                'for' => 'default__'. $this->helper->locale()->getLanguage(),
+                'module' => $this->config->module->name,
+                'controller' => $this->dispatcher->getControllerName(),
+                'action' => $this->dispatcher->getActionName()
+            ]);
+            $url = $this->currentUrl;
+        }
+        return $this->dataTable->options['ajax']['url'] = $url;
+    }
+
     public function getUrl()
     {
-        return $this->ajaxUrl;
+        if(!$this->isAjax)
+            return null;
+
+        if(isset($this->dataTable->options['ajax']['url']))
+        {
+            return $this->dataTable->options['ajax']['url'];
+        }
+
+        return $this->currentUrl;
     }
 
     /**
-     * @param mixed $url
+     * Get / Set isAjax
      */
-    public function setUrl( $url )
+    public function isAjax( bool $isAjax = null )
     {
-        $this->ajaxUrl = $url;
+        if($isAjax === null)
+            return $this->isAjax;
+
+        if($isAjax === true)
+            $this->isAjax = true;
+        elseif($isAjax === false)
+            $this->isAjax = false;
     }
 
-    /**
-     * @return string
-     */
-    public function getDataSrc()
-    {
-        return $this->dataSrc;
-    }
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Protected methods
+	 */
 
-    /**
-     * @param string $dataSrc
-     */
-    public function setDataSrc( $dataSrc )
-    {
-        $this->dataSrc = $dataSrc;
-    }
-
-
-
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Private methods
+	 */
 
 }

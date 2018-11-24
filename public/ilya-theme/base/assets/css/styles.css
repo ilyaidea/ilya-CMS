@@ -1812,8 +1812,7 @@ input[type="submit"], button {
 }
 
 [class^="ilya-part-form"],
-[class^="ilya-part-datatable"],
-[class^="ilya-part-treemenu"],
+[class^="ilya-part-dt"],
 [class^="ilya-part-custom"] {
 	padding: 20px;
 	margin-bottom: 5px;
@@ -1922,14 +1921,14 @@ input[type="submit"], button {
 	color: #fff;
 }
 
-.ilya-form-error {
-	background-color: #e74c3c;
-	padding: 10px;
-	display: table-cell;
-	color: #fff;
-}
+.ilya-form-tall-error, .ilya-form-wide-error {
+	 background-color: #e74c3c;
+	 padding: 10px;
+	 display: table-cell;
+	 color: #fff;
+ }
 
-.ilya-form-wide-error, .ilya-form-tall-error {
+.ilya-field-tall-error, .ilya-field-wide-error {
 	color: #e74c3c;
 }
 
@@ -3615,8 +3614,7 @@ input[type="submit"], button {
 	}
 	.ilya-widgets-main,
 	[class^="ilya-part-form"],
-	[class^="ilya-part-datatable"],
-	[class^="ilya-part-treemenu"],
+	[class^="ilya-part-dt"],
 	[class^="ilya-part-custom"] {
 		margin-right: 5px;
 		margin-left: 5px;

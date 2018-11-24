@@ -1,13 +1,4 @@
 <?php
-/**
- * CSS Minifier
- *
- * Please report bugs on https://github.com/matthiasmullie/minify/issues
- *
- * @author Matthias Mullie <minify@mullie.eu>
- * @copyright Copyright (c) 2012, Matthias Mullie. All rights reserved
- * @license MIT License
- */
 
 namespace Lib\Assets\Minify;
 
@@ -15,17 +6,6 @@ use Lib\Assets\Minify\Exceptions\FileImportException;
 use Lib\Assets\Minify\ConverterInterface;
 use Lib\Assets\Minify\Converter;
 
-/**
- * CSS minifier
- *
- * Please report bugs on https://github.com/matthiasmullie/minify/issues
- *
- * @package Minify
- * @author Matthias Mullie <minify@mullie.eu>
- * @author Tijs Verkoyen <minify@verkoyen.eu>
- * @copyright Copyright (c) 2012, Matthias Mullie. All rights reserved
- * @license MIT License
- */
 class CSS extends Minify
 {
     /**
@@ -286,7 +266,7 @@ class CSS extends Minify
      * Minify the data.
      * Perform CSS optimizations.
      *
-     * @param string[optional] $path    Path to write the data to
+     * @param string $path    Path to write the data to
      * @param string[]         $parents Parent paths, for circular reference checks
      *
      * @return string The minified data
@@ -451,7 +431,6 @@ class CSS extends Minify
              *
              * @see https://developer.mozilla.org/nl/docs/Web/CSS/url#The_url()_functional_notation
              * @see https://hg.mozilla.org/mozilla-central/rev/14abca4e7378
-             * @see https://github.com/matthiasmullie/minify/issues/193
              */
             $url = trim($url);
             if (preg_match('/[\s\)\'"#\x{7f}-\x{9f}]/u', $url)) {
@@ -576,7 +555,6 @@ class CSS extends Minify
         // NOTE: it should be safe to remove all units for a 0 value, but in
         // practice, Webkit (especially Safari) seems to stumble over at least
         // 0%, potentially other units as well. Only stripping 'px' for now.
-        // @see https://github.com/matthiasmullie/minify/issues/60
         $content = preg_replace('/'.$before.'(-?0*(\.0+)?)(?<=0)px'.$after.'/', '\\1', $content);
 
         // strip 0-digits (.0 -> 0)

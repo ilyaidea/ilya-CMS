@@ -15,6 +15,7 @@
 namespace Lib\Mvc;
 
 use Lib\Assets\Minify\CSS;
+use Lib\Mvc\Helper\Content\ContentBuilder;
 
 /**
  * @property CSS cssmin
@@ -22,10 +23,14 @@ use Lib\Assets\Minify\CSS;
  */
 class Controller extends \Phalcon\Mvc\Controller
 {
+    /**
+     * @var ContentBuilder $content
+     */
+    public $content;
+
     public function initialize()
     {
-        $this->tag->appendTitle("Ilya CMS | ");
-        $this->tag->setTitleSeparator(" | ");
+        $this->content = $this->helper->content();
 
         $this->addAssetsTheme();
     }
@@ -40,12 +45,15 @@ class Controller extends \Phalcon\Mvc\Controller
 
     public function addAssetsTheme()
     {
-        $this->config->module->themePath = dirname($this->view->getMainView()). '/';
-        $content = $this->helper->content()->getContent();
-        $key = $content->getParts('key');
         if(file_exists(dirname($this->view->getMainView()). '/assets/css/styles.css'))
         {
-            $content->addCss('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles.css');
+            $this->content->addCss('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles.css');
+        }
+
+        $this->content->addJs('ilya-theme/base/assets/js/jquery.min.js');
+        if(file_exists(dirname($this->view->getMainView()). '/assets/js/ilya-global.js'))
+        {
+            $this->content->addJs('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/js/ilya-global.js');
         }
 
         if(
@@ -53,18 +61,7 @@ class Controller extends \Phalcon\Mvc\Controller
             $this->helper->isRTL()
         )
         {
-            $content->addCss('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles-rtl.css');
+            $this->content->addCss('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles-rtl.css');
         }
-    }
-
-    protected function getHashKey()
-    {
-        return
-            HOST_HASH.
-            $this->dispatcher->getParam('lang').
-            md5(
-            $this->dispatcher->getControllerClass().
-            '\\'.
-            $this->dispatcher->getActionName());
     }
 }

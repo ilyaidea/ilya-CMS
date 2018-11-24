@@ -1,4 +1,4 @@
-{# form_note(field, style, columns) #}
+{# form_note(note, style, columns) #}
 {% set tag = (columns > 1) ? 'span' : 'div' %}
 
-<{{ tag }} class="ilya-form-{{ style }}-note">{{ (field['note'] is defined) ? field['note'] : '' }}</{{ tag }}>
+<{{ tag }} class="ilya-form-{{ style }}-note">{{ note }}</{{ tag }}>

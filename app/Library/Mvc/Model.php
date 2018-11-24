@@ -14,14 +14,27 @@
 
 namespace Lib\Mvc;
 
-
+/**
+ * @property  Helper $helper
+ */
 class Model extends \Phalcon\Mvc\Model
 {
+    protected $helper;
+
     public function initialize()
     {
+        $this->helper = $this->getDI()->getShared('helper');
+
         if(isset($this->getDI()->getShared('config')->module->database->connection))
         {
             $this->setConnectionService($this->getDI()->getShared('config')->module->database->connection);
         }
+
+        $this->setRelationships();
+    }
+
+    protected function setRelationships()
+    {
+
     }
 }

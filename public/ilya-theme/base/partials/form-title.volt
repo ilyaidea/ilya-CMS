@@ -1,7 +1,7 @@
-{# form_title(part) #}
+{# form_title(form) #}
 
-{% set partTitle = (part['title'] is defined) ? part['title'] : null %}
-{% set partTitleTags = (part['title_tags'] is defined) ? part['title_tags'] : null %}
+{% set partTitle = (form.formInfo.title.get() !== null) ? form.formInfo.title.get() : null %}
+{% set partTitleTags = (form.formInfo.title.getTags(true) !== null) ? form.formInfo.title.getTags(true) : null %}
 
 {% if (strlen(partTitle)) or (strlen(partTitleTags)) %}
     <h2{{ rtrim(' '~ partTitleTags) }}>{{ partTitle }}</h2>
