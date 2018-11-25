@@ -23,94 +23,140 @@ use Phalcon\Mvc\User\Component;
  */
 class Buttons extends Component
 {
-    private $buttons = [];
-    private $event = [];
-    private $key = 0;
-    protected $dtKey;
+    /** @var DataTable $_dataTable */
+    protected $_dataTable;
 
-    public function __construct($dtKey)
+    protected $_name;
+
+    protected $_data;
+
+    protected $_title;
+
+    protected $_label;
+
+    protected $_visible = true;
+
+    protected $_attributes = [];
+
+    public function __construct($name, $attributes = null, DataTable $dataTable)
     {
-        $this->dtKey = $dtKey;
+        $this->_dataTable = $dataTable;
     }
 
-    public function toArray()
+    public function add()
     {
-        return $this->buttons;
+        $this->_dataTable->isCustom(false);
     }
 
-    public function event()
+    /**
+     * @return DataTable
+     */
+    public function getDataTable(): DataTable
     {
-        return $this->event;
+        return $this->_dataTable;
     }
 
-    public function add($title)
+    /**
+     * @param DataTable $dataTable
+     */
+    public function setDataTable( DataTable $dataTable ): void
     {
-        $url = $this->url->get([
-            'for' => 'default__'. $this->helper->locale()->getLanguage(),
-            'module' => $this->config->module->name,
-            'controller' => $this->dispatcher->getControllerName(),
-            'action' => 'add'
-        ]);
-
-        $this->buttons[$this->key]['text'] = $title;
-        $this->buttons[$this->key]['action'] = "function (e, dt, node, config){".
-            "window.location.href = '".$url."';".
-            "return false;".
-            " }";
-
-        $this->key++;
+        $this->_dataTable = $dataTable;
     }
 
-    public function edit( $title )
+    /**
+     * @return mixed
+     */
+    public function getName()
     {
-        $url = $this->url->get([
-            'for' => 'default__'. $this->helper->locale()->getLanguage(),
-            'module' => $this->config->module->name,
-            'controller' => $this->dispatcher->getControllerName(),
-            'action' => 'edit'
-        ]);
-
-        $this->buttons[$this->key]['text'] = $title;
-        $this->buttons[$this->key]['action'] = "function (e, dt, node, config){".
-            "var id = dt.row( { selected: true } ).data().id;".
-            "window.location.href = '".$url."'+id;".
-            "return false;".
-            " },";
-        $this->buttons[$this->key]['enabled'] = false;
-
-        $this->event[] = ".on( 'select deselect', function () {
-            var selectedRows = ".$this->dtKey.".rows( { selected: true } ).count();
-     
-            ".$this->dtKey.".button( ".$this->key." ).enable( selectedRows === 1 );
-        } );";
-
-        $this->key++;
+        return $this->_name;
     }
 
-    public function delete( $title )
+    /**
+     * @param mixed $name
+     */
+    public function setName( $name ): void
     {
-        $url = $this->url->get([
-            'for' => 'default__'. $this->helper->locale()->getLanguage(),
-            'module' => $this->config->module->name,
-            'controller' => $this->dispatcher->getControllerName(),
-            'action' => 'delete'
-        ]);
+        $this->_name = $name;
+    }
 
-        $this->buttons[$this->key]['text'] = $title;
-        $this->buttons[$this->key]['action'] = "function (e, dt, node, config){".
-            "var id = dt.row( { selected: true } ).data().id;".
-            "window.location.href = '".$url."'+id;".
-            "return false;".
-            " },";
-        $this->buttons[$this->key]['enabled'] = false;
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->_data;
+    }
 
-        $this->event[] = ".on( 'select deselect', function () {
-            var selectedRows = ".$this->dtKey.".rows( { selected: true } ).count();
-     
-            ".$this->dtKey.".button( ".$this->key." ).enable( selectedRows >= 1 );
-        } );";
+    /**
+     * @param mixed $data
+     */
+    public function setData( $data ): void
+    {
+        $this->_data = $data;
+    }
 
-        $this->key++;
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->_title;
+    }
 
+    /**
+     * @param mixed $title
+     */
+    public function setTitle( $title ): void
+    {
+        $this->_title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLabel()
+    {
+        return $this->_label;
+    }
+
+    /**
+     * @param mixed $label
+     */
+    public function setLabel( $label ): void
+    {
+        $this->_label = $label;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVisible(): bool
+    {
+        return $this->_visible;
+    }
+
+    /**
+     * @param bool $visible
+     */
+    public function setVisible( bool $visible ): void
+    {
+        $this->_visible = $visible;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributes(): array
+    {
+        return $this->_attributes;
+    }
+
+    /**
+     * @param array $attributes
+     */
+    public function setAttributes( array $attributes ): void
+    {
+        $this->_attributes = $attributes;
     }
 }

@@ -69,6 +69,8 @@ class Data extends Component
                 }
                 $i++;
             }
+
+            $this->dataTable->addJs($this->jsForTreeView());
         }
 
         if(!$this->dataTable->ajax->isAjax() && isset($this->dataTable->options['ajax']))
@@ -110,25 +112,26 @@ class Data extends Component
      * @author Ali Mansoori
      * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
      * @param array $data
-     * @param string $parentField
      * @version 1.0.0
      * @example Desc <code></code>
      */
-    public function setData( array $data = [], $parentField = 'parent_id')
+    public function setData( array $data = [])
     {
-        $this->parentField = $parentField;
-
+        // process data
         if(!empty($data) && is_array($data))
         {
             $data = $this->dataProcess($data);
         }
 
-        // array Flatten
-        $data_flat = $this->flatArray($data);
+        if($this->dataTable->isTreeView())
+        {
+            $this->data = $this->flatArray($data);
+        }
+        else
+        {
+            $this->data = $data;
+        }
 
-        //end
-
-        $this->data = $data_flat;
     }
 
     public function getData()
@@ -196,6 +199,51 @@ class Data extends Component
         return $this->tree($data);
     }
 
+    public function jsForTreeView()
+    {
+        $parentIndex = $this->getParentIndex();
+        $prefix = $this->dataTable->prefix;
+        $jsInitDt = /** @lang JavaScript */
+            "
+$('#$prefix').on('init.dt', function () {
+        $prefix.columns([$parentIndex]).search('^(0)$', true, false).draw();
+    });
+    var displayed = new Set([]);
+    $('#$prefix tbody').on('click', 'tr td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = $prefix.row(tr);
+        var id = row.data().id;
+        if (displayed.has(id)) {
+            displayed.delete(id);
+            tr.removeClass('details');
+        } else {
+            displayed.add(id);
+            tr.addClass('details');
+        }
+        var regex = \"^(0\";
+        displayed.forEach(function (value) {
+            regex = regex + \"|\" + value;
+        });
+        regex = regex + \")$\";
+        $prefix.columns([$parentIndex]).search(regex, true, false).draw();
+    });
+    
+    		$('#".$prefix."_filter input[type=\'search\']').on('keyup', function () {
+        		var value = $(this).val();
+            
+        		if (value === '') {
+        		    $prefix.columns([$parentIndex]).search('^(0)$', true, false).draw();
+                }
+        		else {
+                    $prefix.columns([$parentIndex]).search('^([0-9]*)$', true, false).draw();
+        		}
+        		
+            $prefix.search(value).draw();
+        });
+";
+        return $jsInitDt;
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Protected methods
 	 */
@@ -205,6 +253,12 @@ class Data extends Component
         $result = [];
         foreach($arrays as $array)
         {
+            if(!isset($array[$this->parentField]))
+            {
+                $array[$this->parentField] = null;
+                $this->dataKeys[7] = $this->parentField;
+            }
+
             if($array[$this->parentField] == $parent)
             {
                 $array['level'] = $level;

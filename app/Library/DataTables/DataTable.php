@@ -34,6 +34,8 @@ class DataTable extends Component
     public $data;
     /** @var Ajax $ajax */
     public $ajax;
+    /** @var Responsive $response */
+    public $response;
     /** @var array $options */
     public $options = [
         'columns' => []
@@ -46,7 +48,11 @@ class DataTable extends Component
 	 */
 
     private $treeView = false;
+
     private $custom = true;
+
+    private $jsAfter   = [];
+    private $jsBefore  = [];
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Constructor
@@ -54,9 +60,10 @@ class DataTable extends Component
 
     public function __construct()
     {
-        $this->content = ContentBuilder::instantiate();
-        $this->ajax = new Ajax($this);
-        $this->data = new Data($this);
+        $this->content  = ContentBuilder::instantiate();
+        $this->ajax     = new Ajax($this);
+        $this->data     = new Data($this);
+        $this->response = new Responsive($this);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -74,18 +81,8 @@ class DataTable extends Component
 
         $this->data->process();
         $this->ajax->process();
+        $this->response->process();
 
-        // responsive datatable
-        $this->content->assets->addCss(
-            'assets/datatables-responsive/css/responsive.dataTables.min.css'
-        );
-        $this->content->assets->addJs(
-            'assets/datatables-responsive/js/dataTables.responsive.js'
-        );
-
-        $this->options['responsive']['details']['display'] = "||$.fn.dataTable.Responsive.display.childRowImmediate||";
-        $this->options['responsive']['details']['type'] = "";
-        //
 
 //        dump($this->data->getData());
 //        dump($this->options);
@@ -95,56 +92,41 @@ class DataTable extends Component
 //            "$.fn.dataTableExt.sErrMode = 'throw';"
 //        );
 
+
+        // assets before init dataTable
+        foreach($this->jsBefore as $js)
+        {
+            $this->content->assets->addJs($js);
+        }
+
         $timeout = self::$timeout;
         $jsInitDt = "setTimeout(function () { ";
 
         $jsInitDt .= "var $this->prefix = $('#$this->prefix').DataTable(".$options.");";
 
-        if($this->isTreeView())
+        foreach($this->jsAfter as $js )
         {
-            $parentIndex = $this->data->getParentIndex();
-            $jsInitDt .= /** @lang JavaScript */
-                "
-$('#$this->prefix').on('init.dt', function () {
-        $this->prefix.columns([$parentIndex]).search('^(0)$', true, false).draw();
-    });
-    var displayed = new Set([]);
-    $('#$this->prefix tbody').on('click', 'tr td.details-control', function () {
-        var tr = $(this).closest('tr');
-        var row = $this->prefix.row(tr);
-        var id = row.data().id;
-        if (displayed.has(id)) {
-            displayed.delete(id);
-            tr.removeClass('details');
-        } else {
-            displayed.add(id);
-            tr.addClass('details');
-        }
-        var regex = \"^(0\";
-        displayed.forEach(function (value) {
-            regex = regex + \"|\" + value;
-        });
-        regex = regex + \")$\";
-        $this->prefix.columns([$parentIndex]).search(regex, true, false).draw();
-    });
-    
-    		$('#".$this->prefix."_filter input[type=\'search\']').on('keyup', function () {
-        		var value = $(this).val();
-            
-        		if (value === '') {
-        		    $this->prefix.columns([$parentIndex]).search('^(0)$', true, false).draw();
-                }
-        		else {
-                    $this->prefix.columns([$parentIndex]).search('^([0-9]*)$', true, false).draw();
-        		}
-        		
-            $this->prefix.search(value).draw();
-        });
-";
+            if (filter_var($js, FILTER_VALIDATE_URL) == true || file_exists($js)) {
+                continue;
+            }
+
+            $jsInitDt .= $js;
+
         }
         $jsInitDt .= "}, $timeout);";
 
+        // init dataTable
         $this->content->assets->addJs($jsInitDt);
+
+        foreach($this->jsAfter as $js )
+        {
+            if(!file_exists($js))
+            {
+                continue;
+            }
+            $this->content->assets->addJs($js);
+        }
+
         self::$timeout = self::$timeout + 1000;
     }
 
@@ -169,6 +151,11 @@ $('#$this->prefix').on('init.dt', function () {
         return new Columns($name, $attributs, $this);
     }
 
+    public function button($name, $attributs = null)
+    {
+        return new Buttons($name, $attributs, $this);
+    }
+
     public function add($obj)
     {
         if(is_object($obj))
@@ -187,6 +174,30 @@ $('#$this->prefix').on('init.dt', function () {
             $this->custom = true;
         elseif($isCustom === false)
             $this->custom = false;
+    }
+
+    public function addCss($css, $afterInit = true)
+    {
+        if($afterInit)
+        {
+            $this->cssAfter[] = $css;
+        }
+        else
+        {
+            $this->cssBefore[] = $css;
+        }
+    }
+
+    public function addJs($js, $afterInit = true)
+    {
+        if($afterInit)
+        {
+            $this->jsAfter[] = $js;
+        }
+        else
+        {
+            $this->jsBefore[] = $js;
+        }
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
