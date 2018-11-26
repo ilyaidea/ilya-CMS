@@ -14,17 +14,30 @@
 
 namespace Lib\DataTables;
 
-
-use Phalcon\Mvc\User\Component;
-
-class Select extends Component
+class Select
 {
-    private $select = true;
+    /** @var DataTable $_dataTable */
+    private $_dataTable;
 
-    public function toArray()
+    public function __construct(DataTable $dataTable)
     {
-        return [
-            'style' => 'single'
-        ];
+        $this->_dataTable = $dataTable;
+        $this->_dataTable->options['select'] = true;
     }
+
+    public function process()
+    {
+        if(isset($this->_dataTable->options['select']))
+        {
+            $this->_dataTable->addCss(
+                'assets/datatables.net-select-dt/css/select.dataTables.min.css',
+                false
+            );
+            $this->_dataTable->addJs(
+                'assets/datatables.net-select/js/dataTables.select.min.js',
+                false
+            );
+        }
+    }
+
 }

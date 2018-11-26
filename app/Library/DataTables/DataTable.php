@@ -36,10 +36,14 @@ class DataTable extends Component
     public $ajax;
     /** @var Responsive $response */
     public $response;
+    /** @var Select $select */
+    public $select;
     /** @var array $options */
     public $options = [
         'columns' => []
     ];
+
+    private $dom;
 
     public static $timeout = 0;
 
@@ -51,8 +55,12 @@ class DataTable extends Component
 
     private $custom = true;
 
+    private $cssAfter   = [];
+    private $cssBefore  = [];
     private $jsAfter   = [];
     private $jsBefore  = [];
+
+    private $_title;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Constructor
@@ -64,6 +72,7 @@ class DataTable extends Component
         $this->ajax     = new Ajax($this);
         $this->data     = new Data($this);
         $this->response = new Responsive($this);
+        $this->select   = new Select($this);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -82,6 +91,7 @@ class DataTable extends Component
         $this->data->process();
         $this->ajax->process();
         $this->response->process();
+        $this->select->process();
 
 
 //        dump($this->data->getData());
@@ -94,6 +104,10 @@ class DataTable extends Component
 
 
         // assets before init dataTable
+        foreach($this->cssBefore as $css)
+        {
+            $this->content->assets->addCss($css);
+        }
         foreach($this->jsBefore as $js)
         {
             $this->content->assets->addJs($js);
@@ -163,6 +177,44 @@ class DataTable extends Component
     }
 
     /**
+     * @return string
+     */
+    public function getDom()
+    {
+        return $this->dom;
+    }
+
+    /**
+     * @param string $dom
+     *
+     * @see https://datatables.net/reference/option/dom
+     */
+    public function setDom( $dom = null ): void
+    {
+        if(!$dom)
+            $dom = '';
+
+        $this->options['dom'] = $dom;
+        $this->dom = $dom;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->_title;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle( $title ): void
+    {
+        $this->_title = $title;
+    }
+
+    /**
      * Get / Set isCustom
      */
     public function isCustom( $isCustom = null )
@@ -192,11 +244,11 @@ class DataTable extends Component
     {
         if($afterInit)
         {
-            $this->jsAfter[] = $js;
+            $this->jsAfter[$js] = $js;
         }
         else
         {
-            $this->jsBefore[] = $js;
+            $this->jsBefore[$js] = $js;
         }
     }
 

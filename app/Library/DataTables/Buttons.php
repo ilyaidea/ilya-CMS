@@ -15,148 +15,141 @@
 namespace Lib\DataTables;
 
 
-use Lib\Mvc\Helper;
+use Lib\DataTables\Buttons\Actions;
+use Lib\DataTables\Buttons\Types;
 use Phalcon\Mvc\User\Component;
 
-/**
- * @property Helper helper
- */
 class Buttons extends Component
 {
     /** @var DataTable $_dataTable */
     protected $_dataTable;
+    /** @var Types $_type */
+    protected $_type;
 
-    protected $_name;
-
-    protected $_data;
-
-    protected $_title;
-
-    protected $_label;
-
-    protected $_visible = true;
+    /** @var Actions $_actions */
+    protected $_actions;
 
     protected $_attributes = [];
 
+    public $options = [];
+
     public function __construct($name, $attributes = null, DataTable $dataTable)
     {
-        $this->_dataTable = $dataTable;
+        $this->options['name'] = $name;
+        $this->_dataTable      = $dataTable;
+        $this->_type           = new Types($this, $dataTable);
+        $this->_actions        = new Actions($this, $dataTable);
     }
 
     public function add()
     {
-        $this->_dataTable->isCustom(false);
+        if(!empty($this->_dataTable->options['columns']))
+        {
+            $this->_dataTable->isCustom(false);
+            $this->_dataTable->content->assets->addCss(
+                'assets/datatables.net-buttons-dt/css/buttons.dataTables.min.css'
+            );
+            $this->_dataTable->addJs(
+                'assets/datatables.net-buttons/js/dataTables.buttons.min.js'
+            );
+
+            $this->action()->add();
+
+            $this->_dataTable->options['buttons'][] = $this->options;
+        }
     }
 
     /**
-     * @return DataTable
+     * Set Name
+     *
+     * @param string $name
+     * @return Buttons
      */
-    public function getDataTable(): DataTable
+    public function setName(string $name = ''): Buttons
     {
-        return $this->_dataTable;
+        $this->options['name'] = $name;
+
+        return $this;
     }
 
-    /**
-     * @param DataTable $dataTable
-     */
-    public function setDataTable( DataTable $dataTable ): void
-    {
-        $this->_dataTable = $dataTable;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getName()
     {
-        return $this->_name;
+        if(isset($this->options['name']) && is_string($this->options['name']))
+            return $this->options['name'];
+        return null;
     }
 
     /**
-     * @param mixed $name
+     * Set Title
+     *
+     * @param string $title
+     * @return Buttons
      */
-    public function setName( $name ): void
+    public function setText(string $title = ''): Buttons
     {
-        $this->_name = $name;
+        $this->options['text'] = $title;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get Title
+     *
+     * @return mixed|null
      */
-    public function getData()
+    public function getText()
     {
-        return $this->_data;
+        if(isset($this->options['text']) && is_string($this->options['text']))
+            return $this->options['text'];
+        return null;
     }
 
     /**
-     * @param mixed $data
+     * Set Enabled
+     *
+     * @param bool $enabled
+     * @return Buttons
      */
-    public function setData( $data ): void
+    public function setEnabled(bool $enabled): Buttons
     {
-        $this->_data = $data;
+        $this->options['enabled'] = $enabled;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * Get Enabled
+     *
+     * @return mixed|null
      */
-    public function getTitle()
+    public function getEnabled()
     {
-        return $this->_title;
+        if(isset($this->options['enabled']) && is_bool($this->options['enabled']))
+            return $this->options['enabled'];
+        return null;
     }
 
     /**
-     * @param mixed $title
+     * Built-in Buttons list
+     *
+     * @return Types
+     * @see https://datatables.net/reference/button/
      */
-    public function setTitle( $title ): void
+    public function type(): Types
     {
-        $this->_title = $title;
+        return $this->_type;
     }
 
     /**
-     * @return mixed
+     * Action to take when the button is activated
+     *
+     * This function defined the action that the button will take when activated by the end user. This will normally be to perform some operation on the DataTable, but can be absolutely anything since the function can be defined by yourself.
+     *
+     * @see https://datatables.net/reference/option/buttons.buttons.action
+     * @return Actions
      */
-    public function getLabel()
+    public function action(): Actions
     {
-        return $this->_label;
-    }
-
-    /**
-     * @param mixed $label
-     */
-    public function setLabel( $label ): void
-    {
-        $this->_label = $label;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isVisible(): bool
-    {
-        return $this->_visible;
-    }
-
-    /**
-     * @param bool $visible
-     */
-    public function setVisible( bool $visible ): void
-    {
-        $this->_visible = $visible;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAttributes(): array
-    {
-        return $this->_attributes;
-    }
-
-    /**
-     * @param array $attributes
-     */
-    public function setAttributes( array $attributes ): void
-    {
-        $this->_attributes = $attributes;
+        return $this->_actions;
     }
 }
