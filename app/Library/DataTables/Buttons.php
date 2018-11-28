@@ -33,7 +33,7 @@ class Buttons extends Component
 
     public $options = [];
 
-    public function __construct($name, $attributes = null, DataTable $dataTable)
+    public function __construct($name, $attributes = null, $dataTable)
     {
         $this->options['name'] = $name;
         $this->_dataTable      = $dataTable;
@@ -43,9 +43,8 @@ class Buttons extends Component
 
     public function add()
     {
-        if(!empty($this->_dataTable->options['columns']))
+        if(!empty($this->_dataTable->columns->getColumns()))
         {
-            $this->_dataTable->isCustom(false);
             $this->_dataTable->content->assets->addCss(
                 'assets/datatables.net-buttons-dt/css/buttons.dataTables.min.css'
             );
@@ -65,7 +64,7 @@ class Buttons extends Component
      * @param string $name
      * @return Buttons
      */
-    public function setName(string $name = ''): Buttons
+    public function setName($name = '')
     {
         $this->options['name'] = $name;
 
@@ -85,7 +84,7 @@ class Buttons extends Component
      * @param string $title
      * @return Buttons
      */
-    public function setText(string $title = ''): Buttons
+    public function setText($title = '')
     {
         $this->options['text'] = $title;
 
@@ -110,7 +109,7 @@ class Buttons extends Component
      * @param bool $enabled
      * @return Buttons
      */
-    public function setEnabled(bool $enabled): Buttons
+    public function setEnabled($enabled)
     {
         $this->options['enabled'] = $enabled;
 
@@ -135,7 +134,7 @@ class Buttons extends Component
      * @return Types
      * @see https://datatables.net/reference/button/
      */
-    public function type(): Types
+    public function type()
     {
         return $this->_type;
     }
@@ -148,7 +147,7 @@ class Buttons extends Component
      * @see https://datatables.net/reference/option/buttons.buttons.action
      * @return Actions
      */
-    public function action(): Actions
+    public function action()
     {
         return $this->_actions;
     }

@@ -57,7 +57,7 @@ class Actions
      * @param string $url
      * @return Buttons
      */
-    public function setUrl(string $url): Buttons
+    public function setUrl(string $url)
     {
         $this->options['url'] = $url;
         $this->storage[] = "window.location.href = '$url';";

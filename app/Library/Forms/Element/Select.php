@@ -19,7 +19,7 @@ class Select extends \Phalcon\Forms\Element\Select
 {
     /** @var Design $design */
     public $design;
-    public function __construct( string $name, $options = null, ?array $attributes = null )
+    public function __construct( $name, $options = null, $attributes = null )
     {
         parent::__construct( $name, $options, $attributes );
 

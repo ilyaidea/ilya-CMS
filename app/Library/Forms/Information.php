@@ -53,7 +53,7 @@ class Information
     /**
      * @param mixed $tags
      */
-    public function addTags( $tags ): void
+    public function addTags( $tags )
     {
         if(is_array($tags))
             $this->tags = array_merge($this->tags, $tags);

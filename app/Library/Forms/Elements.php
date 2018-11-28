@@ -37,7 +37,7 @@ class Elements
     /**
      * @return bool
      */
-    public function hasField(): bool
+    public function hasField()
     {
         if(!empty($this->getFields()))
             return true;
@@ -62,7 +62,7 @@ class Elements
     /**
      * @return bool
      */
-    public function hasButton(): bool
+    public function hasButton()
     {
         if(!empty($this->getButtons()))
             return true;
@@ -87,7 +87,7 @@ class Elements
     /**
      * @return bool
      */
-    public function hasHidden(): bool
+    public function hasHidden()
     {
         if(!empty($this->getHiddens()))
             return true;

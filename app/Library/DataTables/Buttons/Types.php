@@ -148,7 +148,7 @@ class Types
 
     }
 
-    public function print()
+    public function printtt()
     {
 
     }
@@ -190,11 +190,12 @@ TAG;
             <<<TAG
 var id = dt.row({selected:true}).data().id;window.location.href = '$url'+id;return false;
 TAG;
+        $table = $this->_dataTable->prefix. '_table';
         $dt = $this->_dataTable->prefix;
         $btn_name = $this->_btn->getName();
         $this->_dataTable->addJs( /** @lang JavaScript */
             <<<TAG
-$dt.on('select deselect', function(e, dt, type, indexes) {
+$table.on('select deselect', function(e, dt, type, indexes) {
     var count = dt.rows({selected:true}).count();
     if (count > 1 || count == 0){
         dt.button('$btn_name:name').disable();
@@ -230,10 +231,11 @@ TAG
 var id = dt.row({selected:true}).data().id;window.location.href = '$url'+id;return false;
 TAG;
         $dt = $this->_dataTable->prefix;
+        $table = $this->_dataTable->prefix. '_table';
         $btn_name = $this->_btn->getName();
         $this->_dataTable->addJs( /** @lang JavaScript */
             <<<TAG
-$dt.on('select deselect', function(e, dt, type, indexes) {
+$table.on('select deselect', function(e, dt, type, indexes) {
     var count = dt.rows({selected:true}).count();
     if (count > 1 || count == 0){
         dt.button('$btn_name:name').disable();

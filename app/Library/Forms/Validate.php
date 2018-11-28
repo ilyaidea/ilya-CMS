@@ -34,7 +34,7 @@ class Validate extends Component
     /**
      * @return bool
      */
-    public function isOk(): bool
+    public function isOk()
     {
         if($this->request->isPost() && $this->request->getPost('action') !== null)
         {
@@ -55,7 +55,7 @@ class Validate extends Component
     /**
      * @param string $message
      */
-    public function setOkMsg( string $message ): void
+    public function setOkMsg( $message )
     {
         $this->error = null;
         $this->ok = $message;
@@ -73,7 +73,7 @@ class Validate extends Component
     /**
      * @return bool
      */
-    public function hasError(): bool
+    public function hasError()
     {
         if(!is_null($this->error))
             return true;
@@ -84,7 +84,7 @@ class Validate extends Component
     /**
      * @param string $message
      */
-    public function setErrorMsg( string $message ): void
+    public function setErrorMsg( string $message )
     {
         $this->ok = null;
         $this->error = $message;

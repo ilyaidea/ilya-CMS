@@ -40,27 +40,11 @@ class Data extends Component
 
     public function process()
     {
-//        $this->parentTarget = array_search($this->parentField, $this->getDataKeys());
-        if($this->dataTable->isCustom())
-        {
-            for ($i = 0; $i < count($this->dataKeys); $i++)
-            {
-                array_push(
-                    $this->dataTable->options['columns'],
-                    [
-                        'title' => $this->dataKeys[$i],
-                        'target' => $i+1,
-                        'data' => $this->dataKeys[$i]
-                    ]
-                );
-            }
-        }
-
         // search key index parent id
         if($this->dataTable->isTreeView())
         {
             $i = 0;
-            foreach($this->dataTable->options['columns'] as $column)
+            foreach($this->dataTable->columns->getColumns() as $column)
             {
                 if(isset($column['data']) && $column['data'] == $this->parentField)
                 {
@@ -73,27 +57,7 @@ class Data extends Component
             $this->dataTable->addJs($this->jsForTreeView());
         }
 
-        if(!$this->dataTable->ajax->isAjax() && isset($this->dataTable->options['ajax']))
-        {
-            unset($this->dataTable->options['ajax']);
-            $this->dataTable->options['data'] = '||data_'. $this->dataTable->prefix.'||';
-
-            $dataVar = 'data_'. $this->dataTable->prefix;
-            $dataEncode = json_encode($this->getData());
-
-            $this->dataTable->content->assets->addJs( /** @lang JavaScript */
-                "var $dataVar = $dataEncode;"
-            );
-        }
-
-        if(
-            $this->request->isAjax() &&
-            $this->request->get('action_'.$this->dataTable->prefix) !== null &&
-            $this->security->checkHash(
-                get_class($this->dataTable).$this->dataTable->prefix,
-                $this->request->get('action_'.$this->dataTable->prefix)
-            )
-        )
+        if($this->dataTable->isAjax())
         {
             dump(json_encode(
                 [
@@ -142,7 +106,7 @@ class Data extends Component
     /**
      * @return int
      */
-    public function getParentIndex(): int
+    public function getParentIndex()
     {
         return $this->parentIndex;
     }
@@ -150,7 +114,7 @@ class Data extends Component
     /**
      * @return array
      */
-    public function getDataKeys(): array
+    public function getDataKeys()
     {
         return $this->dataKeys;
     }
@@ -158,7 +122,7 @@ class Data extends Component
     /**
      * @return string
      */
-    public function getParentField(): string
+    public function getParentField()
     {
         return $this->parentField;
     }
@@ -166,7 +130,7 @@ class Data extends Component
     /**
      * @param string $parentField
      */
-    public function setParentField( string $parentField ): void
+    public function setParentField( string $parentField )
     {
         $this->parentField = $parentField;
     }
@@ -181,18 +145,6 @@ class Data extends Component
 
     private function dataProcess(array $data)
     {
-        foreach($data as $dt)
-        {
-            if($this->dataKeys == [])
-            {
-                $this->dataKeys = array_keys($dt);
-                if (($key = array_search('children', $this->dataKeys)) !== false) {
-                    unset($this->dataKeys[$key]);
-                }
-            }
-            break;
-        }
-
         if(!$this->dataTable->isTreeView())
             return $data;
 
@@ -202,16 +154,17 @@ class Data extends Component
     public function jsForTreeView()
     {
         $parentIndex = $this->getParentIndex();
+        $table = $this->dataTable->prefix.'_table';
         $prefix = $this->dataTable->prefix;
         $jsInitDt = /** @lang JavaScript */
             "
 $('#$prefix').on('init.dt', function () {
-        $prefix.columns([$parentIndex]).search('^(0)$', true, false).draw();
+        $table.columns([$parentIndex]).search('^(0)$', true, false).draw();
     });
     var displayed = new Set([]);
     $('#$prefix tbody').on('click', 'tr td.details-control', function () {
         var tr = $(this).closest('tr');
-        var row = $prefix.row(tr);
+        var row = $table.row(tr);
         var id = row.data().id;
         if (displayed.has(id)) {
             displayed.delete(id);
@@ -225,20 +178,20 @@ $('#$prefix').on('init.dt', function () {
             regex = regex + \"|\" + value;
         });
         regex = regex + \")$\";
-        $prefix.columns([$parentIndex]).search(regex, true, false).draw();
+        $table.columns([$parentIndex]).search(regex, true, false).draw();
     });
     
     		$('#".$prefix."_filter input[type=\'search\']').on('keyup', function () {
         		var value = $(this).val();
             
         		if (value === '') {
-        		    $prefix.columns([$parentIndex]).search('^(0)$', true, false).draw();
+        		    $table.columns([$parentIndex]).search('^(0)$', true, false).draw();
                 }
         		else {
-                    $prefix.columns([$parentIndex]).search('^([0-9]*)$', true, false).draw();
+                    $table.columns([$parentIndex]).search('^([0-9]*)$', true, false).draw();
         		}
         		
-            $prefix.search(value).draw();
+            $table.search(value).draw();
         });
 ";
         return $jsInitDt;

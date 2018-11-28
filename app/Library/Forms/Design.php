@@ -58,7 +58,7 @@ class Design
     /**
      * @param mixed $style
      */
-    public function setStyle( $style ): void
+    public function setStyle( $style )
     {
         $this->style = $style;
     }
@@ -66,7 +66,7 @@ class Design
     /**
      * @return bool
      */
-    public function isBoxed(): bool
+    public function isBoxed()
     {
         return $this->boxed;
     }
@@ -74,7 +74,7 @@ class Design
     /**
      * @param bool $boxed
      */
-    public function setBoxed( bool $boxed ): void
+    public function setBoxed( $boxed )
     {
         $this->boxed = $boxed;
     }

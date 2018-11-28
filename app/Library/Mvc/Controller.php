@@ -15,7 +15,7 @@
 namespace Lib\Mvc;
 
 use Lib\Assets\Minify\CSS;
-use Lib\Mvc\Helper\Content\ContentBuilder;
+use Lib\Contents\ContentBuilder;
 
 /**
  * @property CSS cssmin
@@ -30,9 +30,9 @@ class Controller extends \Phalcon\Mvc\Controller
 
     public function initialize()
     {
-        $this->content = $this->helper->content();
+        $this->content = ContentBuilder::instantiate();
 
-        $this->addAssetsTheme();
+//        $this->addAssetsTheme();
     }
 
     public function setEnviroment($theme = 'frontend', $layout = null)
@@ -47,13 +47,13 @@ class Controller extends \Phalcon\Mvc\Controller
     {
         if(file_exists(dirname($this->view->getMainView()). '/assets/css/styles.css'))
         {
-            $this->content->addCss('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles.css');
+            $this->content->assets->addCss('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles.css');
         }
 
-        $this->content->addJs('ilya-theme/base/assets/js/jquery.min.js');
+        $this->content->assets->addJs('ilya-theme/base/assets/js/jquery.min.js');
         if(file_exists(dirname($this->view->getMainView()). '/assets/js/ilya-global.js'))
         {
-            $this->content->addJs('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/js/ilya-global.js');
+            $this->content->assets->addJs('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/js/ilya-global.js');
         }
 
         if(
@@ -61,7 +61,7 @@ class Controller extends \Phalcon\Mvc\Controller
             $this->helper->isRTL()
         )
         {
-            $this->content->addCss('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles-rtl.css');
+            $this->content->assets->addCss('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles-rtl.css');
         }
     }
 }

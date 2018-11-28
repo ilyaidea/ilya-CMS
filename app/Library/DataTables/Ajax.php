@@ -41,7 +41,7 @@ class Ajax extends Component
 	 * Constructor
 	 */
 
-    public function __construct(DataTable $dataTable)
+    public function __construct($dataTable)
     {
         $this->dataTable = $dataTable;
         $this->setUrl();
@@ -55,10 +55,29 @@ class Ajax extends Component
     {
         $this->dataTable->options['ajax']['dataSrc'] = 'data_'.$this->dataTable->prefix;
 
-        $this->dataTable->options['ajax']['data']['action_'.$this->dataTable->prefix] =
-            $this->security->hash(
+        if($this->dataTable->getParent())
+        {
+            $dt_parent = $this->dataTable->getParent()->prefix.'_table';
+            $dt = $this->dataTable->prefix;
+            $action = $this->security->hash(
                 get_class($this->dataTable). $this->dataTable->prefix
             );
+            $this->dataTable->options['ajax']['data'] = "||function(d){";
+
+            $str = "";
+            $str .= "var selected = $dt_parent.row({selected:true});";
+            $str .= "d.action_$dt = '$action';";
+            $str .= "if(selected.any()){d.id = selected.data().id;}";
+            $this->dataTable->options['ajax']['data'] .= $str;
+            $this->dataTable->options['ajax']['data'] .= "}||";
+        }
+        else
+        {
+            $this->dataTable->options['ajax']['data']['action_'.$this->dataTable->prefix] =
+                $this->security->hash(
+                    get_class($this->dataTable). $this->dataTable->prefix
+                );
+        }
     }
 
     public function setType($type = self::GET_DATA)
@@ -116,7 +135,7 @@ class Ajax extends Component
     /**
      * Get / Set isAjax
      */
-    public function isAjax( bool $isAjax = null )
+    public function isAjax( $isAjax = null )
     {
         if($isAjax === null)
             return $this->isAjax;

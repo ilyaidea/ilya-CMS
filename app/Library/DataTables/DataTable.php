@@ -38,22 +38,22 @@ class DataTable extends Component
     public $response;
     /** @var Select $select */
     public $select;
+    /** @var Columns $columns */
+    public $columns;
     /** @var array $options */
     public $options = [
         'columns' => []
     ];
 
+    /** @var DataTable $parent */
+    private $parent;
     private $dom;
-
-    public static $timeout = 0;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Private parameters
 	 */
 
     private $treeView = false;
-
-    private $custom = true;
 
     private $cssAfter   = [];
     private $cssBefore  = [];
@@ -73,6 +73,8 @@ class DataTable extends Component
         $this->data     = new Data($this);
         $this->response = new Responsive($this);
         $this->select   = new Select($this);
+        $this->columns  = new Columns($this);
+        $this->setDom('Blfrtip');
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -82,66 +84,43 @@ class DataTable extends Component
     public function process()
     {
         $this->installBaseAssets();
-
-        if(method_exists($this, 'initialize'))
-            $this->initialize();
-
+        $this->runInitMethod();
         $this->addColumnTreeView();
-
         $this->data->process();
-        $this->ajax->process();
         $this->response->process();
         $this->select->process();
+        $this->ajax->process();
+        $this->eventSelectingIfHasParent();
+//        $this->disableError();
+        $this->assetsBeforeInitDataTable();
 
+        $this->initDataTable();
 
-//        dump($this->data->getData());
-//        dump($this->options);
-        $options = $this->prepareStrForJs(json_encode($this->options));
+    }
 
-//        $this->content->assets->addJs( /** @lang JavaScript */
-//            "$.fn.dataTableExt.sErrMode = 'throw';"
-//        );
+    public function disableError()
+    {
+        $this->content->assets->addJs( /** @lang JavaScript */
+            "$.fn.dataTableExt.sErrMode = 'throw';"
+        );
+    }
 
+    /**
+     * @return DataTable|null
+     */
+    public function getParent()
+    {
+        if($this->parent)
+            return $this->parent;
+        return null;
+    }
 
-        // assets before init dataTable
-        foreach($this->cssBefore as $css)
-        {
-            $this->content->assets->addCss($css);
-        }
-        foreach($this->jsBefore as $js)
-        {
-            $this->content->assets->addJs($js);
-        }
-
-        $timeout = self::$timeout;
-        $jsInitDt = "setTimeout(function () { ";
-
-        $jsInitDt .= "var $this->prefix = $('#$this->prefix').DataTable(".$options.");";
-
-        foreach($this->jsAfter as $js )
-        {
-            if (filter_var($js, FILTER_VALIDATE_URL) == true || file_exists($js)) {
-                continue;
-            }
-
-            $jsInitDt .= $js;
-
-        }
-        $jsInitDt .= "}, $timeout);";
-
-        // init dataTable
-        $this->content->assets->addJs($jsInitDt);
-
-        foreach($this->jsAfter as $js )
-        {
-            if(!file_exists($js))
-            {
-                continue;
-            }
-            $this->content->assets->addJs($js);
-        }
-
-        self::$timeout = self::$timeout + 1000;
+    /**
+     * @param DataTable $parent
+     */
+    public function setParent( $parent )
+    {
+        $this->parent = $parent;
     }
 
     /**
@@ -155,14 +134,14 @@ class DataTable extends Component
     /**
      * @param bool $treeView
      */
-    public function setTreeView( bool $treeView ): void
+    public function setTreeView( $treeView )
     {
         $this->treeView = $treeView;
     }
 
     public function column($name, $attributs = null)
     {
-        return new Columns($name, $attributs, $this);
+        return new Column($name, $attributs, $this);
     }
 
     public function button($name, $attributs = null)
@@ -189,7 +168,7 @@ class DataTable extends Component
      *
      * @see https://datatables.net/reference/option/dom
      */
-    public function setDom( $dom = null ): void
+    public function setDom( $dom = null )
     {
         if(!$dom)
             $dom = '';
@@ -209,23 +188,9 @@ class DataTable extends Component
     /**
      * @param mixed $title
      */
-    public function setTitle( $title ): void
+    public function setTitle( $title )
     {
         $this->_title = $title;
-    }
-
-    /**
-     * Get / Set isCustom
-     */
-    public function isCustom( $isCustom = null )
-    {
-        if($isCustom === null)
-            return $this->custom;
-
-        if($isCustom === true)
-            $this->custom = true;
-        elseif($isCustom === false)
-            $this->custom = false;
     }
 
     public function addCss($css, $afterInit = true)
@@ -252,6 +217,21 @@ class DataTable extends Component
         }
     }
 
+    public function isAjax()
+    {
+        if(
+            $this->request->isAjax() &&
+            $this->request->get('action_'.$this->prefix) !== null &&
+            $this->security->checkHash(
+                get_class($this).$this->prefix,
+                $this->request->get('action_'.$this->prefix)
+            )
+        )
+            return true;
+
+        return false;
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Protected methods
 	 */
@@ -259,6 +239,13 @@ class DataTable extends Component
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Private methods
 	 */
+
+    private function runInitMethod()
+    {
+        if(method_exists($this, 'initialize'))
+            $this->initialize();
+    }
+
     private function installBaseAssets()
     {
         $this->content->assets->addCss(
@@ -268,14 +255,20 @@ class DataTable extends Component
         $this->content->assets->addJs(
             'assets/jquery/dist/jquery.min.js'
         );
+//        $this->content->assets->addJs(
+//            'https://code.jquery.com/jquery-3.3.1.min.js'
+//        );
 
         $this->content->assets->addJs(
             'assets/datatables.net/js/jquery.dataTables.min.js'
         );
     }
 
-    private function prepareStrForJs($str)
+    private function prepareStrForJs()
     {
+        $this->options['columns'] = $this->columns->getColumns();
+
+        $str = json_encode($this->options);
         $str = str_replace('"||', '', $str);
         $str = str_replace('||"', '', $str);
         return $str;
@@ -373,29 +366,95 @@ TAG
 
             );
 
-            array_unshift(
-                $this->options['columns'],
-                [
-                    'class' => 'details-control',
-                    'data' => null,
-                    'orderable' => false,
-                    'defaultContent' => "",
-                    'width' => 50,
-                    'target' => 0,
-                    'createdCell' => "||".
-                        "function (td, cellData, rowData, row, col) {".
-                        "if (rowData._children === 0) { ".
-                        "var space = '&nbsp;';".
-                        "for(var i=0;i<rowData.level;i++){space = space+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}".
-                        "td.className = ''; $(td).append(space+'_'); ".
-                        "}".
-                        "if (rowData.level > 0) { ".
-                        "td.className = td.className + ' level-' + rowData.level; ".
-                        "}".
-                        "}".
-                        "||"
-                ]
-            );
+            $this->columns->addFirstColumn([
+                'class' => 'details-control',
+                'data' => null,
+                'orderable' => false,
+                'defaultContent' => "",
+                'width' => 50,
+                'target' => 0,
+                'createdCell' => "||".
+                    "function (td, cellData, rowData, row, col) {".
+                    "if (rowData._children === 0) { ".
+                    "var space = '&nbsp;';".
+                    "for(var i=0;i<rowData.level;i++){space = space+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}".
+                    "td.className = ''; $(td).append(space+'_'); ".
+                    "}".
+                    "if (rowData.level > 0) { ".
+                    "td.className = td.className + ' level-' + rowData.level; ".
+                    "}".
+                    "}".
+                    "||"
+            ]);
+        }
+    }
+
+    private function eventSelectingIfHasParent()
+    {
+        if($this->getParent())
+        {
+            $parent_table = $this->getParent()->prefix. '_table';
+            $table = $this->prefix. '_table';
+            $parentIndex = $this->data->getParentIndex();
+
+            if($this->isTreeView())
+                $levelParents = "$table.columns([$parentIndex]).search('^(0)$', true, false).draw();";
+
+            $this->addJs( /** @lang JavaScript */
+                "
+$('#part_$this->prefix').hide();
+$parent_table.on( 'select', function () {
+    $table.ajax.reload();
+    $('#part_$this->prefix').show();
+    $levelParents
+} );
+
+$parent_table.on( 'deselect', function () {
+    $table.ajax.reload();
+    $('#part_$this->prefix').hide();
+} );
+"
+);
+        }
+    }
+
+    private function assetsBeforeInitDataTable()
+    {
+        foreach($this->cssBefore as $css)
+        {
+            $this->content->assets->addCss($css);
+        }
+        foreach($this->jsBefore as $js)
+        {
+            $this->content->assets->addJs($js);
+        }
+    }
+
+    private function initDataTable()
+    {
+        $table = $this->prefix.'_table';
+
+        $jsInitDt = "var $table = $('#$this->prefix').DataTable(".$this->prepareStrForJs().");";
+
+        foreach($this->jsAfter as $js )
+        {
+            if (filter_var($js, FILTER_VALIDATE_URL) == true || file_exists($js)) {
+                continue;
+            }
+
+            $jsInitDt .= $js;
+        }
+
+        // init dataTable
+        $this->content->assets->addJs($jsInitDt);
+
+        foreach($this->jsAfter as $js )
+        {
+            if(!file_exists($js))
+            {
+                continue;
+            }
+            $this->content->assets->addJs($js);
         }
     }
 }

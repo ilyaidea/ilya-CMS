@@ -53,7 +53,7 @@ class Title
     /**
      * @param array $tags
      */
-    public function addTags( array $tags ): void
+    public function addTags( array $tags )
     {
         if(is_array($tags))
             $this->tags = array_merge($this->tags, $tags);
@@ -63,7 +63,7 @@ class Title
      * @param string $key
      * @param string $value
      */
-    public function appendTag($key, $value): void
+    public function appendTag($key, $value)
     {
         if($key && $value)
         {

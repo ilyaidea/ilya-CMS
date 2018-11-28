@@ -21,7 +21,7 @@ use Phalcon\Security;
  */
 trait TraitSecurity
 {
-    public function getToken(): string
+    public function getToken()
     {
         if(!$this->security->getSessionToken())
             return $this->security->getToken();
