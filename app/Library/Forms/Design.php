@@ -15,8 +15,6 @@
 namespace Lib\Forms;
 
 
-use Phalcon\Forms\Element;
-
 class Design
 {
     /** @var Form $form */
@@ -24,7 +22,7 @@ class Design
     /** @var Element $field */
     private $field;
     /** @var string $style */
-    private $style = 'wide';
+    private $style = 'tall';
     private $boxed = false;
     private $columns = 0;
     private $colspan = null;
@@ -86,8 +84,8 @@ class Design
                 $this->form
                 &&
                 (
-                    $this->form->validate->isOk()
-                    ||
+//                    $this->form->validate->isOk()
+//                    ||
                     $this->form->elements->hasField()
                 )
             )

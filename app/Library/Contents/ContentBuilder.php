@@ -203,5 +203,6 @@ class ContentBuilder extends CB
         $this->assets->process();
         $this->view->content = $this->fields();
         $this->view->theme = $this->theme;
+        $this->view->messages = $this->flash->getMessages();
     }
 }

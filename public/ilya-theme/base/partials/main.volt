@@ -1,5 +1,4 @@
 <div class="ilya-main">
-        {{ flash.output() }}
         {#{{ partial(
             'widgets',
             [

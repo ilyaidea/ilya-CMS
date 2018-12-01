@@ -31,7 +31,7 @@ class Responsive extends Component
     {
         // responsive datatable
         $this->_dataTable->content->assets->addCss(
-            'assets/datatables-responsive/css/responsive.dataTables.min.css'
+            'assets/datatables.net-responsive-dt/css/responsive.dataTables.min.css'
         );
         $this->_dataTable->content->assets->addJs(
             'assets/datatables-responsive/js/dataTables.responsive.js'

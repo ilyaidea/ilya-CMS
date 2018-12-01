@@ -14,40 +14,19 @@
 namespace Lib\Forms\Element;
 
 use Lib\Forms\Design;
+use Lib\Forms\Element;
+use Lib\Tag;
 
-class Check extends \Phalcon\Forms\Element\Check
+class Check extends Element
 {
-    /** @var Design $design */
-    public $design;
     public function __construct( $name, array $attributes = null )
     {
         parent::__construct( $name, $attributes );
-
-        $this->design = new Design($this);
+        $this->_type = 'checkbox';
     }
 
-    public function getAttributes()
+    public function render( $attributes = null )
     {
-        $arg = null;
-        if(!empty(func_get_args()) && count(func_get_args()) == 1)
-        {
-            $arg = func_get_args()[0];
-        }
-
-        $attrs = parent::getAttributes();
-
-        $attrs = array_merge(
-            [
-                'type' => 'checkbox'
-            ],
-            $attrs
-        );
-
-        if($arg)
-        {
-            return (isset($attrs[$arg])) ? $attrs[$arg] : null;
-        }
-
-        return $attrs;
+        return Tag::checkField($this->prepareAttributes($attributes));
     }
 }

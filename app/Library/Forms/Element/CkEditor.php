@@ -13,19 +13,18 @@
  */
 namespace Lib\Forms\Element;
 
-use Lib\Forms\Element;
-use Lib\Tag;
+use Lib\Contents\ContentBuilder;
 
-class Radio extends Element
+class CkEditor extends TextArea
 {
     public function __construct( $name, array $attributes = null )
     {
         parent::__construct( $name, $attributes );
-        $this->_type = 'radio';
+
+        $content = ContentBuilder::instantiate();
+
+        $content->assets->addJs('assets/ckeditor/ckeditor.js');
+        $content->assets->addJs("CKEDITOR.replace( '$name' );");
     }
 
-    public function render( $attributes = null )
-    {
-        return Tag::radioField($this->prepareAttributes($attributes, true));
-    }
 }

@@ -13,41 +13,26 @@
  */
 namespace Lib\Forms\Element;
 
-use Lib\Forms\Design;
+use Lib\Forms\Element;
+use Lib\Tag;
 
-class Hidden extends \Phalcon\Forms\Element\Hidden
+class Hidden extends Element
 {
-    /** @var Design $design */
-    public $design;
     public function __construct( $name, array $attributes = null )
     {
         parent::__construct( $name, $attributes );
-
-        $this->design = new Design($this);
+        $this->_type = 'hidden';
     }
 
-    public function getAttributes()
+    /**
+     * Renders the element widget returning html
+     *
+     * @param array $attributes
+     * @return string
+     */
+    public function render( $attributes = null )
     {
-        $arg = null;
-        if(!empty(func_get_args()) && count(func_get_args()) == 1)
-        {
-            $arg = func_get_args()[0];
-        }
-
-        $attrs = parent::getAttributes();
-
-        $attrs = array_merge(
-            [
-                'type' => 'hidden'
-            ],
-            $attrs
-        );
-
-        if($arg)
-        {
-            return (isset($attrs[$arg])) ? $attrs[$arg] : null;
-        }
-
-        return $attrs;
+        return Tag::hiddenField($this->prepareAttributes($attributes));
     }
+
 }

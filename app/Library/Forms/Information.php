@@ -16,7 +16,6 @@ namespace Lib\Forms;
 
 
 use Lib\Common\Arrays;
-use Phalcon\Forms\Element;
 
 class Information
 {
@@ -26,6 +25,7 @@ class Information
     private $tags = [];
     /** @var Form $form */
     private $form;
+    private $name;
 
     public function __construct(Form $form)
     {
@@ -65,5 +65,21 @@ class Information
         {
             $this->tags[$key] = $value;
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName( $name )
+    {
+        $this->name = $name;
     }
 }

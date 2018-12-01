@@ -168,10 +168,20 @@ class Types
                 'action' => 'add'
             ]);
         }
-        $this->_btn->action()->storage[] = /** @lang JavaScript */
-            <<<TAG
+
+        if($this->_dataTable->isTreeView())
+        {
+            $this->_btn->action()->storage[] = /** @lang JavaScript */
+                <<<TAG
+var count = dt.row({selected:true}).count(); if (count === 1){var id = dt.row({selected:true}).data().id;window.location.href = '$url'+'?parent='+id}else{window.location.href = '$url';};return false;
+TAG;
+        }
+        else {
+            $this->_btn->action()->storage[] = /** @lang JavaScript */
+                <<<TAG
 window.location.href = '$url';return false;
 TAG;
+        }
         return $this->_btn;
     }
 

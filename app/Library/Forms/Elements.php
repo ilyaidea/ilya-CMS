@@ -15,8 +15,6 @@
 namespace Lib\Forms;
 
 
-use Phalcon\Forms\Element;
-
 class Elements
 {
     /** @var Form $form */

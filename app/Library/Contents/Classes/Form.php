@@ -37,13 +37,15 @@ class Form extends CB
         {
             // Allow just a single parameter to be passed - each can be
             // overridden if needed later using the API.
-            $this->name( get_class( $form ) );
             $this->getSetForm( $form );
+            $this->name( get_class( $form ) );
+            $this->_form->init();
         }
         else
         {
-            $this->name( $name );
             $this->getSetForm( $form );
+            $this->name( $name );
+            $this->_form->init();
         }
     }
 
@@ -125,6 +127,7 @@ class Form extends CB
      */
     public function name( $_ = null )
     {
+        $this->_form->formInfo->setName($_);
         return $this->_getSet( $this->_name, $_ );
     }
 

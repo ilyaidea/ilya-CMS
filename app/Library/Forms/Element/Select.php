@@ -13,41 +13,59 @@
  */
 namespace Lib\Forms\Element;
 
-use Lib\Forms\Design;
+use Lib\Forms\Element;
 
-class Select extends \Phalcon\Forms\Element\Select
+class Select extends Element
 {
-    /** @var Design $design */
-    public $design;
+    protected $_optionsValues;
+
     public function __construct( $name, $options = null, $attributes = null )
     {
+        $this->_optionsValues = $options;
         parent::__construct( $name, $options, $attributes );
-
-        $this->design = new Design($this);
+        $this->_type = 'select';
     }
 
-    public function getAttributes()
+    public function render( $attributes = null )
     {
-        $arg = null;
-        if(!empty(func_get_args()) && count(func_get_args()) == 1)
+        /**
+         * Merged passed attributes with previously defined ones
+         */
+
+        return \Phalcon\Tag\Select::selectField($this->prepareAttributes($attributes), $this->_optionsValues);
+    }
+
+    public function setOptions($options)
+    {
+        $this->_optionsValues = $options;
+        return $this;
+    }
+
+    public function getOptions()
+    {
+        return $this->_optionsValues;
+    }
+
+    /**
+     * Adds an option to the current options
+     *
+     * @param array $option
+     * @return $this
+     */
+    public function addOption($option)
+    {
+        if(is_array($option))
         {
-            $arg = func_get_args()[0];
+            foreach($option as $key=>$value)
+            {
+                $this->_optionsValues[$key] = $value;
+            }
+        }
+        else
+        {
+            $this->_optionsValues[] = $option;
         }
 
-        $attrs = parent::getAttributes();
-
-        $attrs = array_merge(
-            [
-                'type' => 'select'
-            ],
-            $attrs
-        );
-
-        if($arg)
-        {
-            return (isset($attrs[$arg])) ? $attrs[$arg] : null;
-        }
-
-        return $attrs;
+        return $this;
     }
 }

@@ -34,24 +34,41 @@ class Form extends \Phalcon\Forms\Form
     public $elements;
 
     public $prefix;
+
+    private $entity = null;
+    private $userOptions = null;
     
-    public function __construct( $entity = null, array $userOptions = null )
+    public function initialize( $entity = null, $userOptions = null )
     {
+        $this->entity = $entity;
+        $this->userOptions = $userOptions;
+
         $this->securityElems();
         $this->formInfo = new Information($this);
         $this->design   = new Design($this);
-        $this->validate = new Validate($this);
+//        $this->validate = new Validate($this);
         $this->elements = new Elements($this);
-        parent::__construct( $entity, $userOptions );
-    }
-
-    public function initialize( $entity = null, $userOptions = null )
-    {
     }
 
     public function process()
     {
 
+    }
+
+    public function isValid( $data = null, $entity = null )
+    {
+        if($this->request->isPost() &&
+            $this->request->getPost('action') !== null)
+        {
+            if($this->security->checkHash(get_class($this), $this->request->getPost('action')))
+            {
+                if(parent::isValid( $this->request->getPost(), $entity ))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private function securityElems()

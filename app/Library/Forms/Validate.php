@@ -36,20 +36,7 @@ class Validate extends Component
      */
     public function isOk()
     {
-        if($this->request->isPost() && $this->request->getPost('action') !== null)
-        {
-            if($this->security->checkHash(get_class($this->form), $this->request->getPost('action')))
-            {
-                if($this->form->isValid($this->request->getPost()))
-                {
-                    return true;
-                }
-            }
-        }
-//        if($this->ok !== null)
-//            return true;
 
-        return false;
     }
 
     /**

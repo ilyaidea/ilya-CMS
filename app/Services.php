@@ -17,12 +17,14 @@ use Lib\Acl\DefaultAcl;
 use Lib\Authenticates\Auth;
 use Lib\Contents\ContentBuilder;
 use Lib\Filter;
+use Lib\Flash\Session;
 use Lib\Mvc\Helper;
 use Lib\Mvc\View;
 use Lib\Mvc\View\Engine\Volt;
 use Lib\Plugins\Localization;
 use Lib\Assets\Minify\CSS;
 use Lib\Assets\Minify\JS;
+use Lib\Tag;
 use Phalcon\Cache\Backend\File;
 use Phalcon\Cache\Backend\Libmemcached;
 use Phalcon\Cache\Backend\Memcache;
@@ -63,6 +65,11 @@ class Services extends \Lib\Di\FactoryDefault
         return $url;
     }
 
+    protected function initSharedContent()
+    {
+        return ContentBuilder::instantiate();
+    }
+
     protected function initSharedView()
     {
         $view = new View();
@@ -72,7 +79,6 @@ class Services extends \Lib\Di\FactoryDefault
         $view->setLayoutsDir(THEME_PATH. 'base/layouts/');
         $view->setLayout('main');
         $view->setPartialsDir(THEME_PATH. 'base/partials/');
-
 
         // Volt
         $volt = new Volt($view, $this);
@@ -88,6 +94,14 @@ class Services extends \Lib\Di\FactoryDefault
             '.phtml' => $phtml
         ];
         $view->registerEngines($viewEngines);
+
+        /** @var Manager $eventManager */
+        $eventManager = $this->getShared('manager');
+        $eventManager->attach('view:beforeRender', function() {
+            $content = $this->getShared('content');
+            $content->process();
+        });
+        $view->setEventsManager($eventManager);
 
         return $view;
     }
@@ -126,12 +140,7 @@ class Services extends \Lib\Di\FactoryDefault
 
     protected function initFlash()
     {
-        return new \Phalcon\Flash\Session([
-            'error' => 'ilya-error',
-            'success' => 'ilya-success',
-            'notice' => 'ilya-notice',
-            'warning' => 'ilya-warning'
-        ]);
+        return new Session();
     }
 
     protected function initSharedSession()
@@ -225,6 +234,11 @@ class Services extends \Lib\Di\FactoryDefault
     protected function initSharedAcl()
     {
         return new DefaultAcl();
+    }
+
+    protected function initSharedTag()
+    {
+        return new Tag();
     }
 
     protected function initSharedDispatcher()

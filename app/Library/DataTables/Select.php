@@ -22,7 +22,9 @@ class Select
     public function __construct(DataTable $dataTable)
     {
         $this->_dataTable = $dataTable;
-        $this->_dataTable->options['select'] = true;
+        $this->_dataTable->options['select'] = [
+            'style' => 'single'
+        ];
     }
 
     public function process()

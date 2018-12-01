@@ -16,22 +16,19 @@ namespace Lib\Mvc;
 
 use Lib\Assets\Minify\CSS;
 use Lib\Contents\ContentBuilder;
+use Lib\Flash\Session;
 
 /**
  * @property CSS cssmin
  * @property Helper helper
+ * @property Session $flash
+ * @property ContentBuilder $content
  */
 class Controller extends \Phalcon\Mvc\Controller
 {
-    /**
-     * @var ContentBuilder $content
-     */
-    public $content;
 
     public function initialize()
     {
-        $this->content = ContentBuilder::instantiate();
-
 //        $this->addAssetsTheme();
     }
 
