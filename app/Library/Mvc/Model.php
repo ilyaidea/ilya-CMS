@@ -29,12 +29,5 @@ class Model extends \Phalcon\Mvc\Model
         {
             $this->setConnectionService($this->getDI()->getShared('config')->module->database->connection);
         }
-
-        $this->setRelationships();
-    }
-
-    protected function setRelationships()
-    {
-
     }
 }

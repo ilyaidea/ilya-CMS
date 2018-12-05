@@ -6,7 +6,9 @@
   "directories": {
     "doc": "docs"
   },
-  "dependencies": {},
+  "dependencies": {
+    "blueimp-file-upload": "^9.28.0"
+  },
   "devDependencies": {
     "grunt": "^1.0.3",
     "grunt-contrib-concat": "^1.0.1",

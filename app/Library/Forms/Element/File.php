@@ -13,6 +13,7 @@
  */
 namespace Lib\Forms\Element;
 
+use Lib\Contents\ContentBuilder;
 use Lib\Forms\Element;
 use Lib\Tag;
 
@@ -34,5 +35,4 @@ class File extends Element
     {
         return Tag::fileField($this->prepareAttributes($attributes));
     }
-
 }

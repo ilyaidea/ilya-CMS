@@ -64,6 +64,16 @@ class DefaultRouter extends \Phalcon\Mvc\Router
             ],
             'default_controller'
         );
+
+        $this->addGet(
+            '/assets/([0-9]+)',
+            [
+                'module' => 'page-manager',
+                'controller' => 'assets',
+                'action' => 'index',
+                'blob_id' => 1
+            ]
+        );
     }
 
 

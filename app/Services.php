@@ -37,6 +37,7 @@ use Phalcon\Mvc\View\Engine\Php;
 use Phalcon\Security;
 use Phalcon\Session\Adapter\Files;
 use Plugins\DbManagerPlugin;
+use Lib\Upload\Uploader;
 
 class Services extends \Lib\Di\FactoryDefault
 {
@@ -174,6 +175,29 @@ class Services extends \Lib\Di\FactoryDefault
     {
         $jsMin = new JS();
         return $jsMin;
+    }
+
+    protected function initUploader()
+    {
+        $uploader = new Uploader();
+
+        $uploader->setRules([
+            'directory' => BASE_PATH.'data/files/',
+            'minsize' => 1000,
+            'maxsize' => 10000000, // 10 MB
+            'mimes'   => [
+                'image/jpeg',
+                'image/png'
+            ],
+            'extensions' => [
+                'jpeg',
+                'jpg',
+                'png'
+            ],
+            'sanitize' => true,
+            'hash' => 'md5'
+        ]);
+        return $uploader;
     }
 
     protected function initSecurity()

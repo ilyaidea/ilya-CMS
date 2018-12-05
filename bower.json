@@ -46,7 +46,8 @@
     "datatables.net-rowgroup-dt": "^1.1.0",
     "datatables.net-rowreorder-dt": "^1.2.5",
     "datatables.net-scroller-dt": "^1.5.1",
-    "ckeditor": "^4.11.1"
+    "ckeditor": "^4.11.1",
+    "blueimp-file-upload": "git@github.com:blueimp/jQuery-File-Upload.git#^9.28.0"
   },
   "devDependencies": {
     "ckeditor-dev": "^4.11.1"

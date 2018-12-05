@@ -32,9 +32,24 @@ class Arrays
      */
     public static function arrayToStringTags(array $array )
     {
+        $attrs = '';
         if(is_array($array) && !empty($array))
-            return str_replace("=", '="', http_build_query($array, null, '" ', PHP_QUERY_RFC3986)).'"';
+        {
+            $count = count($array);
+            $i = 1;
 
-        return null;
+            foreach($array as $key => $value)
+            {
+                $attrs .= " $key='$value'";
+
+                if($i !== $count)
+                {
+                    $attrs .= ' ';
+                }
+                $i++;
+            }
+        }
+
+        return $attrs;
     }
 }
