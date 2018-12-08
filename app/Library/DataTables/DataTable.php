@@ -397,6 +397,7 @@ TAG
             $table = $this->prefix. '_table';
             $parentIndex = $this->data->getParentIndex();
 
+            $levelParents = "";
             if($this->isTreeView())
                 $levelParents = "$table.columns([$parentIndex]).search('^(0)$', true, false).draw();";
 

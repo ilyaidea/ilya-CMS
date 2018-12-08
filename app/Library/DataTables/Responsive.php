@@ -22,7 +22,7 @@ class Responsive extends Component
     /** @var DataTable $_dataTable */
     private $_dataTable;
 
-    public function __construct(DataTable $dataTable)
+    public function __construct($dataTable)
     {
         $this->_dataTable = $dataTable;
     }

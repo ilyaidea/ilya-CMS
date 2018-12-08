@@ -19,7 +19,7 @@ class Select
     /** @var DataTable $_dataTable */
     private $_dataTable;
 
-    public function __construct(DataTable $dataTable)
+    public function __construct($dataTable)
     {
         $this->_dataTable = $dataTable;
         $this->_dataTable->options['select'] = [

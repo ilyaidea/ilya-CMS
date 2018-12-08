@@ -28,7 +28,7 @@ class Actions
     protected $options = [];
     public $storage = [];
 
-    public function __construct(Buttons $btn, DataTable $dt)
+    public function __construct($btn, $dt)
     {
         $this->_dataTable = $dt;
         $this->_btn = $btn;
@@ -42,7 +42,8 @@ class Actions
 
             foreach($this->storage as $value)
             {
-                $action .= $value;
+                // remove new line from string
+                $action .= trim(preg_replace('/\s+/', ' ', $value));;
             }
 
             $action .= "}||";
@@ -57,7 +58,7 @@ class Actions
      * @param string $url
      * @return Buttons
      */
-    public function setUrl(string $url)
+    public function setUrl($url)
     {
         $this->options['url'] = $url;
         $this->storage[] = "window.location.href = '$url';";

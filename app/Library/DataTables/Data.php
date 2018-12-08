@@ -29,7 +29,7 @@ class Data extends Component
 	 * Constructor
 	 */
 
-    public function __construct(DataTable $dataTable)
+    public function __construct($dataTable)
     {
         $this->dataTable = $dataTable;
     }

@@ -24,7 +24,7 @@ class Types
     /** @var Buttons $_btn */
     protected $_btn;
 
-    public function __construct(Buttons $btn, DataTable $dt)
+    public function __construct($btn, $dt)
     {
         $this->_dataTable = $dt;
         $this->_btn = $btn;
@@ -173,14 +173,52 @@ class Types
         {
             $this->_btn->action()->storage[] = /** @lang JavaScript */
                 <<<TAG
-var count = dt.row({selected:true}).count(); if (count === 1){var id = dt.row({selected:true}).data().id;window.location.href = '$url'+'?parent='+id}else{window.location.href = '$url';};return false;
+var addsub = null;
+if (dt.ajax.params()._id){
+    addsub = dt.ajax.params()._id;
+}
+var url = '$url';
+if (addsub){
+    if (url.indexOf('?') > -1){
+        url += '&addsub='+addsub;
+    }else {
+        url += '?addsub='+addsub;
+    }
+}
+
+var count = dt.row({selected:true}).count();
+if (count === 1){
+    var id = dt.row({selected:true}).data().id;
+    
+    if (url.indexOf('?') > -1) {
+        url += '&parent='+id;
+    } else {
+        url += '?parent='+id;
+    }
+}
+window.location.href = url;
+return false;
 TAG;
         }
         else {
-            $this->_btn->action()->storage[] = /** @lang JavaScript */
-                <<<TAG
-window.location.href = '$url';return false;
-TAG;
+            $this->_btn->action()->storage[] =
+                "
+var addsub = null;
+if (dt.ajax.params()._id){
+    addsub = dt.ajax.params()._id;
+}
+var url = '$url';
+if (addsub){
+    if (url.indexOf('?') > -1){
+        url += '&addsub='+addsub;
+    }else {
+        url += '?addsub='+addsub;
+    }
+}
+
+window.location.href = url;
+return false;
+";
         }
         return $this->_btn;
     }

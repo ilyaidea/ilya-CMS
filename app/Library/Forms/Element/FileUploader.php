@@ -127,7 +127,10 @@ $(function() {
   });
   form.bind('fileuploadcompleted', function (e, data) {
       $.each(data.result.files, function (index, file) {
-          form.append('<input type=\'hidden\' name=\'$name\' value=\''+file.blob_id+'\'/>');
+          
+        var blobid = file.name.split('.').slice(0, -1).join('.');
+        
+          form.append('<input type=\'hidden\' name=\'$name\' value=\''+blobid+'\'/>');
       });
   });
   
@@ -175,7 +178,29 @@ $(function() {
         {
             $this->_values = $values->toArray();
         }
-        elseif(!is_array($values))
+        elseif(!is_array($values) and is_numeric($values))
+        {
+            $image = Blobs::findFirst($values);
+            if($image)
+            {
+                $this->_values = $image->toArray();
+            }
+        }
+        elseif(is_array($values))
+        {
+            if($this->isAssoc($values) && ctype_digit(implode('', $values)))
+            {
+                foreach($values as $value)
+                {
+                    $image = Blobs::findFirst($value);
+                    if($image)
+                    {
+                        $this->_values[] = $image->toArray();
+                    }
+                }
+            }
+        }
+        else
         {
             $this->_values = [];
             return $this;
@@ -196,6 +221,13 @@ $(function() {
     public function getValues()
     {
         return $this->_values;
+    }
+
+    private function isAssoc(array $arr)
+    {
+        if($arr === []) return false;
+
+        return array_keys($arr) !== range(0, count($arr)-1);
     }
 
 }

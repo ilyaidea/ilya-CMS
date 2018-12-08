@@ -17,20 +17,19 @@ use Lib\Mvc\Model;
 
 class Blobs extends Model
 {
-    public $id;             // Big int 20 / unsigned / not null /
-    public $format;         // Varchar 20 / not null
-    public $content;        // Mediumblob / is null default
-    public $name;           // Varchar 255 / is null default
-    public $size;           // Varchar 100 / is null default
-    public $user_id;        // int 10 / unsigned / is null default
-    public $cookie_id;      // Big int 20 / unsigned / is null default
-    public $create_ip;      // Varbinary 16 / is null default
-    public $created;        // datetime / is null default
-    public $status;         // enum ('tmp', 'active') / not null
+    public  $id;             // Big int 20 / unsigned / not null /
+    private $format;         // Varchar 20 / not null
+    private $content;        // Mediumblob / is null default
+    private $name;           // Varchar 255 / is null default
+    private $size;           // Varchar 100 / is null default
+    private $user_id;        // int 10 / unsigned / is null default
+    private $cookie_id;      // Big int 20 / unsigned / is null default
+    private $create_ip;      // Varbinary 16 / is null default
+    private $created;        // datetime / is null default
+    private $status;         // enum ('tmp', 'active') / not null
 
     public function initialize()
     {
-//        parent::initialize();
         $this->setSource('ilya_blobs');
     }
 
@@ -55,7 +54,7 @@ class Blobs extends Model
     public function setId()
     {
         for ($attempt = 0; $attempt < 10; $attempt++) {
-            $blobId = sprintf('%d%06d%06d', mt_rand(1, 18446743), mt_rand(0, 999999), mt_rand(0, 999999));
+            $blobId = sprintf('%d%06d', mt_rand(1, 18446743), mt_rand(0, 999999));
 
             if (self::findFirst($blobId))
                 continue;

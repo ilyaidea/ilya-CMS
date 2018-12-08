@@ -164,12 +164,22 @@ class IndexController extends Controller
         $this->view->disable();
         try {
             $blobs = Blobs::find([
-                'columns' => 'id,format,status',
                 'conditions' => 'status = :status:',
                 'bind' => [
                     'status' => 'tmp'
                 ]
             ]);
+
+            $blobs = $this
+                ->modelsManager
+                ->executeQuery(
+                    "SELECT b.id, b.format, TIME_TO_SEC(TIMEDIFF(NOW(), b.created)) AS diff_time ".
+                    "FROM Ilya\Models\Blobs AS b ".
+                    "WHERE status=:status:",
+                    [
+                        'status' => 'tmp'
+                    ]
+                );
 
             if(count($blobs->toArray()) === 0)
             {
@@ -178,23 +188,20 @@ class IndexController extends Controller
 
             $files_path = BASE_PATH. 'public/files/';
 
-            /** @var Blobs $blob */
             foreach($blobs as $blob)
             {
-                $blob = Blobs::findFirst($blob->id);
-                if(!$blob)
-                    continue;
-
                 $filename = $files_path. $blob->id. '.'. $blob->format;
                 $filenameThumb = $files_path. 'thumbnail/'. $blob->id. '.'. $blob->format;
 
-                if(!$blob->delete())
-                {
-                    dump($blob->getMessages());
-                }
+                $delete = false;
+                if($blob->diff_time > 1)
+                    $delete = $this->modelsManager->executeQuery("DELETE FROM Ilya\Models\Blobs WHERE id=:id:", ['id' => $blob->id]);
 
-//                unlink($filename);
-//                unlink($filenameThumb);
+                if(!$delete)
+                    continue;
+
+                unlink($filename);
+                unlink($filenameThumb);
             }
 
         } catch(\Exception $exception)

@@ -15,7 +15,7 @@
 namespace Lib\Mvc;
 
 /**
- * @property  Helper $helper
+ * @property Helper $helper
  */
 class Model extends \Phalcon\Mvc\Model
 {

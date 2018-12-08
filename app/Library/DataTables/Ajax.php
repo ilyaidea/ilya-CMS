@@ -67,7 +67,7 @@ class Ajax extends Component
             $str = "";
             $str .= "var selected = $dt_parent.row({selected:true});";
             $str .= "d.action_$dt = '$action';";
-            $str .= "if(selected.any()){d.id = selected.data().id;}";
+            $str .= "if(selected.any()){d._id = selected.data().id;}";
             $this->dataTable->options['ajax']['data'] .= $str;
             $this->dataTable->options['ajax']['data'] .= "}||";
         }

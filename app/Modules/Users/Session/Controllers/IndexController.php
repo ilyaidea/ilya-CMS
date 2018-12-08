@@ -13,6 +13,7 @@
  */
 namespace Modules\Users\Session\Controllers;
 
+use Ilya\Models\Blobs;
 use Ilya\Models\Users;
 use Lib\Authenticates\Auth;
 use Lib\Mvc\Helper;

@@ -13,7 +13,8 @@
  */
 namespace Modules\Users\Session\Models;
 
-use Phalcon\Mvc\Model;
+
+use Lib\Mvc\Model;
 
 class Users extends Model
 {
