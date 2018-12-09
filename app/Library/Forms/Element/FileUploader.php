@@ -88,25 +88,25 @@ class FileUploader extends Element
 
         $content = ContentBuilder::instantiate();
 
-        $content->assets->addCss('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
-        $content->assets->addCss('assets\blueimp-file-upload\css\jquery.fileupload.css');
-        $content->assets->addCss('assets\blueimp-file-upload\css\jquery.fileupload-ui.css');
+        $content->assets->addCss('assets/bootstrap/dist/css/bootstrap.min.css');
+        $content->assets->addCss('assets/blueimp-file-upload/css/jquery.fileupload.css');
+        $content->assets->addCss('assets/blueimp-file-upload/css/jquery.fileupload-ui.css');
 
-        $content->assets->addJs('assets\jquery\dist\jquery.min.js');
-        $content->assets->addJs('https://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js');
-        $content->assets->addJs('https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js');
-        $content->assets->addJs('https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js');
-        $content->assets->addJs('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js');
-        $content->assets->addJs('https://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js');
-        $content->assets->addJs('assets\blueimp-file-upload\js\vendor\jquery.ui.widget.js');
-        $content->assets->addJs('assets\blueimp-file-upload\js\jquery.iframe-transport.js');
-        $content->assets->addJs('assets\blueimp-file-upload\js\jquery.fileupload.js');
-        $content->assets->addJs('assets\blueimp-file-upload\js\jquery.fileupload-process.js');
-        $content->assets->addJs('assets\blueimp-file-upload\js\jquery.fileupload-image.js');
-        $content->assets->addJs('assets\blueimp-file-upload\js\jquery.fileupload-audio.js');
-        $content->assets->addJs('assets\blueimp-file-upload\js\jquery.fileupload-video.js');
-        $content->assets->addJs('assets\blueimp-file-upload\js\jquery.fileupload-validate.js');
-        $content->assets->addJs('assets\blueimp-file-upload\js\jquery.fileupload-ui.js');
+        $content->assets->addJs('assets/jquery/dist/jquery.min.js');
+        $content->assets->addJs('assets/blueimp-tmpl/js/tmpl.min.js');
+        $content->assets->addJs('assets/blueimp-load-image/js/load-image.all.min.js');
+        $content->assets->addJs('assets/blueimp-canvas-to-blob/js/canvas-to-blob.min.js');
+        $content->assets->addJs('assets/bootstrap/dist/js/bootstrap.min.js');
+        $content->assets->addJs('assets/blueimp-gallery/js/jquery.blueimp-gallery.min.js');
+        $content->assets->addJs('assets/blueimp-file-upload/js/vendor/jquery.ui.widget.js');
+        $content->assets->addJs('assets/blueimp-file-upload/js/jquery.iframe-transport.js');
+        $content->assets->addJs('assets/blueimp-file-upload/js/jquery.fileupload.js');
+        $content->assets->addJs('assets/blueimp-file-upload/js/jquery.fileupload-process.js');
+        $content->assets->addJs('assets/blueimp-file-upload/js/jquery.fileupload-image.js');
+        $content->assets->addJs('assets/blueimp-file-upload/js/jquery.fileupload-audio.js');
+        $content->assets->addJs('assets/blueimp-file-upload/js/jquery.fileupload-video.js');
+        $content->assets->addJs('assets/blueimp-file-upload/js/jquery.fileupload-validate.js');
+        $content->assets->addJs('assets/blueimp-file-upload/js/jquery.fileupload-ui.js');
 
         $options = json_encode($this->storageOptions);
         $values = json_encode($this->_values);

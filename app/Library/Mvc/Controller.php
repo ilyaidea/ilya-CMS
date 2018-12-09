@@ -17,11 +17,13 @@ namespace Lib\Mvc;
 use Lib\Assets\Minify\CSS;
 use Lib\Contents\ContentBuilder;
 use Lib\Flash\Session;
+use Phalcon\Mvc\Model\Transaction\Manager;
 use Uploader\Uploader;
 
 /**
  * @property CSS cssmin
  * @property Helper helper
+ * @property Manager $transactions
  * @property Session $flash
  * @property ContentBuilder $content
  * @property Uploader $uploader

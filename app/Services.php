@@ -71,6 +71,11 @@ class Services extends \Lib\Di\FactoryDefault
         return ContentBuilder::instantiate();
     }
 
+    protected function initSharedTransactions()
+    {
+        return new \Phalcon\Mvc\Model\Transaction\Manager();
+    }
+
     protected function initSharedView()
     {
         $view = new View();

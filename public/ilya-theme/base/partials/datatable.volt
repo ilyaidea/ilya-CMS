@@ -1,3 +1,3 @@
 {# datatable(key, datatable) #}
 {{ partial('datatable-title', ['dataTable': datatable]) }}
-<table id="{{ key }}" class="display"></table>
+<table id="{{ key }}" class="cell-border"></table>
