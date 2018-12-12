@@ -37,13 +37,13 @@ class DataTable extends CB
         {
             // Allow just a single parameter to be passed - each can be
             // overridden if needed later using the API.
-            $this->name( get_class( $dt ) );
             $this->getSetDT( $dt );
+            $this->name( get_class( $dt ) );
         }
         else
         {
-            $this->name( $name );
             $this->getSetDT( $dt );
+            $this->name( $name );
         }
     }
 
@@ -125,7 +125,7 @@ class DataTable extends CB
      *
      * @return \Lib\DataTables\DataTable|null
      */
-    public function getDT()
+    public function get()
     {
         return $this->_dt;
     }
@@ -138,6 +138,7 @@ class DataTable extends CB
      */
     public function name( $_ = null )
     {
+        $this->_dt->setName($_);
         return $this->_getSet( $this->_name, $_ );
     }
 
@@ -162,6 +163,12 @@ class DataTable extends CB
     public function getPosition()
     {
         return $this->_position;
+    }
+
+    public function process()
+    {
+        $this->_dt->init();
+        $this->_dt->process();
     }
 
 }

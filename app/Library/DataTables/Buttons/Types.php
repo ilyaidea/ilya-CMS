@@ -196,12 +196,11 @@ if (count === 1){
         url += '?parent='+id;
     }
 }
-window.location.href = url;
-return false;
 TAG;
         }
         else {
             $this->_btn->action()->storage[] =
+                /** @lang JavaScript */
                 "
 var addsub = null;
 if (dt.ajax.params()._id){
@@ -215,11 +214,32 @@ if (addsub){
         url += '?addsub='+addsub;
     }
 }
-
-window.location.href = url;
-return false;
 ";
         }
+
+        // add hashtag to url
+        $hash = $this->_dataTable->prefix;
+
+        if($this->_dataTable->getFirstSibling())
+        {
+            $hash = $this->_dataTable->getFirstSibling();
+        }
+
+        $this->_btn->action()->storage[] = /** @lang JavaScript */
+            "
+if (url.indexOf('?') > -1){
+        url += '&fragment=$hash';
+    }else {
+        url += '?fragment=$hash';
+}
+";
+
+        $this->_btn->action()->storage[] = /** @lang JavaScript */
+            "
+window.location.href = url; return false;
+";
+
+
         return $this->_btn;
     }
 
@@ -236,8 +256,31 @@ return false;
         }
         $this->_btn->action()->storage[] = /** @lang JavaScript */
             <<<TAG
-var id = dt.row({selected:true}).data().id;window.location.href = '$url'+id;return false;
+var id = dt.row({selected:true}).data().id;var url = '$url'+id;
 TAG;
+        // add hashtag to url
+        $hash = $this->_dataTable->prefix;
+
+        if($this->_dataTable->getFirstSibling())
+        {
+            $hash = $this->_dataTable->getFirstSibling();
+        }
+
+        $this->_btn->action()->storage[] = /** @lang JavaScript */
+            "
+if (url.indexOf('?') > -1){
+        url += '&fragment=$hash';
+    }else {
+        url += '?fragment=$hash';
+}
+";
+
+        $this->_btn->action()->storage[] = /** @lang JavaScript */
+            "
+window.location.href = url; return false;
+";
+
+
         $table = $this->_dataTable->prefix. '_table';
         $dt = $this->_dataTable->prefix;
         $btn_name = $this->_btn->getName();
@@ -274,9 +317,31 @@ TAG
                 'action' => 'delete'
             ]);
         }
+
         $this->_btn->action()->storage[] = /** @lang JavaScript */
             <<<TAG
-var id = dt.row({selected:true}).data().id;window.location.href = '$url'+id;return false;
+var id = dt.row({selected:true}).data().id; var url = '$url'+id;
+TAG;
+        // add hashtag to url
+        $hash = $this->_dataTable->prefix;
+
+        if($this->_dataTable->getFirstSibling())
+        {
+            $hash = $this->_dataTable->getFirstSibling();
+        }
+
+        $this->_btn->action()->storage[] = /** @lang JavaScript */
+            "
+if (url.indexOf('?') > -1){
+        url += '&fragment=$hash';
+    }else {
+        url += '?fragment=$hash';
+}
+";
+
+        $this->_btn->action()->storage[] = /** @lang JavaScript */
+            <<<TAG
+window.location.href = url; return false;
 TAG;
         $dt = $this->_dataTable->prefix;
         $table = $this->_dataTable->prefix. '_table';

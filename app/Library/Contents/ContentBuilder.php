@@ -88,7 +88,7 @@ class ContentBuilder extends CB
             {
                 if( $form->name() === $_ )
                 {
-                    return $form->getForm();
+                    return $form->get();
                 }
             }
 
@@ -101,7 +101,7 @@ class ContentBuilder extends CB
             /** @var Form $arg */
             foreach($_ as $arg)
             {
-                $this->_fields['form_'. $arg->getPosition()] = $arg->getForm();
+                $this->_fields['form_'. $arg->getPosition()] = $arg;
             }
         }
 
@@ -116,7 +116,7 @@ class ContentBuilder extends CB
             /** @var Form $arg */
             foreach($_ as $arg)
             {
-                $this->_fields['form_'. $arg->getPosition()] = $arg->getForm();
+                $this->_fields['form_'. $arg->getPosition()] = $arg;
             }
         }
 
@@ -147,12 +147,13 @@ class ContentBuilder extends CB
             {
                 if( $dt->name() === $_ )
                 {
-                    return $dt->getDT();
+                    return $dt->get();
                 }
             }
 
             throw new \Exception( 'Unknown form: '.$_ );
         }
+
 
         if( $_ !== null && !is_array( $_ ) && $_ instanceof DataTable)
         {
@@ -160,7 +161,7 @@ class ContentBuilder extends CB
             /** @var DataTable $arg */
             foreach($_ as $arg)
             {
-                $this->_fields['dt_'. $arg->getPosition()] = $arg->getDT();
+                $this->_fields['dt_'. $arg->getPosition()] = $arg;
             }
         }
 
@@ -175,15 +176,24 @@ class ContentBuilder extends CB
             /** @var DataTable $arg */
             foreach($_ as $arg)
             {
-                $this->_fields['dt_'. $arg->getPosition()] = $arg->getDT();
+                $this->_fields['dt_'. $arg->getPosition()] = $arg;
             }
         }
 
         return $this->_getSet($this->_dataTables, $_, true);
     }
 
-    public function fields()
+    public function fields($filter = false)
     {
+        if($filter)
+        {
+            $fields = [];
+            foreach($this->_fields as $key=>$field)
+            {
+                $fields[$key] = $field->get();
+            }
+            return $fields;
+        }
         return $this->_fields;
     }
 
@@ -200,8 +210,22 @@ class ContentBuilder extends CB
             }
         }
 
+        // scroll to content
+        $this->assets->addJs( /** @lang JavaScript */
+            "
+$( document ).ready(function() {
+    function goToByScroll(id){
+        $('html,body').animate({scrollTop: $(id).offset().top},'slow');
+    }
+    var hash = window.location.hash;
+    setTimeout(function(){
+        goToByScroll(hash);
+    },500);
+});
+");
+
         $this->assets->process();
-        $this->view->content = $this->fields();
+        $this->view->content = $this->fields(true);
         $this->view->theme = $this->theme;
         $this->view->messages = $this->flash->getMessages();
     }

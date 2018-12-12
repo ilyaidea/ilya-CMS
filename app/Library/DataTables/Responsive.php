@@ -37,7 +37,8 @@ class Responsive extends Component
             'assets/datatables-responsive/js/dataTables.responsive.js'
         );
 
-        $this->_dataTable->options['responsive']['details']['display'] = "||$.fn.dataTable.Responsive.display.childRowImmediate||";
-        $this->_dataTable->options['responsive']['details']['type'] = "";
+//        $this->_dataTable->options['responsive']['details']['display'] = "||$.fn.dataTable.Responsive.display.childRowImmediate||";
+//        $this->_dataTable->options['responsive']['details']['type'] = "";
+        $this->_dataTable->options['responsive'] = true;
     }
 }

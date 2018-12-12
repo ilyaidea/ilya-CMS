@@ -48,6 +48,8 @@ class Session extends \Phalcon\Flash\Session
 
         if($contentClass instanceof Form || $contentClass instanceof DataTable)
             $messages[$type][$contentClass->prefix] = $message;
+        elseif(is_string($contentClass))
+            $messages[$type][$contentClass] = $message;
         else
             $messages[$type][] = $message;
 

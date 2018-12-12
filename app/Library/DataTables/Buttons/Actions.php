@@ -43,7 +43,7 @@ class Actions
             foreach($this->storage as $value)
             {
                 // remove new line from string
-                $action .= trim(preg_replace('/\s+/', ' ', $value));;
+                $action .= trim(preg_replace('/\s+/', ' ', $value));
             }
 
             $action .= "}||";

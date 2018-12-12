@@ -42,23 +42,34 @@ class DataTable extends Component
     public $columns;
     /** @var array $options */
     public $options = [
+        'stateSave' => true,
         'columns' => []
     ];
 
     /** @var DataTable $parent */
     private $parent;
+    /** @var array|DataTable[] $sibling  */
+    private $sibling = [];
     private $dom;
+    private $_name;
+    /*
+     * اگر این فیلد درست باشد به این معنی ست که فرانت اند زمانی رندر از این نمونه عبور میکند.
+     */
+    /** @var bool $_skip */
+    private $_skip = false;
+    private $_first_sibling;
+    private $_assetsSiblingOnce = true;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Private parameters
 	 */
 
-    private $treeView = false;
+    private $treeView   = false;
 
     private $cssAfter   = [];
     private $cssBefore  = [];
-    private $jsAfter   = [];
-    private $jsBefore  = [];
+    private $jsAfter    = [];
+    private $jsBefore   = [];
 
     private $_title;
 
@@ -74,7 +85,7 @@ class DataTable extends Component
         $this->response = new Responsive($this);
         $this->select   = new Select($this);
         $this->columns  = new Columns($this);
-        $this->setDom('Blfrtip');
+        $this->setDom('lfrtip');
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -117,10 +128,102 @@ class DataTable extends Component
 
     /**
      * @param DataTable $parent
+     * @return DataTable
      */
     public function setParent( $parent )
     {
         $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * @return DataTable|DataTable[]
+     */
+    public function getSibling($name=null)
+    {
+        if(is_string($name) && !isset($this->sibling[$name]))
+        {
+            return null;
+        }
+        if(is_string($name) && isset($this->sibling[$name]) && $this->sibling[$name] instanceof DataTable)
+            return $this->sibling[$name];
+
+        return $this->sibling;
+    }
+
+    public function hasSibling()
+    {
+        if(!empty($this->getSibling()))
+            return true;
+
+        return false;
+    }
+
+    /**
+     * @param DataTable $sibling
+     */
+    public function addSibling( $sibling )
+    {
+        if($sibling instanceof DataTable)
+        {
+            $sibling->setSkip(true);
+            $sibling->setFirstSibling($this->prefix);
+            $this->sibling[$sibling->prefix] = $sibling;
+
+            if($this->_assetsSiblingOnce)
+            {
+                $this->addCss( 'assets/jquery-ui/themes/base/jquery-ui.min.css', false);
+                $this->addJs('assets/jquery-ui/jquery-ui.min.js');
+                /*
+                 * دستور جاوااسکریپت ابتدا تب ها را برای دیتاتیبل مقداردهی اولیه میکند و سپس با رویداد
+                 * فعال ساز آن تبی که غیرفعال شده را میگیریم و همه فیلدهایی که شو هستند را مخفی
+                 * میکنیم.
+                 */
+                $this->addJs( /** @lang JavaScript */
+                    "
+$(function() { 
+  $('#tabs_$this->prefix').tabs({
+  active: localStorage.getItem('currentIdx'),
+     activate: function(event, ui) {
+        $('div[data-parent=\''+ui.oldTab.attr('data-dt')+'\']').each(function() {
+           window[ui.oldTab.attr('data-dt')+'_table'].rows().deselect();
+        });
+        
+        localStorage.setItem('currentIdx', $(this).tabs('option', 'active'));
+     }
+  });
+})
+");
+            }
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSkip()
+    {
+        return $this->_skip;
+    }
+
+    /**
+     * @param bool $skip
+     */
+    public function setSkip( $skip )
+    {
+        if(is_bool($skip))
+            $this->_skip = $skip;
+    }
+
+    public function getFirstSibling()
+    {
+        return $this->_first_sibling;
+    }
+
+    public function setFirstSibling( $first_sibling )
+    {
+        $this->_first_sibling = $first_sibling;
     }
 
     /**
@@ -193,6 +296,22 @@ class DataTable extends Component
         $this->_title = $title;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->_name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName( $name )
+    {
+        $this->_name = $name;
+    }
+
     public function addCss($css, $afterInit = true)
     {
         if($afterInit)
@@ -255,6 +374,21 @@ class DataTable extends Component
         $this->content->assets->addJs(
             'assets/jquery/dist/jquery.min.js'
         );
+        /*
+         * add hide and show event to jquery
+         */
+        $this->content->assets->addJs( /** @lang JavaScript */
+            "
+(function($) {
+	$.each(['show', 'hide'], function(i, ev) {
+		var el = $.fn[ev];
+		$.fn[ev] = function() {
+			this.trigger(ev);
+			return el.apply(this, arguments);
+		};
+	});
+})(jQuery);
+");
 //        $this->content->assets->addJs(
 //            'https://code.jquery.com/jquery-3.3.1.min.js'
 //        );
@@ -271,6 +405,7 @@ class DataTable extends Component
         $str = json_encode($this->options);
         $str = str_replace('"||', '', $str);
         $str = str_replace('||"', '', $str);
+
         return $str;
     }
 
@@ -393,6 +528,7 @@ TAG
     {
         if($this->getParent())
         {
+            $parentPrefix = $this->getParent()->prefix;
             $parent_table = $this->getParent()->prefix. '_table';
             $table = $this->prefix. '_table';
             $parentIndex = $this->data->getParentIndex();
@@ -407,6 +543,7 @@ $('#part_$this->prefix').hide();
 $parent_table.on( 'select', function () {
     $table.ajax.reload();
     $('#part_$this->prefix').show();
+    $('#part_$this->prefix').attr('data-parent', '$parentPrefix');
     $levelParents
 } );
 
@@ -434,8 +571,37 @@ $parent_table.on( 'deselect', function () {
     private function initDataTable()
     {
         $table = $this->prefix.'_table';
+        $tablePart = 'part_'.$this->prefix;
 
-        $jsInitDt = "var $table = $('#$this->prefix').DataTable(".$this->prepareStrForJs().");";
+        $jsInitDt = "var savedSelected_$table;";
+        $this->options['stateSaveParams'] = trim(preg_replace('/\s+/', ' ', "||
+            function(setting, data){
+                data.selected = this.api().rows({selected:true})[0];
+            }
+        ||"));
+
+        $this->options['stateLoadParams'] = trim(preg_replace('/\s+/', ' ', "||
+            function(setting, data){
+                savedSelected_$table = data.selected;
+            }
+        ||"));
+
+        $this->options['ajax']['complete'] = trim(preg_replace('/\s+/', ' ', "||
+            function(){
+                $table.rows(savedSelected_$table).select();
+                $table.state.save();
+            }
+        ||"));
+
+
+        $jsInitDt .= "var $table = $('#$this->prefix').DataTable(".$this->prepareStrForJs().");";
+
+        $jsInitDt .= /** @lang JavaScript */
+            "
+$table.on('select deselect', function() {
+  $table.state.save();
+});
+";
 
         foreach($this->jsAfter as $js )
         {

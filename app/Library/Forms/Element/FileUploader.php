@@ -29,6 +29,7 @@ class FileUploader extends Element
     public $options;
 
     protected $_values = [];
+    private $_key;
 
     public $storageOptions = [
         'maxNumberOfFiles' => 1
@@ -36,6 +37,7 @@ class FileUploader extends Element
 
     public function __construct( $name, array $attributes = null )
     {
+        $this->_key = $name;
         parent::__construct( $name, $attributes );
         $this->options = new Options($this);
         $this->_type = 'file';
@@ -49,6 +51,8 @@ class FileUploader extends Element
      */
     public function render( $attributes = null )
     {
+        $attributes['data-key'] = $this->_key;
+        $this->setName('files');
         return Tag::fileUploaderField($this->prepareAttributes($attributes));
     }
 
@@ -114,8 +118,7 @@ class FileUploader extends Element
         $content->assets->addJs( /** @lang JavaScript */
             "
 $(function() {
-  
-  var form = $('input[name=\"$name\"]').closest('form');
+  var form = $('input[name=\"files\"][data-key=\"$this->_key\"]').closest('form');
   
   form.fileupload($options);
   

@@ -20,7 +20,7 @@ use Phalcon\Mvc\User\Component;
 class Data extends Component
 {
     private $dataTable;
-    private $data;
+    private $data = [];
     private $dataKeys = [];
     private $parentField = 'parent_id';
     private $parentIndex = 0;

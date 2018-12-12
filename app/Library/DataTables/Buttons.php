@@ -45,8 +45,14 @@ class Buttons extends Component
     {
         if(!empty($this->_dataTable->columns->getColumns()))
         {
-            $this->_dataTable->content->assets->addCss(
-                'assets/datatables.net-buttons-dt/css/buttons.dataTables.min.css'
+//            dump($this->_dataTable->getDom());
+            if(strpos($this->_dataTable->getDom(), 'B') === false)
+            {
+                $this->_dataTable->setDom('B'. $this->_dataTable->getDom());
+            }
+            $this->_dataTable->addCss(
+                'assets/datatables.net-buttons-dt/css/buttons.dataTables.min.css',
+                false
             );
             $this->_dataTable->addJs(
                 'assets/datatables.net-buttons/js/dataTables.buttons.min.js'
