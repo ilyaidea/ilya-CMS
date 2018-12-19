@@ -17,12 +17,12 @@ use Lib\Forms\Element;
 
 class Select extends Element
 {
-    protected $_optionsValues;
+    protected $_optionsValues = [];
 
     public function __construct( $name, $options = null, $attributes = null )
     {
         $this->_optionsValues = $options;
-        parent::__construct( $name, $options, $attributes );
+        parent::__construct( $name, $attributes );
         $this->_type = 'select';
     }
 

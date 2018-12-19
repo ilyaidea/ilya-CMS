@@ -17,6 +17,7 @@ use Lib\Contents\ContentBuilder;
 use Lib\Forms\Element;
 use Lib\Forms\Element\FileUploader\Options;
 use Lib\Forms\Form;
+use Lib\Forms\Request;
 use Lib\Tag;
 use Lib\Upload\UploadHandler;
 use Ilya\Models\Blobs;
@@ -41,6 +42,12 @@ class FileUploader extends Element
         parent::__construct( $name, $attributes );
         $this->options = new Options($this);
         $this->_type = 'file';
+
+        $request = new \Phalcon\Http\Request();
+        if($request->isPost() && $request->getPost($this->getName()))
+        {
+            $this->setValues($request->getPost($this->getName()));
+        }
     }
 
     /**
@@ -179,14 +186,14 @@ $(function() {
     {
         if($values instanceof Blobs)
         {
-            $this->_values = $values->toArray();
+            $this->_values[] = $values->toArray();
         }
-        elseif(!is_array($values) and is_numeric($values))
+        elseif(is_numeric($values))
         {
             $image = Blobs::findFirst($values);
             if($image)
             {
-                $this->_values = $image->toArray();
+                $this->_values[] = $image->toArray();
             }
         }
         elseif(is_array($values))
@@ -203,22 +210,6 @@ $(function() {
                 }
             }
         }
-        else
-        {
-            $this->_values = [];
-            return $this;
-        }
-
-        if(!isset($this->_values[0]))
-        {
-            $this->_values = [$this->_values];
-        }
-
-        if(count($this->_values) === 0)
-        {
-            $this->_values = [];
-            return $this;
-        }
     }
 
     public function getValues()
@@ -230,7 +221,7 @@ $(function() {
     {
         if($arr === []) return false;
 
-        return array_keys($arr) !== range(0, count($arr)-1);
+        return array_keys($arr) === range(0, count($arr)-1);
     }
 
 }

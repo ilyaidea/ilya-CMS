@@ -163,13 +163,6 @@ class IndexController extends Controller
     {
         $this->view->disable();
         try {
-            $blobs = Blobs::find([
-                'conditions' => 'status = :status:',
-                'bind' => [
-                    'status' => 'tmp'
-                ]
-            ]);
-
             $blobs = $this
                 ->modelsManager
                 ->executeQuery(

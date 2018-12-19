@@ -54,7 +54,8 @@ class UploadHandler extends Component
         $this->resp = [];
         $this->options = array(
 //            'script_url' => $this->get_full_url().'/'.$this->basename($this->get_server_var('SCRIPT_NAME')),
-            'script_url' => $this->url->get($this->router->getRewriteUri()),
+//            'script_url' => $this->url->get($this->router->getRewriteUri()),
+            'script_url' => $this->request->getURI(),
             'upload_dir' => BASE_PATH. 'public/files/',
             'upload_url' => $this->url->get('file/'),
             'input_stream' => 'php://input',

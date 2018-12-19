@@ -19,7 +19,7 @@ use Phalcon\Mvc\Model\Message;
 
 class Session extends \Phalcon\Flash\Session
 {
-    public function message( $type, $message, $contentClass = null )
+    public function message( $type, $message, $prefix = null )
     {
         $messages = [];
         if(is_array($message))
@@ -46,10 +46,8 @@ class Session extends \Phalcon\Flash\Session
         if(!isset($messages[$type]))
             $messages[$type] = [];
 
-        if($contentClass instanceof Form || $contentClass instanceof DataTable)
-            $messages[$type][$contentClass->prefix] = $message;
-        elseif(is_string($contentClass))
-            $messages[$type][$contentClass] = $message;
+        if(is_string($prefix) && $prefix !== null)
+            $messages[$type][$prefix] = $message;
         else
             $messages[$type][] = $message;
 

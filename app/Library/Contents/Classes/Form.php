@@ -39,11 +39,13 @@ class Form extends CB
             // overridden if needed later using the API.
             $this->getSetForm( $form );
             $this->name( get_class( $form ) );
+            $this->_form->init();
         }
         else
         {
             $this->getSetForm( $form );
             $this->name( $name );
+            $this->_form->init();
         }
     }
 
@@ -155,7 +157,6 @@ class Form extends CB
 
     public function process()
     {
-        $this->_form->init();
         $this->_form->process();
     }
 }

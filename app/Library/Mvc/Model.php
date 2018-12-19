@@ -21,6 +21,9 @@ class Model extends \Phalcon\Mvc\Model
 {
     protected $helper;
 
+    protected $update_mode = false;
+    protected $create_mode = false;
+
     public function initialize()
     {
         $this->helper = $this->getDI()->getShared('helper');

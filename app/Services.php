@@ -37,7 +37,7 @@ use Phalcon\Mvc\View\Engine\Php;
 use Phalcon\Security;
 use Phalcon\Session\Adapter\Files;
 use Plugins\DbManagerPlugin;
-use Lib\Upload\Uploader;
+use Phalcon\Mvc\Model\Transaction\Manager as TransactionManager;
 
 class Services extends \Lib\Di\FactoryDefault
 {
@@ -69,11 +69,6 @@ class Services extends \Lib\Di\FactoryDefault
     protected function initSharedContent()
     {
         return ContentBuilder::instantiate();
-    }
-
-    protected function initSharedTransactions()
-    {
-        return new \Phalcon\Mvc\Model\Transaction\Manager();
     }
 
     protected function initSharedView()
@@ -289,5 +284,10 @@ class Services extends \Lib\Di\FactoryDefault
         $dispatcher->setEventsManager($eventManager);
 
         return $dispatcher;
+    }
+
+    protected function initSharedTransactions()
+    {
+        return new TransactionManager();
     }
 }

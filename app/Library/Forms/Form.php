@@ -37,23 +37,17 @@ class Form extends \Phalcon\Forms\Form
 
     public $prefix;
 
-    private $entity = null;
-    private $userOptions = null;
-
     protected $edit_mode = false;
     
     public function initialize( $entity = null, $userOptions = null )
     {
-        $this->entity = $entity;
-        $this->userOptions = $userOptions;
-
         $this->securityElems();
         $this->formInfo = new Information($this);
         $this->design   = new Design($this);
 //        $this->validate = new Validate($this);
         $this->elements = new Elements($this);
 
-        if(isset($this->userOptions['edit']) && $this->userOptions['edit'] === true)
+        if(isset($userOptions['edit']) && $userOptions['edit'] === true)
         {
             $this->edit_mode = true;
         }
@@ -72,7 +66,7 @@ class Form extends \Phalcon\Forms\Form
         {
             if($this->security->checkHash(get_class($this), $this->request->getPost('action')))
             {
-                if(parent::isValid( $this->request->getPost(), $entity ))
+                if(parent::isValid( $data ? $data : $this->request->getPost(), $entity ))
                 {
                     return true;
                 }
@@ -151,6 +145,14 @@ class Form extends \Phalcon\Forms\Form
             }
         }
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEditMode()
+    {
+        return $this->edit_mode;
     }
 
 }

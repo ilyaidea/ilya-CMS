@@ -28,7 +28,8 @@ class Ajax extends Component
     public function __construct($options)
     {
         $this->options = $options;
-        $this->options->fileUploader->storageOptions['url'] = $this->url->get($this->router->getRewriteUri());
+//        $this->options->fileUploader->storageOptions['url'] = $this->url->get($this->router->getRewriteUri());
+        $this->options->fileUploader->storageOptions['url'] = $this->request->getURI();
     }
 
     public function setUrl($url)

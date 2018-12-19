@@ -89,10 +89,27 @@ class ModuleServices extends Component
             $this->getDI()->set($dbModuleName, $this->setDbModule($dbModuleName));
         }
 
+        $this->getDI()->setShared('transactions', $this->setTransactions());
+
         foreach (get_class_methods($this) as $method)
         {
             $this->condForUseSetOrSetSharedMethod($method);
         }
+    }
+
+    protected function setTransactions()
+    {
+        /** @var \Phalcon\Mvc\Model\Transaction\Manager $transactions */
+        $transactions = $this->getDI()->getShared('transactions');
+        $config = $this->getDI()->getShared('config');
+        if(isset($config->module->database->connection))
+        {
+            $transactions->setDbService(
+                $config->module->database->connection
+            );
+        }
+
+        return $transactions;
     }
 
     protected function setDispatcher()
