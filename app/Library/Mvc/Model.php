@@ -30,12 +30,21 @@ class Model extends \Phalcon\Mvc\Model
 
     public function initialize()
     {
+
+        if(method_exists($this,'init'))
+            $this->init();
+
+        if(method_exists($this,'relations'))
+            $this->relations();
+
         $this->helper = $this->getDI()->getShared('helper');
 
         if(isset($this->getDI()->getShared('config')->module->database->connection))
         {
             $this->setConnectionService($this->getDI()->getShared('config')->module->database->connection);
         }
+
+
     }
 
 }
