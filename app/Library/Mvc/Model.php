@@ -14,13 +14,17 @@
 
 namespace Lib\Mvc;
 
+use Lib\Mvc\Model\TraitSetPosition;
+
+
 /**
  * @property Helper $helper
  */
 class Model extends \Phalcon\Mvc\Model
 {
-    protected $helper;
+    use TraitSetPosition;
 
+    protected $helper;
     protected $update_mode = false;
     protected $create_mode = false;
 
@@ -33,4 +37,5 @@ class Model extends \Phalcon\Mvc\Model
             $this->setConnectionService($this->getDI()->getShared('config')->module->database->connection);
         }
     }
+
 }
