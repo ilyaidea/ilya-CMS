@@ -13,6 +13,7 @@
  */
 
 namespace Lib\Mvc;
+use Phalcon\Mvc\Model\Manager;
 
 use Lib\Mvc\Model\TraitSetPosition;
 
@@ -30,13 +31,6 @@ class Model extends \Phalcon\Mvc\Model
 
     public function initialize()
     {
-
-        if(method_exists($this,'init'))
-            $this->init();
-
-        if(method_exists($this,'relations'))
-            $this->relations();
-
         $this->helper = $this->getDI()->getShared('helper');
 
         if(isset($this->getDI()->getShared('config')->module->database->connection))
@@ -44,7 +38,11 @@ class Model extends \Phalcon\Mvc\Model
             $this->setConnectionService($this->getDI()->getShared('config')->module->database->connection);
         }
 
+        if(method_exists($this,'init'))
+            $this->init();
 
+        if(method_exists($this,'relations'))
+            $this->relations();
     }
 
 }

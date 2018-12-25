@@ -17,16 +17,21 @@ use Ilya\Models\Blobs;
 use Ilya\Models\ModelCars;
 use Ilya\Models\Users;
 use Lib\Authenticates\Auth;
+use Lib\Mvc\Controllers\AdminController;
 use Lib\Mvc\Helper;
 use Modules\Users\Session\Forms\LoginForm;
-use Modules\Users\Session\Forms\SignUpForm;
+use Modules\Users\Session\Forms\RegisterForm;
 
 /**
  * @property Helper $helper
  * @property Auth $auth
  */
-class IndexController extends \Lib\Mvc\Controller
+class IndexController extends AdminController
 {
+    public function testAction()
+    {
+        dump('TEST');
+    }
     public function indexAction()
     {
         // Check user is logged in
@@ -39,7 +44,7 @@ class IndexController extends \Lib\Mvc\Controller
         $content->setTemplate('session-template', 'Session Template');
 
         $loginForm = $content->addFormWide(new LoginForm());
-        $signupForm = $content->addFormTall(new SignUpForm());
+        $signupForm = $content->addFormTall(new RegisterForm());
 
         $content->getTheme()->noLeftMasterPage();
 //        $content->getTheme()->noRightMasterPage();
@@ -57,8 +62,6 @@ class IndexController extends \Lib\Mvc\Controller
                 $this->flash->success($e->getMessage());
             }
         }
-
-
 
         if($signupForm->isValid())
         {

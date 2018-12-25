@@ -13,7 +13,11 @@
  */
 namespace Modules\Users\Session\Forms;
 
-use Ilya\Models\Users;
+use Lib\Mvc\Model\Users\ModelUsers;
+use Lib\Forms\Element\Check;
+use Lib\Forms\Element\Password;
+use Lib\Forms\Element\Submit;
+use Lib\Forms\Element\Text;
 use Lib\Forms\Form;
 use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\Email;
@@ -22,57 +26,28 @@ use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\StringLength;
 use Phalcon\Validation\Validator\Uniqueness;
 
-/**
- * Summary Class SignUpForm
- *
- * Description Class SignUpForm
- *
- * @author Ali Mansoori
- * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
- * @package Modules\Users\Session\Forms
- * @version 1.0.0
- * @example Desc <code></code>
- */
-class SignUpForm extends Form
+class RegisterForm extends Form
 {
-    /**
-     * Summary Function initialize
-     *
-     * Description Function initialize
-     *
-     * @author Ali Mansoori
-     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
-     * @param null $entity
-     * @param null $options
-     * @version 1.0.0
-     * @example Desc <code></code>
-     */
-    public function initialize($entity = null, $options = null)
+    public function init()
     {
-        $this->setTitleForm('Sign Up Form', [
-            'id' => 'sign-up-form'
-        ]);
+        $this->formInfo->title->set('Sign Up Form');
 
-        $this->setAction('#sign-up-form');
-
-        $this->addusername();
+        $this->addUsername();
 
         $this->addEmail();
 
-        $this->addpassword();
+        $this->addPassword();
 
-        $this->addpasswordconfirm();
+        $this->addPasswordConfirm();
 
-        $this->addterms();
+        $this->addTerms();
 
-        $this->addCSRF();
-
-        $this->addsubmit();
+        $this->addSubmit();
     }
 
-    public function addusername()
+    public function addUsername()
     {
-        $username = new \Phalcon\Forms\Element\Text('username', [
+        $username = new Text('username', [
             'placeholder' => 'Choose username'
         ]);
 
@@ -90,7 +65,7 @@ class SignUpForm extends Form
             ]),
             new Uniqueness(
                 [
-                    'model' => new Users(),
+                    'model' => new ModelUsers(),
                     'attribute' => 'username',
                     'message' => ':field isn\'t unique'
                 ]
@@ -101,7 +76,7 @@ class SignUpForm extends Form
 
     public function addEmail()
     {
-        $email = new \Phalcon\Forms\Element\Text('email', [
+        $email = new Text('email', [
             'placeholder' => 'Your Email Address'
         ]);
 
@@ -116,7 +91,7 @@ class SignUpForm extends Form
                 ),
                 new Uniqueness(
                     [
-                        'model' => new Users(),
+                        'model' => new ModelUsers(),
                         'message' => 'This :field has already been registered'
                     ]
                 ),
@@ -130,9 +105,9 @@ class SignUpForm extends Form
         $this->add($email);
     }
 
-    public function addpassword()
+    public function addPassword()
     {
-        $password = new \Phalcon\Forms\Element\Password('password', [
+        $password = new Password('password', [
             'placeholder' => 'Enter Password'
         ]);
 
@@ -162,9 +137,9 @@ class SignUpForm extends Form
         $this->add($password);
     }
 
-    public function addpasswordconfirm()
+    public function addPasswordConfirm()
     {
-        $confirmPassword = new \Phalcon\Forms\Element\Password('confirmPassword', [
+        $confirmPassword = new Password('confirmPassword', [
             'placeholder' => 'Confirm password'
         ]);
 
@@ -182,9 +157,9 @@ class SignUpForm extends Form
         $this->add($confirmPassword);
     }
 
-    public function addterms()
+    public function addTerms()
     {
-        $terms = new \Phalcon\Forms\Element\Check('terms', [
+        $terms = new Check('terms', [
             'value' => 'yes'
         ]);
 
@@ -203,24 +178,9 @@ class SignUpForm extends Form
         $this->add($terms);
     }
 
-    public function addCSRF()
+    public function addSubmit()
     {
-        $csrf = new \Phalcon\Forms\Element\Hidden('csrf', [
-            'value' => $this->getToken()
-        ]);
-        $csrf->addValidator(new Identical(
-            [
-                'value'   => $this->security->getSessionToken(),
-                'message' => ':field validation failed'
-            ]
-        ));
-        $csrf->clear();
-        $this->add($csrf);
-    }
-
-    public function addsubmit()
-    {
-        $register = new \Phalcon\Forms\Element\Submit('save');
+        $register = new Submit('save');
 
         $register->setLabel('Sign Up');
 

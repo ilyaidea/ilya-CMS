@@ -49,7 +49,7 @@
     "ckeditor": "^4.11.1",
     "blueimp-file-upload": "git@github.com:blueimp/jQuery-File-Upload.git#^9.28.0",
     "bootstrap": "3.3.7",
-    "blueimp-gallery": "^2.33.0",
+    "blueimp-gallery": "blueimp#^2.33.0",
     "blueimp-md5": "^2.10.0",
     "jquery-ui": "^1.12.1"
   },

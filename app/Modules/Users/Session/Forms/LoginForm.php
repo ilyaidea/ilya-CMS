@@ -15,26 +15,19 @@
 namespace Modules\Users\Session\Forms;
 
 
+use Lib\Forms\Element\Check;
+use Lib\Forms\Element\Password;
+use Lib\Forms\Element\Submit;
+use Lib\Forms\Element\Text;
 use Lib\Forms\Form;
-use Phalcon\Forms\Element\Check;
-use Phalcon\Forms\Element\Password;
-use Phalcon\Forms\Element\Submit;
-use Phalcon\Forms\Element\Text;
 use Phalcon\Validation\Validator\PresenceOf;
 
 class LoginForm extends Form
 {
-    public function initialize($entity = null, $options = [])
+    public function init()
     {
-        parent::initialize($entity = null, $options = []);
+        $this->formInfo->title->set('Login Form');
 
-        $this->setTitleForm('Login Form', [
-            'id' => 'login-form'
-        ]);
-
-        $this->setAction('#login-form');
-
-        $this->setUserOption('name', 'ali');
         $this->addEmailOrUsername();
         $this->addPassword();
         $this->addRememberMe();
@@ -53,7 +46,7 @@ class LoginForm extends Form
             [
                 new PresenceOf(
                     [
-                        'message' => 'This field is required'
+                        'message' => 'This :field is required'
                     ]
                 )
             ]

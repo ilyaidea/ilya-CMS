@@ -36,6 +36,7 @@ use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\View\Engine\Php;
 use Phalcon\Security;
 use Phalcon\Session\Adapter\Files;
+use Plugins\Acl;
 use Plugins\DbManagerPlugin;
 use Phalcon\Mvc\Model\Transaction\Manager as TransactionManager;
 
@@ -264,6 +265,11 @@ class Services extends \Lib\Di\FactoryDefault
     protected function initSharedTag()
     {
         return new Tag();
+    }
+
+    protected function initSharedForms()
+    {
+        return new \Lib\Forms\Manager();
     }
 
     protected function initSharedDispatcher()

@@ -15,6 +15,7 @@
 namespace Lib\Mvc;
 
 use Lib\Assets\Minify\CSS;
+use Lib\Authenticates\Auth;
 use Lib\Contents\ContentBuilder;
 use Lib\Flash\Session;
 use Phalcon\Mvc\Model\Transaction\Manager;
@@ -26,14 +27,17 @@ use Uploader\Uploader;
  * @property Manager $transactions
  * @property Session $flash
  * @property ContentBuilder $content
- * @property Uploader $uploader
+ * @property Auth $auth
  */
 class Controller extends \Phalcon\Mvc\Controller
 {
 
     public function initialize()
     {
-//        $this->addAssetsTheme();
+        $this->addAssetsTheme();
+
+        if(method_exists($this, 'init'))
+            $this->init();
     }
 
     public function setEnviroment($theme = 'frontend', $layout = null)
@@ -64,5 +68,10 @@ class Controller extends \Phalcon\Mvc\Controller
         {
             $this->content->assets->addCss('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles-rtl.css');
         }
+    }
+
+    public function redirect()
+    {
+
     }
 }

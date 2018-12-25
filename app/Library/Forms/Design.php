@@ -112,7 +112,7 @@ class Design
         if(
             $this->field
             &&
-            @$this->field->getAttributes('type') == 'checkbox'
+            @$this->field->getAttributes('type') === 'checkboxx'
             &&
             $this->getColumns() == 1
             &&

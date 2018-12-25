@@ -88,10 +88,11 @@ class Auth extends Component
 
     public function isLoggedIn()
     {
-        if ($this->session->get('auth'))
+        $auth = $this->session->get('auth');
+        if(!$auth || !isset($auth->id) || !$auth->id)
         {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 }

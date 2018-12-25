@@ -21,15 +21,6 @@ class Routes
 {
     public function __construct(DefaultRouter $router)
     {
-//        $router->add(
-//            '/',
-//            [
-//                'module' => 'session',
-//                'controller' => 'index',
-//                'action' => 'index'
-//            ]
-//        )->setName('home');
-
         $router->add(
             '/logout',
             [
@@ -38,6 +29,26 @@ class Routes
                 'action' => 'index'
             ]
         )->setName('logout');
+
+        $router->addd(
+            '/login',
+            [
+                'module' => 'session',
+                'controller' => 'login',
+                'action' => 'index'
+            ],
+            'login'
+        );
+
+        $router->addd(
+            '/register',
+            [
+                'module' => 'session',
+                'controller' => 'register',
+                'action' => 'index'
+            ],
+            'register'
+        );
 
         return $router;
     }
