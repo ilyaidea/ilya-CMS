@@ -27,6 +27,7 @@ class ModelWidgets extends Model
 
     public function initialize()
     {
+        $this->setDbRef(true);
     }
 
     public function getSource()

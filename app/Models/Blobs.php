@@ -14,6 +14,7 @@
 namespace Ilya\Models;
 
 use Lib\Mvc\Model;
+use Modules\Others\Course\Models\Courses\ModelCourses;
 
 class Blobs extends Model
 {
@@ -28,9 +29,11 @@ class Blobs extends Model
     private $created;        // datetime / is null default
     private $status;         // enum ('tmp', 'active') / not null
 
-    public function initialize()
+    public function init()
     {
         $this->setSource('ilya_blobs');
+//        $this->setSchema('cms');
+        $this->setDbRef(true);
     }
 
     public function beforeCreate()
@@ -206,4 +209,16 @@ class Blobs extends Model
     {
         $this->status = $status;
     }
+
+//    public function relations()
+//    {
+//        $this->hasManyToMany(
+//            'id',
+//            ModelCoursesImage::class,
+//            'image_id','course_id' ,
+//            ModelCourses::class,
+//            'id'
+//
+//        );
+//    }
 }
