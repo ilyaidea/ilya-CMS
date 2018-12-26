@@ -55,7 +55,6 @@ class Controller extends \Phalcon\Mvc\Controller
             $this->content->assets->addCss('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles.css');
         }
 
-        $this->content->assets->addJs('ilya-theme/base/assets/js/jquery.min.js');
         if(file_exists(dirname($this->view->getMainView()). '/assets/js/ilya-global.js'))
         {
             $this->content->assets->addJs('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/js/ilya-global.js');
