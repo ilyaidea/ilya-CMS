@@ -14,6 +14,7 @@
 namespace Lib\Forms\Element;
 
 use Lib\Forms\Element;
+use Phalcon\Mvc\Model;
 
 class Select extends Element
 {
@@ -24,6 +25,29 @@ class Select extends Element
         $this->_optionsValues = $options;
         parent::__construct( $name, $attributes );
         $this->_type = 'select';
+
+        if($options instanceof Model\Resultset)
+        {
+            $this->_optionsValues = [];
+            if($attributes['using'] && is_array($attributes['using']))
+            {
+                $key = $attributes['using'][0];
+                $value = $attributes['using'][1];
+
+                if($attributes['useEmpty'])
+                {
+                    $emptyText = null;
+                    $emptyValue = '';
+                    if($attributes['emptyText'])
+                        $emptyText = $attributes['emptyText'];
+                    if($attributes['emptyValue'])
+                        $emptyValue = $attributes['emptyValue'];
+                    $this->_optionsValues[$emptyValue] = $emptyText;
+                }
+
+                $this->_optionsValues = array_merge($this->_optionsValues, array_column($options->toArray(), $key, $value));
+            }
+        }
     }
 
     public function render( $attributes = null )
