@@ -111,6 +111,4 @@ trait TraitSetPosition
         if($position->max)
             $this->setPosition($position->max + 1);
     }
-
-
 }

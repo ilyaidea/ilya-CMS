@@ -19,7 +19,6 @@ use Lib\Authenticates\Auth;
 use Lib\Contents\ContentBuilder;
 use Lib\Flash\Session;
 use Phalcon\Mvc\Model\Transaction\Manager;
-use Uploader\Uploader;
 
 /**
  * @property CSS cssmin

@@ -4,7 +4,7 @@
 
     {% if form.design.getColumns() is true %}
         <tr>
-        <td colspan="{{ form.design.getColumns() }}" class="ilya-form-{{ style }}-buttons">
+            <td colspan="{{ form.design.getColumns() }}" class="ilya-form-{{ style }}-buttons">
     {% endif %}
 
     {% for button in form.elements.getButtons() %}
@@ -21,7 +21,7 @@
     {{ helper.clearContext('button_key') }}
 
     {% if form.design.getColumns() is true %}
-        </td>
-            </tr>
+            </td>
+        </tr>
     {% endif %}
 {% endif %}
