@@ -31,6 +31,7 @@ class Submit extends Element
 
     public function render( $attributes = null )
     {
+        $attributes['label'] = $this->getLabel();
         return Tag::submitButton($this->prepareAttributes($attributes));
     }
 

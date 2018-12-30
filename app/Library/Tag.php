@@ -142,4 +142,41 @@ class Tag extends \Phalcon\Tag
 
         return $html;
     }
+
+    public static function submitButton( $parameters )
+    {
+
+		$params = [];
+
+		if(!is_array($parameters))
+        {
+            $params[] = $parameters;
+        }
+        else
+        {
+            $params = $parameters;
+        }
+
+        if ($params["label"])
+        {
+            $params["value"] = $params["label"];
+            unset($params['label']);
+        }
+        else
+            $params['value'] = $params[0];
+
+		$params['type'] = 'submit';
+        $code = self::renderAttributes("<input", $params);
+
+		/**
+         * Check if Doctype is XHTML
+         */
+		if (self::$_documentType > self::HTML5) {
+            $code .= " />";
+		} else {
+            $code .= ">";
+		}
+
+		return $code;
+    }
 }
