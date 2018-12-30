@@ -2,6 +2,8 @@
 
 namespace Modules\System\Native\Controllers;
 
+use Lib\Contents\Classes\DataTable;
+use Lib\Contents\Classes\Form;
 use Lib\Mvc\Controller;
 use Lib\Mvc\Helper;
 use Modules\System\Native\DataTables\Languages;
@@ -16,51 +18,83 @@ class LanguageController extends Controller
 {
     public function indexAction()
     {
-        $content = $this->helper->content();
-        $content->setTemplate('languages-list', 'Lang List');
-        $content->addDataTable( new LanguagesDataTable() );
-        $content->create();
+        try
+        {
+            $this->content->theme->noLeftRightMasterPage();
+
+            $this->content->dataTable(
+                DataTable::inst(new LanguagesDataTable(), 'dtLang')
+            );
+
+            $this->content->dataTable('dtLang');
+            $this->content->process();
+        }
+        catch (\Exception $e)
+        {
+            dump('ok');
+        }
     }
 
     public function addAction()
     {
-        $content = $this->helper->content();
-        $content->setTemplate('languages-add', 'Lang Add');
+        try {
 
-        $langForm = $content->addFormWide( new LanguageForm() );
+            $this->content->form(
+                Form::inst(new LanguageForm(), 'add_form')
+            );
+            $add_form = $this->content->form('add_form');
+            if ($add_form->isValid()) {
+                $language = new Language\ModelLanguage();
+                $language->setIso($this->request->getPost('iso'));
+                $language->setTitle($this->request->getPost('title'));
+                $language->setPosition($this->request->getPost('position'));
+                $language->setIsPrimary($this->request->getPost('is_primary'));
+                $language->setDirection($this->request->getPost('direction'));
 
-        if( $langForm->isValid() )
-        {
-            $languageModel              = new Language();
-            $languageModel->title       = @$this->request->getPost( 'title' );
-            $languageModel->iso         = @$this->request->getPost( 'iso' );
-            $languageModel->position    = @$this->request->getPost( 'position' );
-            $languageModel->is_primary  = @$this->request->getPost( 'is_primary' );
-            $languageModel->direction   = @$this->request->getPost( 'direction' );
+                if (!$language->save()) {
 
-            if( !$languageModel->create() )
-            {
-                foreach( $languageModel->getMessages() as $message )
-                    $langForm->setError( $message );
-            } else
-            {
-                $languageModel->setOnlyOnePrimary();
-                $langForm->setOk( "Savedddd success" );
+                    foreach ($language->getMessages() as $message)
+                        $this->flash->error($message);
+                }
+                else
+                {
 
-                // Redirect to Show page
-                return $this->response->redirect([
-                    'for' => 'default_action__'. $this->helper->locale()->getLanguage(),
-                    'module' => $this->config->module->name,
-                    'controller' => $this->dispatcher->getControllerName()
-                ]);
+                    $this->flash->success('language is added');
+                    //redirect to show
+                    $this->response->redirect(
+                        $this->url->get(
+                            [
+                                'for' => 'default__'.$this->helper->locale()->getLanguage(),
+                                'module' => $this->config->module->name,
+                                'controller' => 'language',
+                                'action' => 'index',
+
+                            ]),
+                        true
+                    );
+                    return;
+                }
             }
         }
+        catch (\Exception $e)
+        {
+            $this->flash->error($e->getMessage());
 
-        $content->create();
+        }
     }
 
-    public function editAction( $editId = null )
+    public function editAction( )
     {
+        try
+        {
+
+        }
+        catch (\Exception $e)
+        {
+            $this->flash->error($e->getMessage());
+
+        }
+
         $content = $this->helper->content();
         $content->setTemplate('languages-edit', 'Lang Edit');
 
@@ -69,8 +103,8 @@ class LanguageController extends Controller
             die( 'Exception' );
         }
 
-        /** @var Language $language */
-        $language = Language::findFirstById( $editId );
+        /** @var ModelLanguage $language */
+        $language = ModelLanguage::findFirstById( $editId );
 
         if( !$language )
         {
@@ -116,30 +150,30 @@ class LanguageController extends Controller
         $content->create();
     }
 
-    public function deleteAction( $ids )
-    {
-        if( isset($ids) && is_numeric( $ids ) )
-        {
-            $language = Language::findFirst( $ids );
-
-            if( $language )
-            {
-                if($language->delete())
-                    $this->flash->success('Success Delete');
-                else
-                    $this->flash->error('Primary lang can not delete');
-            }
-            else
-            {
-                $this->flash->error('Error Delete 1');
-            }
-        }
-        else
-        {
-            $this->flash->error('Error Delete 2 ');
-        }
-
-        // Redirect to previous page
-        return $this->response->redirect($_SERVER['HTTP_REFERER']);
-    }
+//    public function deleteAction( $ids )
+//    {
+//        if( isset($ids) && is_numeric( $ids ) )
+//        {
+//            $language = ModelLanguage::findFirst( $ids );
+//
+//            if( $language )
+//            {
+//                if($language->delete())
+//                    $this->flash->success('Success Delete');
+//                else
+//                    $this->flash->error('Primary lang can not delete');
+//            }
+//            else
+//            {
+//                $this->flash->error('Error Delete 1');
+//            }
+//        }
+//        else
+//        {
+//            $this->flash->error('Error Delete 2 ');
+//        }
+//
+//        // Redirect to previous page
+//        return $this->response->redirect($_SERVER['HTTP_REFERER']);
+//    }
 }

@@ -1,8 +1,8 @@
 <?php
 /**
- * Summary File Language
+ * Summary File ModelLanguage
  *
- * Description File Language
+ * Description File ModelLanguage
  *
  * ILYA CMS Created by ILYA-IDEA Company.
  * @author Ali Mansoori
@@ -11,62 +11,23 @@
  * @version 1.0.0
  * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
  */
-namespace Modules\System\Native\Models;
+namespace Modules\System\Native\Models\Language;
 
 use Lib\Mvc\Helper\CmsCache;
 use Lib\Mvc\Model;
+use Modules\System\Native\Models\Translate;
 use Phalcon\Di;
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Validation;
 
-class Language extends Model
+class ModelLanguage extends Model
 {
-    protected $id;
-    protected $iso;
-    protected $title;
-    protected $position;
-    protected $is_primary;
-    protected $direction;
+    use TraitPropertiesLanguage;
+    use TraitValidationLanguage;
+    use TraitEventsLanguage;
 
-    public function initialize()
+    public function init()
     {
-        parent::initialize();
-    }
-
-    public function getSource()
-    {
-        return 'ilya_language';
-    }
-
-    public function validation()
-    {
-        $validator = new Validation();
-
-        /**
-         * ISO
-         */
-        $validator->add( 'iso', new Validation\Validator\Uniqueness( [
-            'model'   => $this,
-            'message' => 'The inputted ISO language is existing'
-        ] ) );
-        $validator->add( 'iso', new Validation\Validator\PresenceOf( [
-            'model'   => $this,
-            'message' => 'ISOOO is required'
-        ] ) );
-
-        /**
-         * Name
-         */
-        $validator->add('title', new Validation\Validator\Uniqueness([
-            'model' => $this,
-            "message" => "The inputted title is existing"
-        ]));
-        $validator->add('title', new Validation\Validator\PresenceOf([
-            'model' => $this,
-            'message' => 'Name is required'
-        ]));
-
-        return $this->validate($validator);
+        $this->setSource('ilya_language');
     }
 
     public function beforeCreate()
@@ -129,14 +90,14 @@ class Language extends Model
 
         /** @var Builder $qb */
         $qb = $modelsManager->createBuilder();
-        $qb->from('Modules\System\Native\Models\Language');
+        $qb->from(self::class);
         $qb->orderBy('is_primary DESC, position ASC');
 
         $entries = $qb->getQuery()->execute();
         $save = [];
         if ($entries->count()) {
 
-            /** @var Language $el */
+            /** @var ModelLanguage $el */
             foreach ($entries as $el) {
                 $save[$el->getIso()] = [
                     'id'         => $el->getId(),
@@ -193,7 +154,7 @@ class Language extends Model
 
     public static function cacheKey()
     {
-        return HOST_HASH . md5('Language::findCachedLanguages');
+        return HOST_HASH . md5('ModelLanguage::findCachedLanguages');
     }
 
     public function getUpperPosition()
@@ -206,7 +167,7 @@ class Language extends Model
     {
         if ($this->getIsPrimary() == 1) {
             $languages = $this->find();
-            /** @var Language $lang */
+            /** @var ModelLanguage $lang */
             foreach ($languages as $lang) {
                 if ($lang->getId() != $this->getId()) {
                     $lang->setIsPrimary(0);
@@ -225,6 +186,7 @@ class Language extends Model
 
     public static function positionOptions()
     {
+
         $positionOptions = [];
         $previous = null;
         $passedself = false;
@@ -288,102 +250,5 @@ class Language extends Model
 
         return $row;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId( $id )
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIso()
-    {
-        return $this->iso;
-    }
-
-    /**
-     * @param mixed $iso
-     */
-    public function setIso( $iso )
-    {
-        $this->iso = $iso;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * @param mixed $title
-     */
-    public function setTitle( $title )
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
-     * @param mixed $position
-     */
-    public function setPosition( $position )
-    {
-        $this->position = $position;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIsPrimary()
-    {
-        return $this->is_primary;
-    }
-
-    /**
-     * @param mixed $is_primary
-     */
-    public function setIsPrimary( $is_primary )
-    {
-        $this->is_primary = $is_primary;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDirection()
-    {
-        return $this->direction;
-    }
-
-    /**
-     * @param mixed $direction
-     */
-    public function setDirection( $direction )
-    {
-        $this->direction = $direction;
-    }
-
 
 }

@@ -5,182 +5,132 @@ namespace Modules\System\Native\Forms;
 use Lib\Forms\Element\Check;
 use Lib\Forms\Element\Text;
 use Lib\Forms\Form;
-use Modules\System\Native\Models\Language;
-use Phalcon\Forms\Element\Select;
-use Phalcon\Forms\Element\Submit;
+use Modules\System\Native\Models\Language\ModelLanguage;
+use Lib\Forms\Element\Select;
+use \Lib\Forms\Element\Submit;
 use Phalcon\Validation\Validator\InclusionIn;
 use Phalcon\Validation\Validator\Numericality;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\StringLength;
+use Phalcon\Validation\Validator\Uniqueness;
 
 class LanguageForm extends Form
 {
-    public function initialize( $entity = null, $options = [] )
+    public function init( $entity = null, $options = [] )
     {
-        parent::initialize( $entity = null, $options = [] );
+        $this->formInfo->title->set('add form');
+        $this->formInfo->title->appendTag('id','form1');
+        $this->addTitle();
+        $this->addIso();
+        $this->addPosition();
+        $this->addIsprimary();
+        $this->addDirection();
+        $this->addSaveBtn();
+
+        }
+    public function addTitle()
+    {
+        $title = new Text('title',[
+                'placeholder' => 'Please enter the language name'
+            ]
+        );
+          $title->setLabel('Title');
+          $title->setUserOption('note','For example: English');
+          $title->addValidators(
+              [
+                  new PresenceOf( [
+                      'message' =>'the_field_is_required',
+                      'field' => ':field'
+                  ]),
+                  new Uniqueness([
+                      'model' => new ModelLanguage(),
+                      'message' => 'The inputted title is existing'
+                  ])
+              ]
+
+          );
+          $this->add($title);
     }
 
-    public function initElements()
+    public function addIso()
     {
-        parent::initElements();
-
-        $this->title     = new Text( 'title' );
-        $this->iso       = new Text( 'iso' );
-        $this->isPrimary = new Check( 'is_primary' );
-        $this->direction = new Select( 'direction' );
-        $this->position  = new Select( 'position' );
-        $this->saveBtn   = new Submit( 'save' );
-    }
-
-    public function setAttributesElements()
-    {
-        parent::setAttributesElements();
-
-        $this->title->setAttributes( [
-            'placeholder' => 'Please enter the language name'
-        ] );
-
-        $this->iso->setAttributes( [
-            'placeholder' => 'Language code according to standard ISO. For example: en'
-        ] );
-    }
-
-    public function setDefaultElements()
-    {
-        parent::setDefaultElements();
-
-        $this->isPrimary->setDefault( false );
-    }
-
-    public function setOptionsElements()
-    {
-        parent::setOptionsElements();
-
-        $this->direction->setOptions( [
-            'rtl' => 'Right to Left',
-            'ltr' => 'Left to Right'
-        ] );
-
-        $this->position->setOptions( Language::positionOptions() );
-    }
-
-    public function setUserOptionsElements()
-    {
-        parent::setUserOptionsElements();
-
-        $this->title->setUserOptions( [
-            'note' => 'For example: English'
-        ] );
-
-        $this->iso->setUserOptions( [
-            'note' => "Language code according to standard ISO. For example: en"
-        ] );
-
-        $this->isPrimary->setUserOptions( [
-            'note' => 'This language is chosen as the main language of the site'
-        ] );
-
-    }
-
-    public function setLabelElements()
-    {
-        parent::setLabelElements();
-
-        $this->title->setLabel( 'Title' );
-        $this->iso->setLabel( 'Iso' );
-        $this->isPrimary->setLabel( 'Is Primary' );
-        $this->direction->setLabel( 'Direction' );
-        $this->position->setLabel( 'Position' );
-        $this->saveBtn->setLabel( 'Save' );
-    }
-
-    public function validationElements()
-    {
-        parent::validationElements();
-
-        $this->title->addValidators( [
+        $iso = new Text('iso',[
+            'placeholder' => 'ModelLanguage code according to standard ISO. For example: en'
+        ]);
+        $iso->setLabel('ISO');
+        $iso->setUserOption('note','ModelLanguage code according to standard ISO. For example: en');
+       $iso->addValidators( [
             new PresenceOf( [
-                'message' => $this->helper->t('the_field_is_required', [
-                    'field' => ':field'
-                ])
-            ] )
-        ] );
+                'message' =>'the_field_is_required',
+                'field' => ':field'
+            ]) ,
 
-        $this->iso->addValidators( [
-            new PresenceOf( [
-                'message' => $this->helper->t('the_field_is_required', [
-                    'field' => ':field'
-                ])
-            ] ),
             new StringLength( [
                 'max'            => 5,
                 'messageMaximum' => 'The :field must max 5 char'
-            ] )
+        ] ),
+           new Uniqueness([
+                'model' => new ModelLanguage(),
+               'message' => 'The inputted title is existing'
+           ])
         ] );
 
-        $this->isPrimary->addValidator(
-            new InclusionIn( [
-                'message' => 'the :field must be true or false',
-                    'domain'  => [ false, 1 ]
-            ] )
-        );
+            $this->add($iso);
 
-        $this->direction->addValidator(
-            new InclusionIn( [
-                'message' => 'the :field must be rtl or ltr',
-                'domain'  => [ 'rtl', 'ltr' ]
-            ] )
-        );
-
-        $this->position->addValidators( [
-            new Numericality( [
-                'message'    => 'The :field is not numeric',
-                'allowEmpty' => true
-            ] ),
-            new InclusionIn( [
-                'domain'  => array_keys( Language::positionOptions() ),
-                'message' => 'Your input is not within the allowed range'
-            ] )
-        ] );
     }
-
-    public function addElements()
+    public function addPosition()
     {
-        parent::addElements();
-
-        $this->add( $this->title );
-        $this->add( $this->iso );
-        $this->add( $this->isPrimary );
-        $this->add( $this->direction );
-        $this->add( $this->position );
-        $this->add( $this->saveBtn );
+        $position = new Select('position');
+        $position->setOptions( ModelLanguage::positionOptions() );
+        $position->setLabel('POSITION');
+        $position->addValidators( [
+        new Numericality( [
+            'message'    => 'The :field is not numeric',
+            'allowEmpty' => true
+        ] ),
+        new InclusionIn( [
+            'domain'  => array_keys( ModelLanguage::positionOptions() ),
+            'message' => 'Your input is not within the allowed range'
+        ] )
+    ] );
+        $this->add($position);
     }
+    public function addIsprimary()
+    {
+        $isprimary = new Check('is_primary');
+        $isprimary->setDefault(false);
+        $isprimary->setUserOption('note','This language is chosen as the main language of the site');
+        $isprimary->setLabel('Is Primary');
+        $isprimary->addValidator(
+            new InclusionIn([
+                'message' => 'the :field must be true or false',
+                'domain' =>[false , 1]
+            ])
+        );
+        $this->add($isprimary);
 
-    /*
-     * Elements
-     */
-    /**
-     * @var Text $title
-     */
-    private $title;
-    /**
-     * @var Text $iso
-     */
-    private $iso;
-    /**
-     * @var Check $isPrimary
-     */
-    private $isPrimary;
-    /**
-     * @var Select $direction
-     */
-    private $direction;
-    /**
-     * @var Select $position
-     */
-    private $position;
-    /**
-     * @var Submit $saveBtn
-     */
-    private $saveBtn;
+    }
+    public function addDirection()
+    {
+        $direction = new Select('direction');
+        $direction->setOptions([
+            'rtl' => 'Right to Left',
+            'ltr' => 'Left to Right'
+        ]);
+        $direction->setLabel('Direction');
+        $direction->addValidator(
+            new InclusionIn(
+                [
+                    'message' => 'the :field must be rtl or ltr',
+                    'domain'  => [ 'rtl', 'ltr' ]
+                ]
+            ));
+        $this->add($direction);
+    }
+    public function addSaveBtn()
+    {
+        $saveBtn = new Submit('save');
+        $saveBtn->setLabel('SAVE');
+        $this->add($saveBtn);
+    }
 }

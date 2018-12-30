@@ -100,7 +100,7 @@ class CategoryForm extends Form
         {
             $lang->setDefault($this->entity->lang_id);
         }
-        $lang->setLabel('Language');
+        $lang->setLabel('ModelLanguage');
 
         $lang->addValidator(
             new InclusionIn(

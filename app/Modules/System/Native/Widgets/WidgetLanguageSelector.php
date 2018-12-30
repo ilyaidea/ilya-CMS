@@ -13,9 +13,9 @@
  */
 
 /*
-	Widget Name: Language selector
+	Widget Name: ModelLanguage selector
 	Widget URI:
-	Widget Description: Language selector description
+	Widget Description: ModelLanguage selector description
 	Widget Version: 1.0
 	Widget Date: 2018-03-27
 	Widget Author: Ali Mansoori

@@ -46,7 +46,7 @@ class TranslatesDataTable extends DataTable
         $this->buttons()->edit('Edit');
         $this->buttons()->delete('Delete');
 
-//        $langs['data'] = Language::find()->toArray();
+//        $langs['data'] = ModelLanguage::find()->toArray();
 //
 //        echo "<pre>";
 //        die(print_r($langs));

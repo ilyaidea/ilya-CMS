@@ -18,6 +18,7 @@ namespace Modules\System\Native\Models;
 use Lib\Mvc\Helper;
 use Lib\Mvc\Helper\CmsCache;
 use Lib\Mvc\Model;
+use Modules\System\Native\Models\Language\ModelLanguage;
 
 /**
  * @property Helper helper
@@ -73,7 +74,7 @@ class Translate extends Model
     public static function buildCmsTranslatesCache()
     {
         $save = [];
-        $languages = Language::find();
+        $languages = ModelLanguage::find();
         /** @var Language $lang */
         foreach($languages as $lang) {
             $save[$lang->getIso()] = [""=>""];

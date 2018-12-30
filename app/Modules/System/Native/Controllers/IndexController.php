@@ -7,17 +7,14 @@ use Lib\Mvc\Helper;
 use Modules\System\Native\Forms\LanguageForm;
 use Modules\System\Native\Models\Language;
 
-/**
- * @property Helper helper
- */
 class IndexController extends Controller
 {
     public function indexAction()
     {
-        $content = $this->helper->content();
+       // $content = $this->helper->content();
+        $this->content->theme->noLeftRightMasterPage();
+       // $content->setTemplate('native index', 'Native index');
 
-        $content->setTemplate('native index', 'Native index');
-
-        $content->create();
+       $this->content->process();
     }
 }
