@@ -56,6 +56,15 @@ class LoginController extends Controller
 
         $loginForm = $this->content->form('login_form');
 
+        $loginForm->buttons()
+            ->add('edit')
+            ->setLabel('Edit')
+            ->setPopup('Edit this')
+            ->setLinkTo($this->url->get('register'))
+            ->setTags([
+                'name' => 'q_doedit'
+            ]);
+
         try
         {
             if($loginForm->isValid())
