@@ -21,6 +21,7 @@ use Lib\Mvc\Controller;
 use Lib\Mvc\Model\Users\ModelUsers;
 use Modules\Users\Session\DataTable\UserDataTable;
 use Modules\Users\Session\Forms\RegisterForm;
+use Modules\Users\Session\Models\UserIp;
 
 class UsersController extends Controller
 {
@@ -61,21 +62,24 @@ class UsersController extends Controller
 
             $users = new ModelUsers();
 
-            $users->setUsername('username');
+            $users->setUsername($this->request->getPost('username'));
 
             $users->setEmail($this->request->getPost('email'));
 
             $users->setPassword($this->request->getPost('password'));
 
-//            if ($users->beforeSave()==true)
+
+//            if ($users->beforeCreate()>3)
 //            {
-//                dump('stop!!!');
+//                $this->flash->error("Your registration number is too long");
 //            }
 //            else
 //                {
                 if (!$users->save()) {
                     $this->flash->error($users->getMessages(), $addForm);
-                } else {
+                }
+                else
+                    {
                     $this->flash->success('success', $addForm);
 
                     $this->response->redirect([
@@ -110,8 +114,6 @@ class UsersController extends Controller
 
             /** @var ModelUsers $user */
             $user = ModelUsers::findFirst($user_id);
-
-
 
             if (!$user)
             {

@@ -34,6 +34,8 @@ class Form extends \Phalcon\Forms\Form
     public $design;
     /** @var Elements $elements */
     public $elements;
+    /** @var Buttons $buttons  */
+    protected $buttons;
 
     public $prefix;
 
@@ -46,6 +48,7 @@ class Form extends \Phalcon\Forms\Form
         $this->design   = new Design($this);
 //        $this->validate = new Validate($this);
         $this->elements = new Elements($this);
+        $this->buttons = new Buttons($this);
 
         if(isset($userOptions['edit']) && $userOptions['edit'] === true)
         {
@@ -153,6 +156,11 @@ class Form extends \Phalcon\Forms\Form
     public function isEditMode()
     {
         return $this->edit_mode;
+    }
+
+    public function buttons()
+    {
+        return $this->buttons;
     }
 
 }

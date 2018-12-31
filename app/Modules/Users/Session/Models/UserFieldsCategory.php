@@ -15,9 +15,9 @@
 namespace Modules\Users\Session\Models;
 
 
+use Lib\Mvc\Model;
 use Lib\Mvc\Model\BaseModel;
 use Lib\Validation\Validation;
-use Phalcon\Mvc\Model;
 use Phalcon\Validation\Validator\Identical;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Uniqueness;
@@ -55,7 +55,7 @@ class UserFieldsCategory extends Model
 
     public function getSource ()
     {
-        return 'ilya_user_fields_category';
+        return 'ilya_users_fields_category';
     }
 
     /**

@@ -17,6 +17,8 @@
             </table>
         {% endif %}
 
+        {{ partial('form/view-buttons', ['form': form]) }}
+
         {{ partial('form-hiddens', ['form': form]) }}
 
 {% if form.design.isBoxed() is true %}

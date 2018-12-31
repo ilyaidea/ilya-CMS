@@ -171,15 +171,19 @@ class RegisterForm extends Form
                         'min' => 8,
                         'messageMinimum' => ':field is too short, Minimum 8 characters'
                     ]
-                ),
-                new Confirmation(
-                    [
-                        'message' => ':field doesn\'t match confirmation',
-                        'with' => 'confirmPassword'
-                    ]
                 )
-            ]
-        );
+            ]);
+
+        if(!$this->isEditMode()) {
+            $password->addValidators(
+                [
+                    new Confirmation(
+                        [
+                            'message' => ':field doesn\'t match confirmation',
+                            'with' => 'confirmPassword'
+                        ])
+                ]);
+        }
         $this->add($password);
     }
 

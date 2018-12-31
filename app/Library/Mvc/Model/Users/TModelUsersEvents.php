@@ -16,6 +16,7 @@ namespace Lib\Mvc\Model\Users;
 
 
 
+use Modules\Users\Session\Models\UserIp;
 use Phalcon\Http\Request;
 use Phalcon\Mvc\Model\Transaction\Manager;
 
@@ -38,37 +39,40 @@ trait TModelUsersEvents
 
         $ip = $request->getClientAddress();
 
-      //  $this->setCreateIp($ip);
-
-      // $ip = $this->getCreateIp();
-
-        $ipp = self::findByCreateIp($ip);
-
-        if(count($ipp)>3)
-        {
-            dump('stop!!!');
-            return;
-        }
-        else
         $this->setCreateIp($ip);
 
-    }
+      //  $ip = $this->getCreateIp();
 
-    public function afterCreate()
-    {
-    }
+        $ipp = self:: findByCreateIp($ip);
 
-    public function a()
-    {
-        $ip = $this->getCreateIp();
+        $ippp = count($ipp);
 
-        $ipp = self::findByCreateIp($ip);
 
-        if(count($ipp)>3)
+        $ip2 = new UserIp();
+
+        $ip2->setCreateIp($ip);
+        $ip2->setCounter($ippp+1);
+
+        if($ip2->counter < 1)
         {
-            dump('stop!!!');
-            return;
+            $ip2->save();
         }
+        elseif ($ip2->counter >= 1)
+        {
+            if(!$ip2->update())
+                dump('failed');
+            //   dump($ip2->toArray());
+        }
+
+
     }
+
+    public function beforeUpdate()
+    {
+
+
+    }
+
+
 
 }
