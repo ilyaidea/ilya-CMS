@@ -27,7 +27,7 @@ class UsersController extends Controller
 
     public function indexAction()
     {
-       $this->request->getServerAddress();
+     //  $this->request->getServerAddress();
     }
 
     public function showAction()
@@ -56,8 +56,7 @@ class UsersController extends Controller
 
         $addForm = $this->content->form('add_form');
 
-        if($addForm->isValid())
-        {
+        if($addForm->isValid()) {
 //            dump($_POST);
 
             $users = new ModelUsers();
@@ -68,27 +67,28 @@ class UsersController extends Controller
 
             $users->setPassword($this->request->getPost('password'));
 
+//            if ($users->beforeSave()==true)
+//            {
+//                dump('stop!!!');
+//            }
+//            else
+//                {
+                if (!$users->save()) {
+                    $this->flash->error($users->getMessages(), $addForm);
+                } else {
+                    $this->flash->success('success', $addForm);
 
+                    $this->response->redirect([
+                        'for' => 'default__' . $this->helper->locale()->getLanguage(),
+                        'module' => $this->config->module->name,
+                        'controller' => $this->dispatcher->getControllerName(),
+                        'action' => 'show',
+                    ]);
 
-            if(!$users->save())
-            {
-                $this->flash->error($users->getMessages(),$addForm);
+                    return;
+                }
             }
-            else
-            {
-                $this->flash->success('success', $addForm);
-
-                $this->response->redirect([
-                    'for' => 'default__' . $this->helper->locale()->getLanguage(),
-                    'module' => $this->config->module->name,
-                    'controller' => $this->dispatcher->getControllerName(),
-                    'action' => 'show',
-                ]);
-
-                return;
-            }
-        }
-
+//        }
     }
 
     public function editAction()
