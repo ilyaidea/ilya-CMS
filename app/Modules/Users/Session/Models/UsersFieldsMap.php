@@ -24,7 +24,7 @@ class UsersFieldsMap extends Model
     public $user_id;
     public $content;
 
-    public function initialize()
+    public function init()
     {
         $this->belongsTo(
             'user_id',

@@ -26,8 +26,10 @@ class LoginController extends Controller
 {
     private $redirectTo;
 
-    public function init()
+    public function initialize()
     {
+        parent::initialize();
+
         $this->redirectTo = $this->request->get('to');
 
         if($this->auth->isLoggedIn())

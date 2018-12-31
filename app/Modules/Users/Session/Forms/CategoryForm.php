@@ -17,6 +17,7 @@ namespace Modules\Users\Session\Forms;
 
 use Ilya\Models\Lang;
 use Lib\Forms\Form;
+use Modules\System\Native\Models\Language;
 use Modules\Users\Session\Models\UserFieldsCategory;
 use Phalcon\Forms\Element\Hidden;
 use Phalcon\Forms\Element\Select;
@@ -84,7 +85,7 @@ class CategoryForm extends Form
 
     protected function addLang ( $nameElem)
     {
-        $languages = Lang::find( [
+        $languages = Language::find( [
             'columns'   => 'id, title',
             'order'     => 'is_primary DESC',
             'hydration' => Resultset::HYDRATE_ARRAYS
@@ -100,7 +101,7 @@ class CategoryForm extends Form
         {
             $lang->setDefault($this->entity->lang_id);
         }
-        $lang->setLabel('ModelLanguage');
+        $lang->setLabel('Language');
 
         $lang->addValidator(
             new InclusionIn(

@@ -27,7 +27,7 @@ class UserFields extends Model
     public $flags;
     public $permit;
 
-    public function initialize ()
+    public function init ()
     {
         $this->hasMany(
             'id',

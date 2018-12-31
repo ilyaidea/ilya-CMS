@@ -30,7 +30,7 @@ class UserFieldsCategory extends Model
     public $lang_id;
     public $position;
 
-    public function initialize()
+    public function init()
     {
         $this->hasMany(
             'id',

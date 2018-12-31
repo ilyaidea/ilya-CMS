@@ -19,6 +19,7 @@ use Lib\Forms\Element\Password;
 use Lib\Forms\Element\Submit;
 use Lib\Forms\Element\Text;
 use Lib\Forms\Form;
+use Modules\System\PageManager\Models\Pages\ModelPages;
 use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\Email;
 use Phalcon\Validation\Validator\Identical;
@@ -53,24 +54,42 @@ class RegisterForm extends Form
 
         $username->setLabel('Username');
 
-        $username->addValidators([
-            new StringLength(
-                [
-                    'min' => 8,
-                    'messageMinimum' => ':field is too short, Minimum 8 characters'
-                ]
-            ),
-            new PresenceOf([
-                'message' => 'The :field is required'
-            ]),
-            new Uniqueness(
-                [
-                    'model' => new ModelUsers(),
-                    'attribute' => 'username',
-                    'message' => ':field isn\'t unique'
-                ]
-            )
-        ]);
+        if($this->isEditMode())
+        {
+            if($this->_entity->username !== $this->request->getPost('username'))
+            {
+                $username->addValidators([
+                    new Uniqueness(
+                        [
+                            'model' => new ModelUsers(),
+                            'attribute' => 'username',
+                            'message' => ':field isn\'t unique'
+                        ]),
+                ]);
+            }
+        }
+        else
+        {
+            $username->addValidators([
+                new StringLength(
+                    [
+                        'min' => 8,
+                        'messageMinimum' => ':field is too short, Minimum 8 characters'
+                    ]
+                ),
+                new PresenceOf([
+                    'message' => 'The :field is required'
+                ]),
+                new Uniqueness(
+                    [
+                        'model' => new ModelUsers(),
+                        'attribute' => 'username',
+                        'message' => ':field isn\'t unique'
+                    ]
+                )
+            ]);
+
+        }
         $this->add($username);
     }
 
@@ -82,26 +101,53 @@ class RegisterForm extends Form
 
         $email->setLabel('Email');
 
-        $email->addValidators(
-            [
-                new Email(
-                    [
-                        'message' => 'the :field is not valid'
-                    ]
-                ),
-                new Uniqueness(
-                    [
-                        'model' => new ModelUsers(),
-                        'message' => 'This :field has already been registered'
-                    ]
-                ),
-                new PresenceOf(
-                    [
-                        'message' => 'The :field is required'
-                    ]
-                )
-            ]
-        );
+        if($this->isEditMode())
+        {
+            if($this->_entity->email !== $this->request->getPost('email'))
+            {
+                $email->addValidators([
+                    new Uniqueness(
+                        [
+                            'model' => new ModelUsers(),
+                            'attribute' => 'email',
+                            'message' => ':field isn\'t unique'
+                        ]),
+                ]);
+            }
+            $email->addValidators([ new Email(
+                [
+                    'message' => 'the :field is not valid'
+                ]
+            ),
+            new PresenceOf(
+                [
+                    'message' => 'The :field is required'
+                ]
+            )
+                ]);
+        }
+        else {
+            $email->addValidators(
+                [
+                    new Email(
+                        [
+                            'message' => 'the :field is not valid'
+                        ]
+                    ),
+                    new Uniqueness(
+                        [
+                            'model' => new ModelUsers(),
+                            'message' => 'This :field has already been registered'
+                        ]
+                    ),
+                    new PresenceOf(
+                        [
+                            'message' => 'The :field is required'
+                        ]
+                    )
+                ]
+            );
+        }
         $this->add($email);
     }
 
@@ -154,7 +200,9 @@ class RegisterForm extends Form
                 )
             ]
         );
-        $this->add($confirmPassword);
+        if(!$this->isEditMode()) {
+            $this->add($confirmPassword);
+        }
     }
 
     public function addTerms()
@@ -175,7 +223,11 @@ class RegisterForm extends Form
                 )
             ]
         );
-        $this->add($terms);
+
+        if(!$this->isEditMode()) {
+            $this->add($terms);
+        }
+
     }
 
     public function addSubmit()
