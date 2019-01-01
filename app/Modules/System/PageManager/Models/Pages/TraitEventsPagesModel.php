@@ -15,117 +15,76 @@
 namespace Modules\System\PageManager\Models\Pages;
 
 
+use Phalcon\Mvc\Model\Manager;
 
 trait TraitEventsPagesModel
 {
     public function afterCreate()
     {
-        // TODO: Implement afterCreate() method.
     }
 
     public function afterSave()
     {
-        // TODO: Implement afterSave() method.
     }
 
     public function afterUpdate()
     {
-        // TODO: Implement afterUpdate() method.
     }
 
     public function afterValidation()
     {
-        // TODO: Implement afterValidation() method.
     }
 
     public function afterValidationOnCreate()
     {
-        // TODO: Implement afterValidationOnCreate() method.
     }
 
     public function afterValidationOnUpdate()
     {
-        // TODO: Implement afterValidationOnUpdate() method.
     }
 
-    public function beforeCreate()
+    public function beforeValidationOnCreate()
     {
-        $this->setCreatedAt(date('Y-m-d H:i:s'));
     }
 
-    public function beforeSave()
+    public function beforeValidationOnUpdate()
     {
-        if(!$this->getPosition())
-        {
-            $this->setPositionIfNull();
-        }
     }
 
-    public function beforeUpdate()
+    public function onValidationFails()
     {
-        $this->setModifiedIn(date('Y-m-d H:i:s'));
+    }
+
+    public function prepareSave()
+    {
     }
 
     public function beforeValidation()
     {
         if($this->getLanguage() == null)
         {
-            $this->setLanguage(
-                $this->getDI()->getShared('helper')->locale()->getLanguage()
-            );
+            $this->setLanguage($this->getDI()->getShared('helper')->locale()->getLanguage());
         }
     }
 
-    public function beforeValidationOnCreate()
+    public function beforeCreate()
     {
-        // TODO: Implement beforeValidationOnCreate() method.
+        $this->create_mode = true;
+        $this->setCreatedAt(date('Y-m-d H:i:s'));
     }
 
-    public function beforeValidationOnUpdate()
+    public function beforeUpdate()
     {
-        // TODO: Implement beforeValidationOnUpdate() method.
+        $this->updat_mode = true;
+        $this->setModifiedIn(date('Y-m-d H:i:s'));
     }
 
-    public function onValidationFails()
+    public function beforeSave()
     {
-        // TODO: Implement onValidationFails() method.
+//        if(!$this->getPosition())
+//            $this->setPositionIfNull();
+        if (!$this->getPosition() || !is_numeric($this->getPosition()))
+            $this->setPositionIfEmpty();
     }
 
-    public function prepareSave()
-    {
-        // TODO: Implement prepareSave() method.
-    }
-
-    private function setPositionIfNull()
-    {
-        $lastPosition = null;
-        if($this->getParentId() == null)
-        {
-            $lastPosition = self::findFirst([
-                'conditions' => 'parent_id IS NULL AND language = :lang:',
-                'order' => 'position DESC',
-                'bind' => [
-                    'lang' => $this->getLanguage()
-                ]
-            ]);
-        }
-        else
-        {
-            $lastPosition = self::findFirst([
-                'conditions' => 'parent_id = :parent: AND language = :lang:',
-                'order' => 'position DESC',
-                'bind' => [
-                    'parent' => $this->getParentId(),
-                    'lang' => $this->getLanguage()
-                ]
-            ]);
-        }
-
-        if($lastPosition && $lastPosition->position && is_numeric($lastPosition->position))
-        {
-            return $this->setPosition($lastPosition->position + 1);
-        }
-
-        return $this->setPosition(1);
-    }
 }

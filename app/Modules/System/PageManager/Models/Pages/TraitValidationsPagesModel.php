@@ -34,23 +34,25 @@ trait TraitValidationsPagesModel
                 'message' => 'this :field is required'
             ])
         );
-        $validator->add(
-            'title',
-            new Uniqueness([
-                'model' => new ModelPages(),
-                'message' => 'title must be unique'
-            ])
-        );
+
+//        $validator->add(
+//            'title',
+//            new Uniqueness([
+//                'model' => new ModelPages(),
+//                'message' => 'title must be unique'
+//            ])
+//        );
 
         // Language
         $validator->add(
             'language',
             new InclusionIn([
-                'domain' => array_column(Language::findCachedLanguages(), 'iso'),
+                'domain' => array_column(Language\ModelLanguage::findCachedLanguages(), 'iso'),
                 'message' => 'language is not in domain'
             ])
         );
 
+//        dump(self::findAllParentsByLang($this->getLanguage()));
         // parent id
         $validator->add(
             'parent_id',

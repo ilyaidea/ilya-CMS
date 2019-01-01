@@ -13,15 +13,15 @@
  */
 namespace Modules\System\PageManager\Controllers;
 
+use Lib\Contents\Classes\DataTable;
+use Lib\Contents\Classes\Form;
 use Lib\Mvc\Controller;
 use Lib\Mvc\Helper;
-use Modules\System\Native\Models\Language;
+use Modules\System\PageManager\DataTables\PageDataTable;
+use Modules\System\PageManager\Forms\PageForm;
 use Modules\System\PageManager\Models\Pages\ModelPages;
-use Modules\System\PageManager\TreeMenus\TreeMenuTest;
 
-/**
- * @property Helper helper
- */
+/**@property Helper helper */
 class IndexController extends Controller
 {
     public function indexAction()
@@ -29,27 +29,160 @@ class IndexController extends Controller
         $content = $this->helper->content();
         $content->setTemplate('test-template', $this->helper->t('test_template'));
         $content->getTheme()->noLeftMasterPage();
-        $content->addTreeMenu(new TreeMenuTest());
-
-        $content->create();
     }
 
-    public function testAction()
+
+    public function showAction()
     {
-        $page = new ModelPages();
+        $this->content->theme->noLeftRightMasterPage();
 
-        $page->setParentId(null);
-        $page->setTitle('PAGE 2');
+        $this->content->dataTable(
+            DataTable::inst(new PageDataTable(), 'dt_page' ));
 
-//        $page->setLanguage('en');
+        $dt_page = $this->content->dataTable('dt_page');
+    }
 
-        $saved = $page->save();
 
-        if(!$saved)
+    public function addAction()
+    {
+        $parent = $this->request->get('parent');
+        $fragment = $this->request->get('fragment');
+
+        $this->content->theme->noLeftMasterPage();
+
+        $this->content->form(Form::inst(new PageForm(), 'add_form'));
+
+        $addForm = $this->content->form('add_form');
+
+        if($addForm->isValid())
         {
-            dump($page->getMessages());
+            $page = new ModelPages();
+
+            $page->setParentId($parent);
+            $page->setTitle($this->request->getPost('title'));
+            $page->setContent($this->request->getPost('content'));
+            $page->setLanguage($this->request->getPost('language'));
+            $page->setPosition($this->request->getPost('position'));
+
+            if (!$page->save())
+            {
+                $this->flash->error($page->getMessages(), $addForm);
+            }
+            else
+            {
+                $page->sortByPosition();
+
+                $this->flash->success('Saved Successfully', $fragment);
+
+                return $this->response->redirect(
+                    $this->url->get(
+                        [
+                            'for' => 'default__'. $this->helper->locale()->getLanguage(),
+                            'module' => $this->config->module->name,
+                            'controller' => $this->dispatcher->getControllerName(),
+                            'action' => 'show',
+                            'params' => $page->getId()
+                        ]) .'#part_'.$fragment,
+                    true );
+            }
+        }
+    }
+
+
+    public function editAction()
+    {
+        $id = $this->dispatcher->getParam(0);
+        $fragment = $this->request->get('fragment');
+
+        /** @var ModelPages $page */
+        $page = ModelPages::findFirst( $id );
+
+        $parent = $page->getParentId();
+
+        if( !$page )
+        {
+            die( 'the menu dose not exist' );
         }
 
-        dump('Success Saved!');
+        $this->content->form(Form::inst(new PageForm($page,[ 'edit' => true ]), 'edit_form'));
+
+        $editForm = $this->content->form('edit_form');
+
+        if( $editForm->isValid() )
+        {
+            $page->setParentId($parent);
+            $page->setTitle($this->request->getPost('title'));
+            $page->setContent($this->request->getPost('content'));
+            $page->setLanguage($this->request->getPost('language'));
+            $page->setPosition($this->request->getPost('position'));
+//            $page->beforUdate();
+//            die(print_r($page->toArray()));
+
+            if($page->update())
+            {
+                $this->flash->success('Edited Successfully',$fragment);
+
+                $page->save();
+
+                $page->sortByPosition();
+
+                return $this->response->redirect(
+                    $this->url->get(
+                        [
+                            'for' => 'default__'. $this->helper->locale()->getLanguage(),
+                            'module' => $this->config->module->name,
+                            'controller' => $this->dispatcher->getControllerName(),
+                            'action' => 'show',
+                        ]) .'#part_'.$fragment,
+                    true );
+            }
+            else
+            {
+                foreach($page->getMessages() as $message)
+                {
+                    $this->flash->error('Error Edit => '. $message);
+                }
+            }
+        }
     }
+
+
+    public  function deleteAction()
+    {
+        $id = $this->dispatcher->getParam(0);
+        $fragment = $this->request->get('fragment');
+
+        /** @var $page ModelPages */
+        $page = ModelPages::findFirst($id);
+
+        if(! $page)
+        {
+            die('this id dose not exist');
+        }
+
+        if ($page->delete())
+        {
+            $page->sortByPosition();
+
+            $this->flash->success('Deleted Successfully',$fragment);
+
+            return $this->response->redirect(
+                $this->url->get(
+                    [
+                        'for' => 'default__'. $this->helper->locale()->getLanguage(),
+                        'module' => $this->config->module->name,
+                        'controller' => $this->dispatcher->getControllerName(),
+                        'action' => 'show',
+                    ]) .'#part_'.$fragment,
+                true );
+        }
+        else
+        {
+            foreach ($page->getMessages() as $message)
+            {
+                $this->flash->error('Error Delete');
+            }
+        }
+    }
+
 }
