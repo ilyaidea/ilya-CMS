@@ -56,7 +56,6 @@ trait TraitEventsLanguage
 
     public function beforeSave()
     {
-         $this->setOnlyOnePrimary();
     }
 
     public function afterUpdate()
@@ -67,9 +66,10 @@ trait TraitEventsLanguage
 
     public function afterSave()
     {
+        $this->setOnlyOnePrimary();
+        $this->updateTranslate();
         CmsCache::getInstance()->save('languages', $this->buildCmsLanguagesCache());
         CmsCache::getInstance()->save('translates', ModelTranslate::buildCmsTranslatesCache());
-        $this->updateTranslate();
     }
 
     public function afterDelete()
@@ -196,14 +196,18 @@ trait TraitEventsLanguage
 
     public function setOnlyOnePrimary()
     {
-        if ($this->getIsPrimary() == 1) //is_primary = 1 => all of is_primary = 0
+        if ($this->getIsPrimary()) //is_primary = 1 => all of is_primary = 0
         {
-            $languages = $this::find();
+            $languages = self::find();
             /** @var ModelLanguage $lang */
             foreach ($languages as $lang) {
+
                 if ($lang->getId() != $this->getId()) {
                     $lang->setIsPrimary(0);
-                    $lang->save();
+                    if(!$lang->update())
+                    {
+                        dump($lang->getMessages());
+                    }
 
                 }
             }
