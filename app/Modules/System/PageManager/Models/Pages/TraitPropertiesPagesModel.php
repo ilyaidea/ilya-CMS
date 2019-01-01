@@ -20,6 +20,7 @@ trait TraitPropertiesPagesModel
     private $id;
     private $parent_id;
     private $title;
+    private $slug;
     private $content;
     private $language;
     private $position;
@@ -152,5 +153,21 @@ trait TraitPropertiesPagesModel
     public function setModifiedIn( $modified_in )
     {
         $this->modified_in = $modified_in;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug( $slug )
+    {
+        $this->slug = $slug;
     }
 }

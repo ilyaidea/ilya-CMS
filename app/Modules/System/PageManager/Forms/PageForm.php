@@ -18,6 +18,7 @@ use Lib\Mvc\Helper\CmsCache;
 use Modules\System\PageManager\Models\Pages\ModelPages;
 use Phalcon\Validation\Validator\InclusionIn;
 use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\StringLength;
 use Phalcon\Validation\Validator\Uniqueness;
 
 class PageForm extends Form
@@ -29,6 +30,7 @@ class PageForm extends Form
         $this->allowToUpload(true);
 
         $this->addTitle();
+        $this->addSlug();
         $this->addContent();
         $this->addLanguage();
         $this->addPosition();
@@ -83,6 +85,23 @@ class PageForm extends Form
             );
         }
         $this->add( $title );
+    }
+
+    public function addSlug()
+    {
+        $slug = new Text('slug', [
+            'placeholder' => 'please enter slug OR empty'
+        ]);
+        $slug->setLabel(
+            $this->helper->t('slug')
+        );
+        $slug->addValidators([
+            new StringLength([
+                'max' => 255
+            ])
+        ]);
+
+        $this->add($slug);
     }
 
     public function addContent()

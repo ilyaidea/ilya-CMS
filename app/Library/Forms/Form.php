@@ -17,10 +17,14 @@ use Lib\Common\TraitSecurity;
 use Lib\Forms\Element\File;
 use Lib\Forms\Element\FileUploader;
 use Lib\Forms\Element\Hidden;
+use Lib\Mvc\Helper;
 use Phalcon\Forms\Element\Text;
 use Phalcon\Validation\Message;
 use Phalcon\Validation\Validator\Identical;
 
+/**
+ * @property Helper $helper
+ */
 class Form extends \Phalcon\Forms\Form
 {
     use TraitPropertiesForm;

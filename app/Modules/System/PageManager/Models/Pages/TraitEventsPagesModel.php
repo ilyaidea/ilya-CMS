@@ -65,6 +65,11 @@ trait TraitEventsPagesModel
         {
             $this->setLanguage($this->getDI()->getShared('helper')->locale()->getLanguage());
         }
+
+        if(!$this->getSlug() && $this->getTitle())
+        {
+            $this->setSlug(str_replace(' ', '-', $this->getTitle()));
+        }
     }
 
     public function beforeCreate()
