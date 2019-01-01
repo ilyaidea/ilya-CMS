@@ -13,7 +13,9 @@
  */
 namespace Modules\System\PageManager;
 
-class Module extends \Lib\Module\ModuleManager
+use Lib\Module\ModuleManager;
+
+class Module extends ModuleManager
 {
 
 }
