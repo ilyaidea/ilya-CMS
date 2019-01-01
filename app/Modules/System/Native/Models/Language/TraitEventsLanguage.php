@@ -19,6 +19,7 @@ trait TraitEventsLanguage
 {
     public function beforeCreate()
     {
+
        // $this->setOnlyOnePrimary();
 //        if(!$this->position)
 //            $this->position = $this->getUpperPosition() + 1;
@@ -56,7 +57,7 @@ trait TraitEventsLanguage
 
     public function beforeSave()
     {
-        $this->updateTranslate();
+       // $this->updateTranslate();
 
          $this->setOnlyOnePrimary();
     }
@@ -71,7 +72,7 @@ trait TraitEventsLanguage
     {
         CmsCache::getInstance()->save('languages', $this->buildCmsLanguagesCache());
         CmsCache::getInstance()->save('translates', ModelTranslate::buildCmsTranslatesCache());
-        $this->updateTranslate();
+        //$this->updateTranslate();
 
     }
 
@@ -106,7 +107,7 @@ trait TraitEventsLanguage
        // dump($phrases->toArray());
         foreach ($phrases as $phrase)
         {
-            if ($phrase['phrase'][$this->getIso()] )
+            if ($phrase['phrase'][$language['iso']] )
             {
                 dump('ok');
             }

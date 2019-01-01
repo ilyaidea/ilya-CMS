@@ -18,19 +18,16 @@ class TranslateController extends Controller
 {
     public function indexAction()
     {
-        try
-        {
+        try {
             $this->content->theme->noLeftRightMasterPage();
             //$content->setTemplate('translate-list', 'ModelTranslate List');
             $this->content->dataTable(
-                DataTable::inst(new DtTranslates(),'dtTranslate')
+                DataTable::inst(new DtTranslates(), 'dtTranslate')
             );
             $this->content->dataTable('dtTranslate');
             $this->content->process();
-        }
-        catch (\Exception $e)
-        {
-            dump('ok');
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
         }
     }
 
@@ -52,10 +49,8 @@ class TranslateController extends Controller
                 Form::inst(new FormTranslate(), 'add_form')
             );
             $addform = $this->content->form('add_form');
-            if ($addform->isValid())
-            {
-                foreach (CmsCache::getInstance()->get('languages') as $language)
-                {
+            if ($addform->isValid()) {
+                foreach (CmsCache::getInstance()->get('languages') as $language) {
                     $translateIsAlreadyExisted = ModelTranslate::findFirst([
                         'conditions' => 'phrase = :phrase: AND language = :lang:',
                         'bind' => [
@@ -76,8 +71,7 @@ class TranslateController extends Controller
                     if (!$translate->create()) {
                         foreach ($translate->getMessages() as $message)
                             $this->flash->error($language['iso'] . ' => ' . $message);
-                    }
-                    else {
+                    } else {
                         $this->flash->success("Saved for => " . $language['iso']);
                     }
                 }//end of foreach
@@ -85,175 +79,102 @@ class TranslateController extends Controller
             }//end of if is valid
 
 
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
 
         }
     }
 
-//        $content = $this->helper->content();
-//       // $content->setTemplate('translate-add', 'ModelTranslate Add');
-//
-//        $langForm = $content->addFormWide( new FormTranslate() );
-//
-//        if( $langForm->isValid() )
-//        {
-//            foreach(CmsCache::getInstance()->get('languages') as $language)
-//            {
-//                $translateIsAlreadyExisted = ModelTranslate::findFirst([
-//                    'conditions' => 'phrase = :phrase: AND language = :lang:',
-//                    'bind' => [
-//                        'phrase' => $this->request->getPost( 'phrase' ),
-//                        'lang' => $language['iso']
-//                    ]
-//                ]);
-//
-//                if($translateIsAlreadyExisted)
-//                    continue;
-//
-//                $translateModel              = new ModelTranslate();
-//                $translateModel->phrase      = @$this->request->getPost( 'phrase' );
-//
-//                $translateModel->translation = null;
-//                if($language['iso'] == $this->helper->locale()->getLanguage())
-//                    $translateModel->translation = @$this->request->getPost( 'translation' );
-//
-//                $translateModel->language    = $language['iso'];
-//
-//                if( !$translateModel->create() )
-//                {
-//                    foreach( $translateModel->getMessages() as $message )
-//                        $langForm->setError( $language['iso']. ' => '. $message );//???????????
-//                }
-//                else
-//                {
-//                    $langForm->setOk( "Saved for => ".$language['iso'] );
-//                }
-//            }
-//
-//            // Redirect to Show page
-//            return $this->response->redirect([
-//                'for' => 'default_action__'. $this->helper->locale()->getLanguage(),
-//                'module' => $this->config->module->name,
-//                'controller' => $this->dispatcher->getControllerName()
-//            ]);
-//        }
-//
-//        $content->create();
-//    }
-//        public function editAction( $editId = null )
-//    {
-//        $content = $this->helper->content();
-//        $content->setTemplate('translate-edit', 'ModelTranslate Edit');
-//
-//        if( !isset( $editId ) || !is_numeric( $editId ) )
-//        {
-//            die( 'Exception' );
-//        }
-//
-//        /** @var ModelTranslate $translate */
-//        $translate = ModelTranslate::findFirst( [
-//            "id = :id: AND language = :lang:",
-//            'bind' => [
-//                'id' => $editId,
-//                'lang' => $this->helper->locale()->getLanguage()
-//            ]
-//        ] );
-//
-//        if( !$translate )
-//        {
-//            die( 'this lang not exist' );
-//        }
-//
-//        $oldPhrase = $translate->phrase;
-//
-//        $form = new FormTranslate( $translate, [ 'edit' => true ] );
-//
-//        $langForm = $content->addFormWide( $form );
-//
-//        if( $langForm->isValid() )
-//        {
-//            if($oldPhrase !== $this->request->getPost('phrase'))
-//            {
-//                $translates = ModelTranslate::findByPhrase($oldPhrase);
-//
-//                foreach($translates as $translate)
-//                {
-//                    $translate->phrase = $this->request->getPost('phrase');
-//                    $translate->update();
-//                }
-//            }
-//            else
-//            {
-//                $translate->phrase       = $this->request->getPost('phrase');
-//                $translate->translation  = $this->request->getPost('translation');
-//
-//                if($translate->update())
-//                {
-//                    $this->flash->success('Success Edit');
-//
-//                    // Redirect to Show page
-//                    return $this->response->redirect([
-//                        'for' => 'default_action__'. $this->helper->locale()->getLanguage(),
-//                        'module' => $this->config->module->name,
-//                        'controller' => $this->dispatcher->getControllerName()
-//                    ]);
-//                }
-//                else
-//                {
-//                    foreach($translate->getMessages() as $message)
-//                    {
-//                        $this->flash->error('Error Edit => '. $message);
-//                    }
-//                }
-//            }
-//        }
-//
-//        $content->create();
-//    }
-//
-//    public function deleteAction( $id )
-//    {
-//        if( isset($id) && is_numeric( $id ) )
-//        {
-//            /** @var ModelTranslate $translate */
-//            $translate = ModelTranslate::findFirst( [
-//                'conditions' => 'id = :id:',
-//                'columns' => 'phrase',
-//                'bind' => [
-//                    'id' => $id
-//                ]
-//            ] );
-//
-//
-//            if( $translate )
-//            {
-//                $translates = ModelTranslate::findByPhrase($translate->phrase);
-//
-//                if($translates->delete())
-//                {
-//                    $this->flash->success('Success Delete');
-//                }
-//                else
-//                    $this->flash->error('Primary lang can not delete');
-//            }
-//            else
-//            {
-//                $this->flash->error('Error Delete 1');
-//            }
-//        }
-//        else
-//        {
-//            $this->flash->error('Error Delete 2 ');
-//        }
-//
-//        // Redirect to Show page
-//        return $this->response->redirect([
-//            'for' => 'default_action__'. $this->helper->locale()->getLanguage(),
-//            'module' => $this->config->module->name,
-//            'controller' => $this->dispatcher->getControllerName()
-//        ]);
-//    }
+    public function editAction()
+    {
+        $this->content->theme->noLeftRightMasterPage();
+        try {
+            $translateId = $this->dispatcher->getParam(0);
+            if (!$translateId || !is_numeric($translateId))
+                throw new \Exception('this translateID does not exist');
+
+            $translateModel = ModelTranslate::findFirst([
+                "id = :id: AND language = :lang:",
+                'bind' => [
+                    'id' => $translateId,
+                    'lang' => $this->helper->locale()->getLanguage()
+                ]
+            ]);
+            if (!$translateModel)
+                throw new \Exception('this translate does not exist');
+
+            /** @var ModelTranslate $translateModel */
+            $oldphrase = $translateModel->getPhrase();
+
+            $this->content->form(
+                Form::inst(new FormTranslate($translateModel, ['edit' => true]), 'edit_form')
+
+            );
+            $edit_form = $this->content->form('edit_form');
+
+            if ($edit_form->isValid()) {
+                if ($oldphrase !== $this->request->getPost('phrase')) {
+                    $oldphrases = ModelTranslate::findByPhrase($oldphrase);
+
+                    foreach ($oldphrases as $old) {
+                        /** @var ModelTranslate $old */
+                        $old->setPhrase($this->request->getPost('phrase'));
+                        $old->update();
+                    }
+                } else {
+                    /** @var ModelTranslate $translateModel */
+                    $translateModel->setPhrase($this->request->getPost('phrase'));
+                    $translateModel->setTranslation($this->request->getPost('translation'));
+                    if (!$translateModel->update())
+                        $this->flash->error($translateModel->getMessages());
+                    $this->flash->success('success edit');
+                }
+            }
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage());
+
+        }
+
+    }
+
+    public function deleteAction()
+    {
+        $fragment = $this->request->get('fragment');
+        $translateId = $this->dispatcher->getParam(0);
+
+        try {
+            if (!$translateId || !is_numeric($translateId))
+                throw new \Exception('this languageId is not valid');
+            if (!$fragment)
+                throw new \Exception('this fragment is not valid');
+
+            /** @var ModelTranslate $translateModel */
+            $translateModel = ModelTranslate::findFirst([
+                'conditions' => 'id = :id:',
+                'bind' => [
+                    'id' => $translateId
+                ]
+            ]);
+
+            if (!$translateModel)
+                throw new \Exception('this phrase does not exist');
+
+            else {
+                /** @var ModelTranslate $translates */
+                $translates = ModelTranslate::findByPhrase($translateModel->getPhrase());
+
+                if (!$translates->delete()) {
+                    foreach ($translates->getMessages() as $message)
+                        throw new \Exception($message);
+                }
+                $this->flash->success('deleted successfully', $fragment);
+
+            }
+
+
+        } catch (\Exception $e) {
+            $this->flash->error($e->getMessage(), $fragment);
+
+        }
+    }
 }
