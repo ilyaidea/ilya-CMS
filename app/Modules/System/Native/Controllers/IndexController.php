@@ -4,7 +4,7 @@ namespace Modules\System\Native\Controllers;
 
 use Lib\Mvc\Controller;
 use Lib\Mvc\Helper;
-use Modules\System\Native\Forms\LanguageForm;
+use Modules\System\Native\Forms\FormLanguage;
 use Modules\System\Native\Models\Language;
 
 class IndexController extends Controller
