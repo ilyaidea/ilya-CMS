@@ -56,8 +56,6 @@ trait TraitEventsLanguage
 
     public function beforeSave()
     {
-        $this->updateTranslate();
-
          $this->setOnlyOnePrimary();
     }
 
@@ -72,7 +70,6 @@ trait TraitEventsLanguage
         CmsCache::getInstance()->save('languages', $this->buildCmsLanguagesCache());
         CmsCache::getInstance()->save('translates', ModelTranslate::buildCmsTranslatesCache());
         $this->updateTranslate();
-
     }
 
     public function afterDelete()
@@ -96,19 +93,34 @@ trait TraitEventsLanguage
 
     public function updateTranslate()
     {
-        $language = ModelLanguage::find( );
-
-        $phrases = ModelTranslate::find(
+        $translates = ModelTranslate::find(
             [
                 'columns' => 'phrase,language'
             ]
         );
-       // dump($phrases->toArray());
-        foreach ($phrases as $phrase)
+
+        /** @var ModelTranslate $translate */
+        foreach ($translates as $translate)
         {
-            if ($phrase['phrase'][$this->getIso()] )
+            $isExistThisTranslate = ModelTranslate::findFirst([
+                'conditions' => 'phrase=:ph: AND language=:lang:',
+                'bind' => [
+                    'ph' => $translate->phrase,
+                    'lang' => $this->getIso()
+                ]
+            ]);
+
+            if (!$isExistThisTranslate)
             {
-                dump('ok');
+                $newTranslate = new ModelTranslate();
+                $newTranslate->setLanguage($this->getIso());
+                $newTranslate->setPhrase($translate->phrase);
+                $newTranslate->setTranslation(null);
+
+                if(!$newTranslate->save())
+                {
+                    dump($newTranslate->getMessages());
+                }
             }
         }
 
