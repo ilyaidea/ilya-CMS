@@ -38,7 +38,6 @@ class LanguageController extends Controller
     public function addAction()
     {
         try {
-           // dump(Helper\CmsCache::getInstance()->get('languages'));
 
             $this->content->form(
                 Form::inst(new FormLanguage(), 'add_form')
@@ -87,11 +86,13 @@ class LanguageController extends Controller
 
     public function editAction( )
     {
+        $this->content->theme->noLeftRightMasterPage();
         try
         {
             $langId = $this->dispatcher->getParam(0);
-            if (!$langId)
+            if (!$langId || !is_numeric($langId))
                 throw new \Exception('this languageID does not exist');
+
             /** @var Language\ModelLanguage $language */
             $language = Language\ModelLanguage::findFirst($langId);
             if (!$language)
@@ -152,31 +153,53 @@ class LanguageController extends Controller
         }
 
     }
+    public function deleteAction()
+    {
+        $fragment = $this->request->get('fragment');
+        $langId = $this->dispatcher->getParam(0);
 
-//    public function deleteAction( $ids )
-//    {
-//        if( isset($ids) && is_numeric( $ids ) )
-//        {
-//            $language = ModelLanguage::findFirst( $ids );
+        try
+        {
+            if (!$langId || !is_numeric($langId))
+                throw new \Exception('this languageId is not valid');
+            if (!$fragment)
+                throw new \Exception('this fragment is not valid');
+
+            /** @var Language\ModelLanguage $language */
+            $language = Language\ModelLanguage::findFirstById($langId);
+
+            if (!$language)
+                throw new \Exception('this language does not exist');
+
+            if ($language->getIsPrimary() == 1)
+                throw new \Exception('oops! cannot delete, this language is primary');
+
+            if (!$language->delete())
+            {
+                foreach ($language->getMessages() as $message)
+                    throw new \Exception($message);
+            }
+            $this->flash->success('deleted successfully',$fragment);
+
+        }
+        catch (\Exception $e)
+        {
+            $this->flash->error($e->getMessage(),$fragment);
+
+
+        }
+//        $this->response->redirect(
+//            $this->url->get(
+//                [
+//                    'for' => 'default__'.$this->helper->locale()->getLanguage(),
+//                    'module' => $this->config->module->name,
+//                    'controller' => 'language',
+//                    'action' => 'index',
 //
-//            if( $language )
-//            {
-//                if($language->delete())
-//                    $this->flash->success('Success Delete');
-//                else
-//                    $this->flash->error('Primary lang can not delete');
-//            }
-//            else
-//            {
-//                $this->flash->error('Error Delete 1');
-//            }
-//        }
-//        else
-//        {
-//            $this->flash->error('Error Delete 2 ');
-//        }
-//
-//        // Redirect to previous page
-//        return $this->response->redirect($_SERVER['HTTP_REFERER']);
-//    }
+//                ]).'#part_'.$fragment,
+//            true
+//        );
+//        return;
+
+    }
 }

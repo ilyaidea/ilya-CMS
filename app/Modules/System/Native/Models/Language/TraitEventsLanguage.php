@@ -19,6 +19,7 @@ trait TraitEventsLanguage
 {
     public function beforeCreate()
     {
+
        // $this->setOnlyOnePrimary();
 //        if(!$this->position)
 //            $this->position = $this->getUpperPosition() + 1;

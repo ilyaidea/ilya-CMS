@@ -10,7 +10,7 @@ use Phalcon\Validation\Validator\PresenceOf;
 
 class FormTranslate extends Form
 {
-    public function init( $entity = null, $options = [] )
+    public function init()
     {
         $this->formInfo->title->set($this->helper->t('add form'));
         $this->formInfo->title->appendTag('id','form1');
