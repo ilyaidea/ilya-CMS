@@ -15,7 +15,7 @@
 namespace Modules\Users\Session\Models;
 
 
-use Phalcon\Mvc\Model;
+use Lib\Mvc\Model;
 
 class UserFields extends Model
 {
@@ -63,5 +63,4 @@ class UserFields extends Model
     {
         return 'ilya_user_fields';
     }
-
 }

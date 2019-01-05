@@ -19,6 +19,8 @@ use Lib\Assets\Asset;
 use Lib\Contents\Classes\DataTable;
 use Lib\Contents\Classes\Form;
 use Lib\Contents\Classes\Theme;
+use Lib\Mvc\Model\Options\ModelOptions;
+use Lib\Tag;
 
 class ContentBuilder extends CB
 {
@@ -29,6 +31,9 @@ class ContentBuilder extends CB
     {
         $this->assets = new Asset();
         $this->theme = new Theme($this);
+
+        Tag::appendHtmlTag('lang', $this->helper->locale()->getLanguage());
+        Tag::setTitle(ModelOptions::findCacheByKey('site_title'));
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -58,6 +63,8 @@ class ContentBuilder extends CB
 
     /** @var array */
     private $_out = [];
+
+    private $_template = null;
 
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -228,5 +235,21 @@ $( document ).ready(function() {
         $this->view->content = $this->fields(true);
         $this->view->theme = $this->theme;
         $this->view->messages = $this->flash->getMessages();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTemplate()
+    {
+        return $this->_template;
+    }
+
+    /**
+     * @param mixed $template
+     */
+    public function setTemplate( $template )
+    {
+        $this->_template = $template;
     }
 }
