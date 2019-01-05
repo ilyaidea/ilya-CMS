@@ -1,1 +1,2 @@
+{# head/custom() #}
 {# abstract method #}

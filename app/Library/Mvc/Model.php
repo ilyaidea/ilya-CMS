@@ -21,7 +21,7 @@ use Lib\Mvc\Model\TraitSetPosition;
 /**
  * @property Helper $helper
  */
-class Model extends \Phalcon\Mvc\Model
+abstract class Model extends \Phalcon\Mvc\Model
 {
     use TraitSetPosition;
 
@@ -66,8 +66,4 @@ class Model extends \Phalcon\Mvc\Model
     {
         $this->dbRef = $dbRef;
     }
-
-
-
-
 }

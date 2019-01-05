@@ -63,5 +63,4 @@ class UserFields extends Model
     {
         return 'ilya_users_fields';
     }
-
 }

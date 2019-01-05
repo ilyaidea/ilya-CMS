@@ -108,6 +108,11 @@ class Services extends \Lib\Di\FactoryDefault
 
         return $view;
     }
+
+    protected function initSharedResponse()
+    {
+        return new Response();
+    }
     /**
      * Summary Function initDb
      *

@@ -20,6 +20,8 @@ trait TraitPropertiesPagesModel
     private $id;
     private $parent_id;
     private $title;
+    private $slug;
+    private $content;
     private $language;
     private $position;
     private $created_at;
@@ -36,7 +38,7 @@ trait TraitPropertiesPagesModel
     /**
      * @param mixed $id
      */
-    public function setId( $id ): void
+    public function setId( $id )
     {
         $this->id = $id;
     }
@@ -52,7 +54,7 @@ trait TraitPropertiesPagesModel
     /**
      * @param mixed $parent_id
      */
-    public function setParentId( $parent_id ): void
+    public function setParentId( $parent_id )
     {
         $this->parent_id = $parent_id;
     }
@@ -68,9 +70,25 @@ trait TraitPropertiesPagesModel
     /**
      * @param mixed $title
      */
-    public function setTitle( $title ): void
+    public function setTitle( $title )
     {
         $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param mixed $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
     }
 
     /**
@@ -84,7 +102,7 @@ trait TraitPropertiesPagesModel
     /**
      * @param mixed $language
      */
-    public function setLanguage( $language ): void
+    public function setLanguage( $language )
     {
         $this->language = $language;
     }
@@ -100,7 +118,7 @@ trait TraitPropertiesPagesModel
     /**
      * @param mixed $position
      */
-    public function setPosition( $position ): void
+    public function setPosition( $position )
     {
         $this->position = $position;
     }
@@ -116,7 +134,7 @@ trait TraitPropertiesPagesModel
     /**
      * @param mixed $created_at
      */
-    public function setCreatedAt( $created_at ): void
+    public function setCreatedAt( $created_at )
     {
         $this->created_at = $created_at;
     }
@@ -132,8 +150,24 @@ trait TraitPropertiesPagesModel
     /**
      * @param mixed $modified_in
      */
-    public function setModifiedIn( $modified_in ): void
+    public function setModifiedIn( $modified_in )
     {
         $this->modified_in = $modified_in;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug( $slug )
+    {
+        $this->slug = $slug;
     }
 }

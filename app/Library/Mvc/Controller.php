@@ -18,6 +18,7 @@ use Lib\Assets\Minify\CSS;
 use Lib\Authenticates\Auth;
 use Lib\Contents\ContentBuilder;
 use Lib\Flash\Session;
+use Lib\Tag;
 use Phalcon\Mvc\Model\Transaction\Manager;
 
 /**
@@ -27,6 +28,7 @@ use Phalcon\Mvc\Model\Transaction\Manager;
  * @property Session $flash
  * @property ContentBuilder $content
  * @property Auth $auth
+ * @property Tag $tag
  */
 class Controller extends \Phalcon\Mvc\Controller
 {
@@ -54,9 +56,15 @@ class Controller extends \Phalcon\Mvc\Controller
             $this->content->assets->addCss('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/css/styles.css');
         }
 
+        $this->content->assets->addJs('assets/jquery/dist/jquery.min.js');
+
         if(file_exists(dirname($this->view->getMainView()). '/assets/js/ilya-global.js'))
         {
             $this->content->assets->addJs('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/js/ilya-global.js');
+        }
+        if(file_exists(dirname($this->view->getMainView()). '/assets/js/ilya-core.js'))
+        {
+            $this->content->assets->addJs('ilya-theme/'. basename(dirname($this->view->getMainView())). '/assets/js/ilya-core.js');
         }
 
         if(
