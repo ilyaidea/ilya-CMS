@@ -2,21 +2,23 @@
 
 {% if theme.hasLeftSide() %}
     {# remove sidebar for user profile pages #}
-    {% if helper.getTemplate() is not empty and helper.getTemplate()['name'] !== 'session' %}
+    {% if content.getTemplate() is not empty and content.getTemplate() %}
         <div id="qam-sidepanel-left-toggle"><i class="icon-right-open-big"></i></div>
         <div class="ilya-sidepanel-left" id="qam-sidepanel-left-mobile">
 
+            <hr>
             {#{{ partial('qam_search') }}#}
-            {#{{ partial(
+            {{ partial(
                 'widgets',
                 [
                     'region': 'side2',
                     'place' : 'top'
                 ]
-            ) }}#}
+            ) }}
             {#{{ partial('sidebar') }}#}
 
-            {#{{ partial(
+            <hr>
+            {{ partial(
                 'widgets',
                 [
                     'region': 'side2',
@@ -38,8 +40,8 @@
                     'region': 'side2',
                     'place' : 'bottom'
                 ]
-            ) }}#}
+            ) }}
 
-        </div> <!-- qa-sidepanel -->
+        </div> <!-- ilya-sidepanel -->
     {% endif %}
 {% endif %}

@@ -20,6 +20,7 @@ use Lib\Contents\Classes\DataTable;
 use Lib\Contents\Classes\Form;
 use Lib\Contents\Classes\Theme;
 use Lib\Mvc\Model\Options\ModelOptions;
+use Lib\Mvc\Model\Widgets\ModelWidgets;
 use Lib\Tag;
 
 class ContentBuilder extends CB
@@ -234,6 +235,7 @@ $( document ).ready(function() {
         $this->assets->process();
         $this->view->content = $this->fields(true);
         $this->view->theme = $this->theme;
+        $this->view->widgets = $this->getWidgets();
         $this->view->messages = $this->flash->getMessages();
     }
 
@@ -251,5 +253,71 @@ $( document ).ready(function() {
     public function setTemplate( $template )
     {
         $this->_template = $template;
+    }
+
+    public function getWidgets()
+    {
+        $like = null;
+        if($this->getTemplate())
+        {
+            $like = $this->getTemplate();
+        }
+
+        $widgets = ModelWidgets::find([
+            'conditions' => "tags = 'all' OR tags LIKE '%".$like."%' OR tags LIKE '%".$like."%'",
+        ])->toArray();
+
+        if(!$this->getTemplate())
+        {
+            return null;
+        }
+
+        $templateName = $this->getTemplate();
+
+        $regioncodes = array(
+            'F' => 'full',
+            'M' => 'main',
+            'S' => 'side1',
+            'N' => 'side2',
+        );
+
+        $placecodes = array(
+            'T' => 'top',
+            'H' => 'high',
+            'L' => 'low',
+            'B' => 'bottom',
+        );
+
+        $widgets_content = [];
+        foreach($widgets as $widget)
+        {
+            $tagstring = ',' . $widget['tags'] . ',';
+            $showOnTmpl = strpos($tagstring, ",$templateName,") !== false || strpos($tagstring, ',all,') !== false;
+            // special case for user pages
+            $showOnUser = strpos($tagstring, ',user,') !== false && preg_match('/^user(-.+)?$/', $templateName) === 1;
+
+            if ($showOnTmpl || $showOnUser) {
+                // widget has been selected for display on this template
+                $region = @$regioncodes[substr($widget['place'], 0, 1)];
+                $place = @$placecodes[substr($widget['place'], 1, 2)];
+
+                if (isset($region) && isset($place)) {
+                    // region/place codes recognized
+                    $module = $widget['namespace'];
+                    $allowTmpl = (substr($templateName, 0, 7) == 'custom-') ? 'custom' : $templateName;
+
+                    if (isset($module)/* &&
+                        method_exists($module, 'allow_template') && $module->allow_template($allowTmpl) &&
+                        method_exists($module, 'allow_region') && $module->allow_region($region) &&
+                        method_exists($module, 'output_widget')*/
+                    ) {
+                        // if module loaded and happy to be displayed here, tell theme about it
+                        $widgets_content[$region][$place][] = $module;
+                    }
+                }
+            }
+        }
+
+        return $widgets_content;
     }
 }

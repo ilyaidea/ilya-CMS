@@ -16,6 +16,7 @@ namespace Modules\Users\Session;
 
 
 use Lib\Di\ModuleServices;
+use Modules\Users\Session\Lib\MyTag;
 use Phalcon\Mvc\View;
 
 class Services extends ModuleServices
