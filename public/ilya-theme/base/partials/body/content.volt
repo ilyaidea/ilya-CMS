@@ -1,45 +1,47 @@
 {#{{ partial('content/body-prefix') }}#}
 {#{{ partial('content/notices') }}#}
 
-{#{{ partial(#}
-    {#'widgets',#}
-    {#[#}
-        {#'region': 'full',#}
-        {#'place' : 'top'#}
-    {#]#}
-{#) }}#}
+{{ partial(
+    'widgets',
+    [
+        'region': 'full',
+        'place' : 'top'
+    ]
+) }}
 
+<hr>
 {#{{ partial('body/content/header/index') }}#}
 
 <div class="ilya-body-wrapper">
 
-{#{{ partial(
-    'widgets',
-    [
-        'region': 'full',
-        'place' : 'high'
-    ]
-) }}#}
+    {{ partial(
+        'widgets',
+        [
+            'region': 'full',
+            'place' : 'high'
+        ]
+    ) }}
+
     <div class="ilya-main-wrapper">
         {{ partial('sidepanel-left') }}
         {{ partial('main') }}
         {{ partial('sidepanel-right') }}
     </div> <!-- END main-wrapper -->
 
-    {#{{ partial(
+    {{ partial(
         'widgets',
         [
             'region': 'full',
             'place' : 'low'
         ]
-    ) }}#}
+    ) }}
 </div> <!-- END ilya-body-wrapper -->
 
-{#
+<hr>
 {{ partial(
     'widgets',
     [
         'region': 'full',
         'place' : 'bottom'
     ]
-) }}#}
+) }}

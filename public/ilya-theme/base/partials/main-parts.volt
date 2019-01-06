@@ -1,4 +1,3 @@
-{{ dump(messages) }}
 {{ content() }}
 {% if content is not empty %}
     {% for key, part in content %}

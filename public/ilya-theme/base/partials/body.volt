@@ -1,4 +1,4 @@
-{{ partial('body_tags') }}
+{{ partial('body/tags') }}
 <body{{ body_tags('base', '') }}>
 
 {#{{ partial('body/header') }}#}

@@ -1,24 +1,24 @@
 <div class="ilya-main">
-        {#{{ partial(
+        {{ partial(
             'widgets',
             [
                 'region': 'main',
                 'place' : 'top'
             ]
-        ) }}#}
+        ) }}
         {#page_title_error #}
 
-        {#{{ partial(
+        {{ partial(
             'widgets',
             [
                 'region': 'main',
                 'place' : 'high'
             ]
-        ) }}#}
+        ) }}
 
         {{ partial('main-parts') }}
 
-        {#{{ partial(
+        {{ partial(
             'widgets',
             [
                 'region': 'main',
@@ -26,15 +26,15 @@
             ]
         ) }}
 
-         page_links()
-         $this->suggest_next(); #}
+         {#page_links()#}
+         {#$this->suggest_next(); #}
 
-        {#{{ partial(
+        {{ partial(
             'widgets',
             [
                 'region': 'main',
                 'place' : 'bottom'
             ]
-        ) }}#}
+        ) }}
 
 </div> <!-- END ilya-main -->

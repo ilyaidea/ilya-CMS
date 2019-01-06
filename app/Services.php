@@ -18,6 +18,7 @@ use Lib\Authenticates\Auth;
 use Lib\Contents\ContentBuilder;
 use Lib\Filter;
 use Lib\Flash\Session;
+use Lib\Http\Response;
 use Lib\Mvc\Helper;
 use Lib\Mvc\View;
 use Lib\Mvc\View\Engine\Volt;
