@@ -23,15 +23,13 @@ class FormTranslate extends Form
     public function addPhrase()
     {
         $phrase = new Text('phrase',[
-            'placeholder' => 'Please enter the phrase'
+            'placeholder' => $this->helper->t('Please enter the phrase')
         ]);
-        $phrase->setUserOption('note','For example: hi_name');
-        $phrase->setLabel(
-            $this->helper->t('Phrase')
-        );
+        $phrase->setUserOption('note',$this->helper->t('For example: hi_name'));
+        $phrase->setLabel($this->helper->t('Phrase'));
         $phrase->addValidator(
             new PresenceOf( [
-                'message' => 'The :field is required'
+                'message' => $this->helper->t('The :field is required')
             ])
         );
         $this->add($phrase);
@@ -40,27 +38,19 @@ class FormTranslate extends Form
     public function addTranslation()
     {
         $translation = new TextArea('translation',[
-                'placeholder' => 'Please enter the translation'
+                'placeholder' => $this->helper->t('Please enter the translation')
             ]  );
           $translation->setLabel(
               $this->helper->t('Translation')
           );
-          $translation->setUserOption('note','For example: Hi %name%');
-//          $translation->addValidator(
-//            new PresenceOf( [
-//                'message' => 'The :field is required'
-//            ] )
-//         );
+          $translation->setUserOption('note',$this->helper->t('For example: Hi %name%'));
           $this->add($translation);
-
     }
 
     public function addSaveBtn()
     {
         $saveBtn = new Submit('save');
-        $saveBtn->setLabel(
-            $this->helper->t('SAVE')
-        );
+        $saveBtn->setLabel($this->helper->t('SAVE'));
         $this->add($saveBtn);
 
     }

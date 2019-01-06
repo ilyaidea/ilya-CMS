@@ -203,16 +203,15 @@ trait TraitEventsLanguage
             /** @var ModelLanguage $lang */
             foreach ($languages as $lang) {
 
-                if ($lang->getId() != $this->getId()) {
+                if ($lang->getId() != $this->getId())//add a language
+                {
                     $lang->setIsPrimary(0);
                     if(!$lang->update())
                     {
                         dump($lang->getMessages());
                     }
-
                 }
             }
-            //dump($languages->toArray());
         }
         else //is_primary = 0
             {
@@ -232,26 +231,34 @@ trait TraitEventsLanguage
         $previous = null;
         $passedself = false;
 
-        $languages = self::find([
+        $languages = self::find(
+            [
             'columns' => 'id, title, position'
-        ])->toArray();
+        ]
+        )->toArray();
 
         foreach($languages as $language)
         {
             if(isset($previous))
             {
                 $positionHtml = 'after '. (($passedself ? $language['title'] : $previous['title']));
+//dump($positionHtml);
             }
             else
             {
                 $positionHtml = 'First';
             }
-
             $positionOptions[$language['position']] = $positionHtml;
-
+           // dump($positionHtml);
             $previous = $language;
         }
+        if (isset($previous))
+        {
+            $positionvalue = 'after '. $previous['title'];
+            $positionOptions[1+$previous['position']] = $positionvalue;
+        }
 
+     // dump($previous);
         return $positionOptions;
     }
 

@@ -25,16 +25,16 @@ class DtTranslates extends DataTable
         if ($this->isAjax())
         {
             $this->data->setData(
-              ModelTranslate::find()->toArray()
+              ModelTranslate::find(
+                  [
+                      'conditions' => 'language = :language:',
+                      'bind' => [
+                          'language' => $this->helper->locale()->getLanguage()
+                      ]
+                  ]
+              )->toArray()
             );
         }
-       // $this->query['data'] = ModelTranslate::find([
-//            'columns' => 'id,phrase,translation',
-//            'conditions' => 'language = :lang:',
-//            'bind' => [
-//                'lang' => $this->helper->locale()->getLanguage()
-//            ]
-//        ])->toArray();
         //id
         $id = $this->column('id');
         $id->setLabel('id');

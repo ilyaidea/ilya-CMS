@@ -31,11 +31,13 @@ class FormLanguage extends Form
     public function addTitle()
     {
         $title = new Text('title',[
-                'placeholder' => 'Please enter the language name'
+                'placeholder' => $this->helper->t('Please enter the language name')
             ]
         );
-          $title->setLabel('Title');
-          $title->setUserOption('note','For example: English');
+          $title->setLabel(
+              $this->helper->t('Title')
+          );
+          $title->setUserOption('note',$this->helper->t('For example: English'));
 
           if ($this->isEditMode())
           {
@@ -43,22 +45,21 @@ class FormLanguage extends Form
               {
                   $title->addValidator(new Uniqueness([
                       'model' => new ModelLanguage(),
-                      'message' => 'The inputted title is existing'
+                      'message' => $this->helper->t('The inputted title is existing')
                   ]))  ;
-
               }
           }
           else
           {
               $title->addValidator(new Uniqueness([
                   'model' => new ModelLanguage(),
-                  'message' => 'The inputted title is existing'
+                  'message' => $this->helper->t('The inputted title is existing')
               ]))  ;
           }
 
           $title->addValidator(
                   new PresenceOf( [
-                      'message' =>'the_field_is_required',
+                      'message' =>$this->helper->t('the_field_is_required'),
                       'field' => ':field'
                   ]));
 
@@ -68,29 +69,29 @@ class FormLanguage extends Form
     public function addIso()
     {
         $iso = new Text('iso',[
-            'placeholder' => 'ModelLanguage code according to standard ISO. For example: en'
+            'placeholder' => $this->helper->t('ModelLanguage code according to standard ISO. For example: en')
         ]);
         $iso->setLabel('ISO');
-        $iso->setUserOption('note','ModelLanguage code according to standard ISO. For example: en');
+        $iso->setUserOption('note',$this->helper->t('ModelLanguage code according to standard ISO. For example: en'));
        $iso->addValidators( [
             new PresenceOf( [
-                'message' =>'the_field_is_required',
+                'message' =>$this->helper->t('the_field_is_required'),
                 'field' => ':field'
             ]) ,
 
             new StringLength( [
                 'max'            => 5,
-                'messageMaximum' => 'The :field must max 5 char'
+                'messageMaximum' => $this->helper->t('The :field must max 5 char')
         ] )]);
 
         if ($this->isEditMode())
         {
-            if ($this->getEntity()->title !== $this->request->getPost('title'))
+            if ($this->getEntity()->iso !== $this->request->getPost('iso'))
             {
                 $iso->addValidator(
                     new Uniqueness([
                     'model' => new ModelLanguage(),
-                    'message' => 'The inputted iso is existing'
+                    'message' => $this->helper->t('The inputted iso is existing')
                 ]))  ;
             }
         }
@@ -99,7 +100,7 @@ class FormLanguage extends Form
             $iso->addValidator(
                 new Uniqueness([
                 'model' => new ModelLanguage(),
-                'message' => 'The inputted iso is existing'
+                'message' => $this->helper->t('The inputted iso is existing')
             ]))  ;
         }
         $this->add($iso);
@@ -108,15 +109,16 @@ class FormLanguage extends Form
     {
         $position = new Select('position');
         $position->setOptions( ModelLanguage::positionOptions() );
-        $position->setLabel('POSITION');
+       // dump($position);
+        $position->setLabel($this->helper->t($this->helper->t('POSITION')));
         $position->addValidators( [
         new Numericality( [
-            'message'    => 'The :field is not numeric',
+            'message'    => $this->helper->t('The :field is not numeric'),
             'allowEmpty' => true
         ] ),
         new InclusionIn( [
             'domain'  => array_keys( ModelLanguage::positionOptions() ),
-            'message' => 'Your input is not within the allowed range'
+            'message' => $this->helper->t('Your input is not within the allowed range')
         ] )
     ] );
         $this->add($position);
@@ -125,11 +127,11 @@ class FormLanguage extends Form
     {
         $isprimary = new Check('is_primary');
         $isprimary->setDefault(true);
-        $isprimary->setUserOption('note','This language is chosen as the main language of the site');
-        $isprimary->setLabel('Is Primary');
+        $isprimary->setUserOption('note',$this->helper->t('This language is chosen as the main language of the site'));
+        $isprimary->setLabel($this->helper->t('Is Primary'));
         $isprimary->addValidator(
             new InclusionIn([
-                'message' => 'the :field must be true or false',
+                'message' => $this->helper->t('the :field must be true or false'),
                 'domain' =>[1 , 0]
             ])
         );
@@ -140,14 +142,14 @@ class FormLanguage extends Form
     {
         $direction = new Select('direction');
         $direction->setOptions([
-            'rtl' => 'Right to Left',
-            'ltr' => 'Left to Right'
+            'rtl' => $this->helper->t('Right to Left'),
+            'ltr' => $this->helper->t('Left to Right')
         ]);
-        $direction->setLabel('Direction');
+        $direction->setLabel($this->helper->t('Direction'));
         $direction->addValidator(
             new InclusionIn(
                 [
-                    'message' => 'the :field must be rtl or ltr',
+                    'message' => $this->helper->t('the :field must be rtl or ltr'),
                     'domain'  => [ 'rtl', 'ltr' ]
                 ]
             ));
@@ -156,7 +158,7 @@ class FormLanguage extends Form
     public function addSaveBtn()
     {
         $saveBtn = new Submit('save');
-        $saveBtn->setLabel('SAVE');
+        $saveBtn->setLabel($this->helper->t('save'));
         $this->add($saveBtn);
     }
 }

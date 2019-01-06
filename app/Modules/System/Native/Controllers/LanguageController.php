@@ -6,6 +6,7 @@ use Lib\Contents\Classes\DataTable;
 use Lib\Contents\Classes\Form;
 use Lib\Mvc\Controller;
 use Lib\Mvc\Helper;
+use Lib\Tag;
 use Modules\System\Native\DataTables\Languages;
 use Modules\System\Native\DataTables\DtLanguages;
 use Modules\System\Native\Forms\FormLanguage;
@@ -18,27 +19,27 @@ class LanguageController extends Controller
 {
     public function indexAction()
     {
+       $this->content->theme->noLeftRightMasterPage();
         try
         {
-            $this->content->theme->noLeftRightMasterPage();
-
             $this->content->dataTable(
                 DataTable::inst(new DtLanguages(), 'dtLang')
             );
-
             $this->content->dataTable('dtLang');
-            $this->content->process();
         }
-        catch (\Exception $e)
+        catch (\Exception $exception)
         {
-            dump('ok');
+            $this->flash->error($exception->getMessage());
         }
     }
 
     public function addAction()
     {
+//        Tag::setTitle('اضافه کردن');
+//        Tag::appendTitle('adddd');
+        //Tag::setMetaDescription('description');
         try {
-
+            $fragment = $this->request->get('fragment');
             $this->content->form(
                 Form::inst(new FormLanguage(), 'add_form')
             );
@@ -52,29 +53,28 @@ class LanguageController extends Controller
                 $language->setIsPrimary($this->request->getPost('is_primary'));
                 $language->setDirection($this->request->getPost('direction'));
 
-
-                if (!$language->save()) {
-
+                if (!$language->save())
+                 {
                     foreach ($language->getMessages() as $message)
-                        $this->flash->error($message);
-                }
+                        $this->flash->error($message,$add_form);
+                 }
                 else
                 {
-                    $this->flash->success('language is added');
-                    //redirect to show
-                    $this->response->redirect(
-                        $this->url->get(
-                            [
-                                'for' => 'default__'.$this->helper->locale()->getLanguage(),
-                                'module' => $this->config->module->name,
-                                'controller' => 'language',
-                                'action' => 'index',
-
-                            ]),
-                        true
-                    );
-                    return;
+                    $this->flash->success('language is added',$fragment);
                 }
+                //redirect to show
+                $this->response->redirect(
+                    $this->url->get(
+                        [
+                            'for' => 'default__'.$this->helper->locale()->getLanguage(),
+                            'module' => $this->config->module->name,
+                            'controller' => 'language',
+                            'action' => 'index',
+
+                        ]),
+                    true
+                );
+                $this->response->send();
             }
         }
         catch (\Exception $e)
@@ -87,6 +87,7 @@ class LanguageController extends Controller
     public function editAction( )
     {
         $this->content->theme->noLeftRightMasterPage();
+        $fragment = $this->request->get('fragment');
         try
         {
             $langId = $this->dispatcher->getParam(0);
@@ -124,26 +125,24 @@ class LanguageController extends Controller
 
                 if ($language->update()) {
 
-                    //dump($_POST);
-                    $this->flash->success('success',$edit_form->prefix);
-                    $this->response->redirect(
-                        $this->url->get(
-                            [
-                                'for' => 'default__'.$this->helper->locale()->getLanguage(),
-                                'module' => $this->config->module->name,
-                                'controller' => 'Language',
-                                'action' => 'index',
-
-                            ]),
-                        true
-                    );
-                    return;
+                    $this->flash->success('success edited =>'.$language->getTitle(),$fragment);
                 }
                 else
                 {
                     foreach ($language->getMessages() as $message)
-                        $this->flash->error($message,$edit_form->prefix);
+                        $this->flash->error($message,$edit_form);
                 }
+                $this->response->redirect(
+                    $this->url->get(
+                        [
+                            'for' => 'default__'.$this->helper->locale()->getLanguage(),
+                            'module' => $this->config->module->name,
+                            'controller' => 'Language',
+                            'action' => 'index',
+                        ]),
+                    true
+                );
+                $this->response->send();
             }
         }
         catch (\Exception $e)
@@ -151,7 +150,6 @@ class LanguageController extends Controller
             $this->flash->error($e->getMessage());
 
         }
-
     }
     public function deleteAction()
     {
@@ -179,27 +177,23 @@ class LanguageController extends Controller
                 foreach ($language->getMessages() as $message)
                     throw new \Exception($message);
             }
-            $this->flash->success('deleted successfully',$fragment);
+            $this->flash->success('deleted successfully => '.$language->getTitle(),$fragment);
 
         }
         catch (\Exception $e)
         {
             $this->flash->error($e->getMessage(),$fragment);
 
-
         }
-//        $this->response->redirect(
-//            $this->url->get(
-//                [
-//                    'for' => 'default__'.$this->helper->locale()->getLanguage(),
-//                    'module' => $this->config->module->name,
-//                    'controller' => 'language',
-//                    'action' => 'index',
-//
-//                ]).'#part_'.$fragment,
-//            true
-//        );
-//        return;
-
+        $this->response->redirect(
+            $this->url->get([
+                'for'        => 'default__'.$this->helper->locale()->getLanguage(),
+                'module'     => $this->config->module->name,
+                'controller' => $this->dispatcher->getControllerName(),
+                'action'     => 'index'
+            ]),
+            true
+        );
+        return;
     }
 }

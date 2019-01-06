@@ -9,6 +9,8 @@
 namespace Lib\Mvc\Model;
 
 
+use Phalcon\Mvc\Collection\Manager;
+
 trait TraitSetPosition
 {
     public function sortByPosition($update = false)
@@ -18,7 +20,7 @@ trait TraitSetPosition
 
 
 
-        /** @var Manager $modelManager */
+        /** @var \Phalcon\Mvc\Model\Manager $modelManager */
         $modelManager = $this->getModelsManager();
 
         $result = $modelManager->createBuilder();
@@ -80,7 +82,7 @@ trait TraitSetPosition
 
     protected function setPositionIfEmpty()
     {
-        /** @var Manager $modelManager */
+        /** @var \Phalcon\Mvc\Model\Manager $modelManager */
         $modelManager = $this->getModelsManager();
 
         $position = $modelManager->createBuilder();
