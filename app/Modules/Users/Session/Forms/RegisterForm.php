@@ -13,14 +13,17 @@
  */
 namespace Modules\Users\Session\Forms;
 
+use Lib\Forms\Element\FileUploader;
 use Lib\Mvc\Model\Users\ModelUsers;
 use Lib\Forms\Element\Check;
 use Lib\Forms\Element\Password;
 use Lib\Forms\Element\Submit;
 use Lib\Forms\Element\Text;
 use Lib\Forms\Form;
+use Phalcon\Validation;
 use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\Email;
+use Phalcon\Validation\Validator\File;
 use Phalcon\Validation\Validator\Identical;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\StringLength;
@@ -31,6 +34,8 @@ class RegisterForm extends Form
     public function init()
     {
         $this->formInfo->title->set('Sign Up Form');
+
+        $this->allowToUpload(true);
 
         $this->addUsername();
 
@@ -43,6 +48,9 @@ class RegisterForm extends Form
         $this->addTerms();
 
         $this->addSubmit();
+
+        $this->addAvatar();
+
     }
 
     public function addUsername()
@@ -53,24 +61,42 @@ class RegisterForm extends Form
 
         $username->setLabel('Username');
 
-        $username->addValidators([
-            new StringLength(
-                [
-                    'min' => 8,
-                    'messageMinimum' => ':field is too short, Minimum 8 characters'
-                ]
-            ),
-            new PresenceOf([
-                'message' => 'The :field is required'
-            ]),
-            new Uniqueness(
-                [
-                    'model' => new ModelUsers(),
-                    'attribute' => 'username',
-                    'message' => ':field isn\'t unique'
-                ]
-            )
-        ]);
+        if($this->isEditMode())
+        {
+            if($this->_entity->username !== $this->request->getPost('username'))
+            {
+                $username->addValidators([
+                    new Uniqueness(
+                        [
+                            'model' => new ModelUsers(),
+                            'attribute' => 'username',
+                            'message' => ':field isn\'t unique'
+                        ]),
+                ]);
+            }
+        }
+        else
+        {
+            $username->addValidators([
+                new StringLength(
+                    [
+                        'min' => 8,
+                        'messageMinimum' => ':field is too short, Minimum 8 characters'
+                    ]
+                ),
+                new PresenceOf([
+                    'message' => 'The :field is required'
+                ]),
+                new Uniqueness(
+                    [
+                        'model' => new ModelUsers(),
+                        'attribute' => 'username',
+                        'message' => ':field isn\'t unique'
+                    ]
+                )
+            ]);
+
+        }
         $this->add($username);
     }
 
@@ -82,26 +108,53 @@ class RegisterForm extends Form
 
         $email->setLabel('Email');
 
-        $email->addValidators(
-            [
-                new Email(
-                    [
-                        'message' => 'the :field is not valid'
-                    ]
-                ),
-                new Uniqueness(
-                    [
-                        'model' => new ModelUsers(),
-                        'message' => 'This :field has already been registered'
-                    ]
-                ),
-                new PresenceOf(
-                    [
-                        'message' => 'The :field is required'
-                    ]
-                )
-            ]
-        );
+        if($this->isEditMode())
+        {
+            if($this->_entity->email !== $this->request->getPost('email'))
+            {
+                $email->addValidators([
+                    new Uniqueness(
+                        [
+                            'model' => new ModelUsers(),
+                            'attribute' => 'email',
+                            'message' => ':field isn\'t unique'
+                        ]),
+                ]);
+            }
+            $email->addValidators([ new Email(
+                [
+                    'message' => 'the :field is not valid'
+                ]
+            ),
+            new PresenceOf(
+                [
+                    'message' => 'The :field is required'
+                ]
+            )
+                ]);
+        }
+        else {
+            $email->addValidators(
+                [
+                    new Email(
+                        [
+                            'message' => 'the :field is not valid'
+                        ]
+                    ),
+                    new Uniqueness(
+                        [
+                            'model' => new ModelUsers(),
+                            'message' => 'This :field has already been registered'
+                        ]
+                    ),
+                    new PresenceOf(
+                        [
+                            'message' => 'The :field is required'
+                        ]
+                    )
+                ]
+            );
+        }
         $this->add($email);
     }
 
@@ -125,15 +178,19 @@ class RegisterForm extends Form
                         'min' => 8,
                         'messageMinimum' => ':field is too short, Minimum 8 characters'
                     ]
-                ),
-                new Confirmation(
-                    [
-                        'message' => ':field doesn\'t match confirmation',
-                        'with' => 'confirmPassword'
-                    ]
                 )
-            ]
-        );
+            ]);
+
+        if(!$this->isEditMode()) {
+            $password->addValidators(
+                [
+                    new Confirmation(
+                        [
+                            'message' => ':field doesn\'t match confirmation',
+                            'with' => 'confirmPassword'
+                        ])
+                ]);
+        }
         $this->add($password);
     }
 
@@ -154,7 +211,9 @@ class RegisterForm extends Form
                 )
             ]
         );
-        $this->add($confirmPassword);
+        if(!$this->isEditMode()) {
+            $this->add($confirmPassword);
+        }
     }
 
     public function addTerms()
@@ -175,7 +234,11 @@ class RegisterForm extends Form
                 )
             ]
         );
-        $this->add($terms);
+
+        if(!$this->isEditMode()) {
+            $this->add($terms);
+        }
+
     }
 
     public function addSubmit()
@@ -185,5 +248,15 @@ class RegisterForm extends Form
         $register->setLabel('Sign Up');
 
         $this->add($register);
+    }
+
+    public function addAvatar()
+    {
+
+        $avatar = new FileUploader('avatar');
+
+        $avatar->setLabel('Avatar');
+
+        $this->add($avatar);
     }
 }

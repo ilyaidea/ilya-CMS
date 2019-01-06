@@ -19,8 +19,10 @@ use Lib\Contents\Classes\Form;
 use Lib\Mvc\Controller;
 use Lib\Mvc\Model\Users\ModelUsers;
 use Lib\Security\Limits;
+use Lib\Tag;
 use Modules\Users\Session\Forms\LoginForm;
-use Phalcon\Mvc\Dispatcher;
+use Modules\Users\Session\Lib\Composite\Fieldset;
+use Modules\Users\Session\Lib\Composite\Input;
 
 class LoginController extends Controller
 {
@@ -49,6 +51,7 @@ class LoginController extends Controller
 
         //
         $this->content->theme->noLeftMasterPage();
+        $this->content->setTemplate('tem');
 
         $this->content->form(
             Form::inst(new LoginForm(), 'login_form')
@@ -119,5 +122,9 @@ class LoginController extends Controller
         }
         $this->response->send();
 
+    }
+
+    public function testAction()
+    {
     }
 }

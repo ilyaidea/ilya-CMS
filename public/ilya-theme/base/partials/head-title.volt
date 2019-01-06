@@ -1,1 +1,0 @@
-<title>{{ helper.title().get() }}</title>

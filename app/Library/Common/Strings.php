@@ -37,4 +37,25 @@ class Strings
 
         return false;
     }
+
+    /**
+     * Return true if at least one of the values in array $matches is a substring of $string. Otherwise, return false.
+     *
+     * @param string $string
+     * @param array $matches
+     * @return bool
+     */
+    public static function stringMatchesOne($string, $matches)
+    {
+        if(strlen($string))
+        {
+            foreach($matches as $match)
+            {
+                if(strpos($string, $match) !== false)
+                    return true;
+            }
+        }
+
+        return false;
+    }
 }

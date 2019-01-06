@@ -15,8 +15,14 @@
 namespace Lib;
 
 
+use Lib\Tag\TraitTagHead;
+use Lib\Tag\TraitTagHtml;
+
 class Tag extends \Phalcon\Tag
 {
+    use TraitTagHtml;
+    use TraitTagHead;
+
     public static function staticField( $parameters )
     {
         return "<div>Static field</div>";

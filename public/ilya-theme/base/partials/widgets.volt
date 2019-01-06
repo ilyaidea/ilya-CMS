@@ -1,8 +1,7 @@
 {# widgets(region, place) #}
-{#{% set widgetsHere = (helper.content['widgets'][region][place] is defined) ? helper.content['widgets'][region][place] : [] %}#}
 {% set widgetsHere =
-    (helper.content().getContent().getParts('widgets')[region][place] is not empty) ?
-    helper.content().getContent().getParts('widgets')[region][place] :
+    (widgets[region][place] is not empty) ?
+    widgets[region][place] :
     []
 %}
 
