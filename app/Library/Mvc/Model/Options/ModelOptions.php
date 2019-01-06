@@ -23,7 +23,9 @@ class ModelOptions extends Model
 
     public function init()
     {
+        $this->setDbRef(true);
         $this->setSource('ilya_options');
+
     }
 
     public static function findCacheByKey($key)
@@ -38,7 +40,12 @@ class ModelOptions extends Model
         }
 
         /** @var self $option */
-        $option = self::findFirstByKey($key);
+        $option = self::findFirst([
+            'conditions' => 'key = :key:',
+            'bind' => [
+                'key' => $key
+            ]
+        ]);
         if($option)
         {
             return $option->getValue();
