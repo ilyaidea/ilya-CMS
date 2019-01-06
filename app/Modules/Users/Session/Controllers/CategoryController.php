@@ -1,8 +1,8 @@
 <?php
 /**
- * Summary File UserFieldsCategory
+ * Summary File ModelUserFieldsCategory
  *
- * Description File UserFieldsCategory
+ * Description File ModelUserFieldsCategory
  *
  * ILYA CMS Created by ILYA-IDEA Company.
  * @author Ali Mansoori
@@ -20,7 +20,7 @@ use Ilya\Models\Lang;
 use Lib\DataTables\Resultset;
 use Lib\Mvc\Helper\CmsCache;
 use Modules\Users\Session\Forms\CategoryForm;
-use Modules\Users\Session\Models\UserFieldsCategory;
+use Modules\Users\Session\Models\ModelUserFieldsCategory;
 use Phalcon\Mvc\View;
 
 /**
@@ -57,7 +57,7 @@ class CategoryController extends ControllerBase
         if ( $this->request->isAjax() )
         {
 
-            $categories = UserFieldsCategory::find();
+            $categories = ModelUserFieldsCategory::find();
 
             $row = [];
             foreach ( $categories as $category )
@@ -92,7 +92,7 @@ class CategoryController extends ControllerBase
 
         //        die(print_r(json_decode($this->dataTable->getOptions())));
         //        $resultset = Resultset::inst();
-        //        $resultset->from(['ufc' => 'Modules\Users\Session\Models\UserFieldsCategory']);
+        //        $resultset->from(['ufc' => 'Modules\Users\Session\Models\ModelUserFieldsCategory']);
         //        $resultset->process($this->request->getPost());
         //        $resultset->json();
 
@@ -109,7 +109,7 @@ class CategoryController extends ControllerBase
         {
             if ( $this->request->isPost() && $categoryForm->isValid( $this->request->getPost() ) )
             {
-                $categoryModel = new UserFieldsCategory(
+                $categoryModel = new ModelUserFieldsCategory(
                     [
                         'title'    => $this->request->getPost( 'title', 'striptags' ),
                         'content'  => $this->request->getPost( 'content' ),
@@ -150,7 +150,7 @@ class CategoryController extends ControllerBase
                 throw new \Exception( 'Access denied' );
             }
 
-            $category = UserFieldsCategory::findFirst( $catId );
+            $category = ModelUserFieldsCategory::findFirst( $catId );
 
             if ( !$category )
             {
@@ -195,7 +195,7 @@ class CategoryController extends ControllerBase
 
     public function deleteAction ( $catId = null )
     {
-        $category = UserFieldsCategory::findFirst( $catId );
+        $category = ModelUserFieldsCategory::findFirst( $catId );
 
         try
         {

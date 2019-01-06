@@ -43,13 +43,14 @@ class UserDataTable extends DataTable
         $created = $this->column('created_at');
         $created->setLabel('Created_At');
 
-        $create_ip = $this->column('create_ip');
-        $create_ip->setLabel('Created_Ip');
+        $avatar_id = $this->column('avatar_id');
+        $avatar_id->setLabel('Avatar_Id');
 
         $this->add($username);
         $this->add($email);
         $this->add($created);
-        $this->add($create_ip);
+        $this->add($avatar_id);
+        //$this->add($create_ip);
 
 
         $btn_add = $this->button('add');

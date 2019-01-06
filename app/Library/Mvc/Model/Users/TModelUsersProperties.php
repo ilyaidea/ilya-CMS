@@ -23,6 +23,58 @@ trait TModelUsersProperties
     protected $email;
     protected $username;
     protected $password;
+    protected $avatar_id;
+    protected $avatar_width;
+    protected $avatar_height;
+
+    /**
+     * @return mixed
+     */
+    public function getAvatarId()
+    {
+        return $this->avatar_id;
+    }
+
+    /**
+     * @param mixed $avatar_id
+     */
+    public function setAvatarId($avatar_id)
+    {
+        $this->avatar_id = $avatar_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvatarWidth()
+    {
+        return $this->avatar_width;
+    }
+
+    /**
+     * @param mixed $avatar_width
+     */
+    public function setAvatarWidth($avatar_width)
+    {
+        $this->avatar_width = $avatar_width;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvatarHeight()
+    {
+        return $this->avatar_height;
+    }
+
+    /**
+     * @param mixed $avatar_height
+     */
+    public function setAvatarHeight($avatar_height)
+    {
+        $this->avatar_height = $avatar_height;
+    }
+
 
     /**
      * @return mixed

@@ -18,7 +18,7 @@ namespace Modules\Users\Session\Forms;
 use Ilya\Models\Lang;
 use Lib\Forms\Form;
 use Modules\System\Native\Models\Language;
-use Modules\Users\Session\Models\UserFieldsCategory;
+use Modules\Users\Session\Models\ModelUserFieldsCategory;
 use Phalcon\Forms\Element\Hidden;
 use Phalcon\Forms\Element\Select;
 use Phalcon\Forms\Element\Submit;
@@ -53,7 +53,7 @@ class CategoryForm extends Form
         $this->addSubmit( 'Submit' );
     }
 
-    protected function addTitle ( $nameElem, UserFieldsCategory $entity )
+    protected function addTitle ($nameElem, ModelUserFieldsCategory $entity )
     {
         $title = new Text( $nameElem );
         $title->setLabel('Title');

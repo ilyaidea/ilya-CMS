@@ -13,15 +13,17 @@
  */
 namespace Modules\Users\Session\Forms;
 
+use Lib\Forms\Element\FileUploader;
 use Lib\Mvc\Model\Users\ModelUsers;
 use Lib\Forms\Element\Check;
 use Lib\Forms\Element\Password;
 use Lib\Forms\Element\Submit;
 use Lib\Forms\Element\Text;
 use Lib\Forms\Form;
-use Modules\System\PageManager\Models\Pages\ModelPages;
+use Phalcon\Validation;
 use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\Email;
+use Phalcon\Validation\Validator\File;
 use Phalcon\Validation\Validator\Identical;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\StringLength;
@@ -32,6 +34,8 @@ class RegisterForm extends Form
     public function init()
     {
         $this->formInfo->title->set('Sign Up Form');
+
+        $this->allowToUpload(true);
 
         $this->addUsername();
 
@@ -44,6 +48,9 @@ class RegisterForm extends Form
         $this->addTerms();
 
         $this->addSubmit();
+
+        $this->addAvatar();
+
     }
 
     public function addUsername()
@@ -241,5 +248,15 @@ class RegisterForm extends Form
         $register->setLabel('Sign Up');
 
         $this->add($register);
+    }
+
+    public function addAvatar()
+    {
+
+        $avatar = new FileUploader('avatar');
+
+        $avatar->setLabel('Avatar');
+
+        $this->add($avatar);
     }
 }

@@ -15,13 +15,14 @@
 namespace Modules\Users\Session\Controllers;
 
 
+use Ilya\Models\Blobs;
 use Lib\Contents\Classes\DataTable;
 use Lib\Contents\Classes\Form;
 use Lib\Mvc\Controller;
 use Lib\Mvc\Model\Users\ModelUsers;
 use Modules\Users\Session\DataTable\UserDataTable;
 use Modules\Users\Session\Forms\RegisterForm;
-use Modules\Users\Session\Models\UserIp;
+use Modules\Users\Session\Models\ModelUserIp;
 
 class UsersController extends Controller
 {
@@ -67,6 +68,21 @@ class UsersController extends Controller
             $users->setEmail($this->request->getPost('email'));
 
             $users->setPassword($this->request->getPost('password'));
+
+            //avatar
+
+            if($this->request->getPost('avatar') && is_numeric($this->request->getPost('avatar')))
+            {
+                /**@var Blobs $image*/
+                $image = Blobs::findFirst($this->request->getPost('avatar'));
+                if($image)
+                {
+                    $users->setAvatarId($this->request->getPost('avatar'));
+                    $image->setStatus('active');
+                    $image->save();
+                }
+//               $size = getimagesize('avatar_width',);
+            }
 
 
 //            if ($users->beforeCreate()>3)
@@ -135,6 +151,20 @@ class UsersController extends Controller
                 $user->setEmail($this->request->getPost('email'));
 
                 $user->setPassword($this->request->getPost('password'));
+
+                //avatar
+
+                if ($this->request->getPost('avatar') && is_numeric($this->request->getPost('avatar')))
+                {
+                    /**@var Blobs $image */
+                    $image = Blobs::findFirst($this->request->getPost('avatar'));
+                    if ($image) {
+
+                        $user->setImg($this->request->getPost('avatar'));
+                        $image->setStatus('active');
+                        $image->save();
+                    }
+                }
 
 
                 if (!$user->update())

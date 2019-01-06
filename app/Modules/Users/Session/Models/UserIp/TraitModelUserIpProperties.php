@@ -2,16 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: Torab
- * Date: 12/31/2018
- * Time: 01:12 PM
+ * Date: 01/06/2019
+ * Time: 12:05 PM
  */
 
-namespace Modules\Users\Session\Models;
+namespace Modules\Users\Session\Models\UserIp;
 
 
-use Lib\Mvc\Model;
-
-class UserIp extends Model
+trait TraitModelUserIpProperties
 {
     public $id;
     public $counter;
@@ -63,12 +61,6 @@ class UserIp extends Model
     public function setCreateIp($create_ip)
     {
         $this->create_ip = $create_ip;
-    }
-
-
-    public function getSource ()
-    {
-        return 'ilya_users_ip';
     }
 
 }

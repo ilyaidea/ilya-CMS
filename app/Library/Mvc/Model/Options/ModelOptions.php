@@ -26,6 +26,12 @@ class ModelOptions extends Model
         $this->setSource('ilya_options');
     }
 
+    public function columnMap()
+    {
+        return [
+           "keyy" => "key"
+        ];
+    }
     public static function findCacheByKey($key)
     {
         if(CmsCache::getInstance()->get('options'))
