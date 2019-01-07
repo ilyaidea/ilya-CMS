@@ -14,9 +14,11 @@
 namespace Modules\System\PageManager\Models\Pages;
 
 use Lib\Events\IModelEvents;
+use Lib\Mvc\Controller;
 use Lib\Mvc\DefaultRouter;
 use Lib\Mvc\Model;
 use Phalcon\Di;
+use Phalcon\Http\Request;
 use Phalcon\Mvc\Router\Route;
 
 class ModelPages extends Model implements IModelEvents
@@ -26,11 +28,18 @@ class ModelPages extends Model implements IModelEvents
     use TraitEventsPagesModel;
     use TraitValidationsPagesModel;
 
-    public function initialize()
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Initialize Method
+     */
+
+    public function init()
     {
-        parent::initialize();
         $this->setSource('ilya_pages');
     }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Public Methods
+     */
 
     public function findRoutesBySlug()
     {
@@ -59,6 +68,51 @@ class ModelPages extends Model implements IModelEvents
 
     }
 
+    public function createPageForRequest(Controller $controller)
+    {
+        $this->setParentId($controller->getParentIdFromGetRequest());
+        $this->setTitle($controller->request->getPost('title'));
+        $this->setSlug($controller->request->getPost('slug'));
+        $this->setContent($controller->request->getPost('content'));
+        $this->setLanguage($controller->request->getPost('language'));
+        $this->setPosition($controller->request->getPost('position'));
+
+        if (!$this->save())
+        {
+            $this->appendMessage('There is a problem in the process of storing the page !');
+            return false;
+        }
+        else
+        {
+            $this->sortByPosition();
+            return true;
+        }
+    }
+
+    public function updatePageForRequest(Controller $controller)
+    {
+        $this->setTitle($controller->request->getPost('title'));
+        $this->setSlug($controller->request->getPost('slug'));
+        $this->setContent($controller->request->getPost('content'));
+        $this->setLanguage($controller->request->getPost('language'));
+        $this->setPosition($controller->request->getPost('position'));
+
+        if (!$this->update())
+        {
+            $this->appendMessage('There is a problem in the process of storing the page !');
+            return false;
+        }
+        else
+        {
+            $this->sortByPosition();
+            return true;
+        }
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Public static Methods
+     */
+
     public static function findAllParentsByLang($lang = null)
     {
         if(!$lang)
@@ -75,7 +129,6 @@ class ModelPages extends Model implements IModelEvents
 
         return array_column($findAllParentsByLang, 'id');
     }
-
 
     public static function positionOptions( $lang = 'en', $parent = null, $editId = null)
     {
@@ -139,4 +192,5 @@ class ModelPages extends Model implements IModelEvents
 
         return $positionOptions;
     }
+
 }

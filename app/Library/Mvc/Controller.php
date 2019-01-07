@@ -32,10 +32,15 @@ use Phalcon\Mvc\Model\Transaction\Manager;
  */
 class Controller extends \Phalcon\Mvc\Controller
 {
+    private $fragmentFromGetRequest;
+    private $parentIdFromGetRequest;
 
     public function initialize()
     {
-      $this->addAssetsTheme();
+        $this->parentIdFromGetRequest = $this->request->get('parent');
+        $this->fragmentFromGetRequest = $this->request->get('fragment');
+
+        $this->addAssetsTheme();
 
         if(method_exists($this, 'init'))
             $this->init();
@@ -76,8 +81,34 @@ class Controller extends \Phalcon\Mvc\Controller
         }
     }
 
-    public function redirect()
+    public function redirect($url, $code = 302)
     {
-
+        switch ($code) {
+            case 301:
+                header('HTTP/1.1 301 Moved Permanently');
+                break;
+            case 302:
+                header('HTTP/1.1 302 Moved Temporarily');
+                break;
+        }
+        header('Location: ' . $url);
+        $this->response->send();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFragmentFromGetRequest()
+    {
+        return $this->fragmentFromGetRequest;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParentIdFromGetRequest()
+    {
+        return $this->parentIdFromGetRequest;
+    }
+
 }
