@@ -20,7 +20,7 @@ trait TraitPropertiesPagesModel
     private $id;
     private $parent_id;
     private $title;
-    private $slug;
+    private $slug;          //varchar(255),allow null,default null
     private $content;
     private $language;
     private $position;
@@ -170,4 +170,5 @@ trait TraitPropertiesPagesModel
     {
         $this->slug = $slug;
     }
+
 }

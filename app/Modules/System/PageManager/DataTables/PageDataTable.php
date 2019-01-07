@@ -46,6 +46,10 @@ class PageDataTable extends DataTable
         $content = $this->column('content');
         $content->setLabel('Content');
 
+        $slug = $this->column('slug');
+        $slug->setLabel('Slug');
+
+
         $language = $this->column('language');
         $language->setLabel('Language');
 
@@ -61,6 +65,7 @@ class PageDataTable extends DataTable
 
         $this->add($parent);
         $this->add($title);
+        $this->add($slug);
         $this->add($content);
         $this->add($language);
         $this->add($position);

@@ -1,17 +1,4 @@
 <?php
-/**
- * Summary File WidgetLanguageSlector
- *
- * Description File WidgetLanguageSlector
- *
- * ILYA CMS Created by ILYA-IDEA Company.
- * @author Ali Mansoori
- * Date: 10/21/2018
- * Time: 12:05 PM
- * @version 1.0.0
- * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
- */
-
 /*
 	Widget Name: ModelLanguage selector
 	Widget URI:
@@ -26,7 +13,6 @@
 */
 
 namespace Modules\System\Native\Widgets;
-
 
 use Lib\Widget\WidgetAbstract;
 
