@@ -28,12 +28,6 @@ class ModelOptions extends Model
 
     }
 
-    public function columnMap()
-    {
-        return [
-           "keyy" => "key"
-        ];
-    }
     public static function findCacheByKey($key)
     {
         if(CmsCache::getInstance()->get('options'))
