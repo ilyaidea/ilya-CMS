@@ -31,6 +31,7 @@ class PageForm extends Form
 
         $this->addTitle();
         $this->addSlug();
+//        $this->addKeyword();
         $this->addContent();
         $this->addLanguage();
         $this->addPosition();
@@ -92,19 +93,23 @@ class PageForm extends Form
         $slug = new Text('slug', [
             'placeholder' => 'please enter slug OR empty'
         ]);
-        $slug->setLabel(
-            $this->helper->t('slug')
-        );
+        $slug->setLabel($this->helper->t('slug'));
         $slug->addValidators([
             new StringLength([
                 'max' => 255
             ])
         ]);
-
         $this->add($slug);
     }
 
-    public function addContent()
+//    public function addKeyword()
+//    {
+//        $keyword = new Text('');
+//        $title->setLabel('Title');
+//        $title->setAttributes(['placeholder' => 'Please enter title',]);
+//    }
+
+        public function addContent()
     {
         $content = new CkEditor('content');
         $content->setLabel('Content');
@@ -113,12 +118,10 @@ class PageForm extends Form
 
     public function addLanguage()
     {
-
         $language1 = CmsCache::getInstance()->get('languages');
         $lang = array_column($language1,'title','iso');
 
         $language = new Select('lang', $lang);
-
 
         $language-> addValidators([
             new InclusionIn(
@@ -127,15 +130,21 @@ class PageForm extends Form
                     'domain' => array_column($language1,'iso')
                 ]
             )
-
         ]);
         $this-> add($language);
     }
 
     public function addPosition()
     {
-        $position = new Numeric('position');
+        $position = new Select('position');
         $position->setLabel('Position');
+        $position->setOptions(
+            ModelPages::positionOptions(
+                $this->helper->locale()->getLanguage(),
+                $this->getUserOption('parent') ? $this->getUserOption('parent') : null,
+                ($this->isEditMode()) ? $this->getEntity()->id : null
+            )
+        );
         $this->add($position);
     }
 

@@ -13,6 +13,7 @@
  */
 namespace Modules\System\PageManager\Controllers;
 
+use Lib\Assets\Exception;
 use Lib\Contents\Classes\DataTable;
 use Lib\Contents\Classes\Form;
 use Lib\Mvc\Controller;
@@ -21,14 +22,21 @@ use Modules\System\PageManager\DataTables\PageDataTable;
 use Modules\System\PageManager\Forms\PageForm;
 use Modules\System\PageManager\Models\Pages\ModelPages;
 
-/**@property Helper helper */
 class IndexController extends Controller
 {
     public function indexAction()
     {
-        $content = $this->helper->content();
-        $content->setTemplate('test-template', $this->helper->t('test_template'));
-        $content->getTheme()->noLeftMasterPage();
+        $this->content->theme->noLeftMasterPage();
+
+//        $this->content->form(Form::inst(new PageForm(), 'add_form'));
+//        $addForm = $this->content->form('add_form');
+
+//        $title = 'register__fa';
+//        $search = '__';
+////        echo sprintf($title,);
+//        $m = explode('__',$title);
+//        dump($m);
+
     }
 
 
@@ -54,37 +62,45 @@ class IndexController extends Controller
 
         $addForm = $this->content->form('add_form');
 
-        if($addForm->isValid())
+        try
         {
-            $page = new ModelPages();
-
-            $page->setParentId($parent);
-            $page->setTitle($this->request->getPost('title'));
-            $page->setContent($this->request->getPost('content'));
-            $page->setLanguage($this->request->getPost('language'));
-            $page->setPosition($this->request->getPost('position'));
-
-            if (!$page->save())
+            if ($addForm->isValid())
             {
-                $this->flash->error($page->getMessages(), $addForm);
-            }
-            else
-            {
-                $page->sortByPosition();
+                $page = new ModelPages();
 
-                $this->flash->success('Saved Successfully', $fragment);
+                $page->setParentId($parent);
+                $page->setTitle($this->request->getPost('title'));
+                $page->setSlug($this->request->getPost('slug'));
+                $page->setContent($this->request->getPost('content'));
+                $page->setLanguage($this->request->getPost('language'));
+                $page->setPosition($this->request->getPost('position'));
 
-                return $this->response->redirect(
-                    $this->url->get(
-                        [
-                            'for' => 'default__'. $this->helper->locale()->getLanguage(),
-                            'module' => $this->config->module->name,
-                            'controller' => $this->dispatcher->getControllerName(),
-                            'action' => 'show',
-                            'params' => $page->getId()
-                        ]) .'#part_'.$fragment,
-                    true );
+                if (! $page->save())
+                {
+                    throw new \Exception('this id dose not exist');
+                }
+                else
+                {
+                    $page->sortByPosition();
+
+                    $this->flash->success('Saved Successfully', $fragment);
+
+                    return $this->response->redirect(
+                        $this->url->get(
+                            [
+                                'for' => 'default__'. $this->helper->locale()->getLanguage(),
+                                'module' => $this->config->module->name,
+                                'controller' => $this->dispatcher->getControllerName(),
+                                'action' => 'show',
+                                'params' => $page->getId()
+                            ]) .'#part_'.$fragment,
+                        true );
+                }
             }
+        }
+        catch (\Exception $exception)
+        {
+            $this->flash->error($exception->getMessage(), $addForm->prefix);
         }
     }
 
@@ -112,6 +128,7 @@ class IndexController extends Controller
         {
             $page->setParentId($parent);
             $page->setTitle($this->request->getPost('title'));
+            $page->setSlug($this->request->getPost('slug'));
             $page->setContent($this->request->getPost('content'));
             $page->setLanguage($this->request->getPost('language'));
             $page->setPosition($this->request->getPost('position'));
@@ -152,37 +169,46 @@ class IndexController extends Controller
         $id = $this->dispatcher->getParam(0);
         $fragment = $this->request->get('fragment');
 
-        /** @var $page ModelPages */
-        $page = ModelPages::findFirst($id);
-
-        if(! $page)
+        try
         {
-            die('this id dose not exist');
-        }
+            /** @var $page ModelPages */
+            $page = ModelPages::findFirst($id);
+//            dump($page);
 
-        if ($page->delete())
-        {
-            $page->sortByPosition();
-
-            $this->flash->success('Deleted Successfully',$fragment);
-
-            return $this->response->redirect(
-                $this->url->get(
-                    [
-                        'for' => 'default__'. $this->helper->locale()->getLanguage(),
-                        'module' => $this->config->module->name,
-                        'controller' => $this->dispatcher->getControllerName(),
-                        'action' => 'show',
-                    ]) .'#part_'.$fragment,
-                true );
-        }
-        else
-        {
-            foreach ($page->getMessages() as $message)
+            if (!$page)
             {
-                $this->flash->error('Error Delete');
+                throw new \Exception('this id dose not exist');
+            }
+
+            if (!$page->delete())
+            {
+                foreach ($page->getMessages() as $e)
+                {
+                    throw new \Exception($e);
+                }
+            }
+            else
+            {
+                $page->sortByPosition();
+
+                $this->flash->success('Deleted Successfully', $fragment);
             }
         }
+
+        catch(\Exception $exception)
+        {
+            $this->flash->error($exception->getMessage(), $fragment);
+        }
+
+        return $this->response->redirect(
+            $this->url->get(
+                [
+                    'for' => 'default__'. $this->helper->locale()->getLanguage(),
+                    'module' => $this->config->module->name,
+                    'controller' => $this->dispatcher->getControllerName(),
+                    'action' => 'show',
+                ]) .'#part_'.$fragment,
+            true );
     }
 
 }
