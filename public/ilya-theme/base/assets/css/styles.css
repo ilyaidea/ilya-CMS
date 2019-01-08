@@ -1928,6 +1928,20 @@ input[type="submit"], button {
 	 color: #fff;
  }
 
+.ilya-form-tall-notice, .ilya-form-wide-notice {
+	background-color: #d9edf7;
+	padding: 10px;
+	display: table-cell;
+	color: #31708f;
+}
+
+.ilya-form-tall-warning, .ilya-form-wide-warning {
+	background-color: #fcf8e3;
+	padding: 10px;
+	display: table-cell;
+	color: #8a6d3b;
+}
+
 .ilya-field-tall-error, .ilya-field-wide-error {
 	color: #e74c3c;
 }

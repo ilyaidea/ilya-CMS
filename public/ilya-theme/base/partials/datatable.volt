@@ -10,8 +10,10 @@
     {{ partial('datatable/tabs', ['key': key, 'datatable': datatable]) }}
 {% else %}
     {{ partial('datatable-title', ['dataTable': datatable]) }}
-    {{ partial('datatable/datatable-ok', ['prefix': datatable.prefix, 'dataTable': datatable]) }}
-    {{ partial('datatable/datatable-error', ['prefix': datatable.prefix, 'dataTable': datatable]) }}
+    {{ partial('datatable/alerts/success', ['prefix': datatable.prefix, 'dataTable': datatable]) }}
+    {{ partial('datatable/alerts/error', ['prefix': datatable.prefix, 'dataTable': datatable]) }}
+    {{ partial('datatable/alerts/notice', ['prefix': datatable.prefix, 'dataTable': datatable]) }}
+    {{ partial('datatable/alerts/warning', ['prefix': datatable.prefix, 'dataTable': datatable]) }}
     <table id="{{ key }}" class="cell-border" style="width: 100%;"></table>
 {% endif %}
 
