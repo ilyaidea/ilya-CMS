@@ -30,6 +30,7 @@ class CheckBoxList extends Element {
             $this->_dataOld = [$dataOld];
         parent::__construct($name, $attribute);
         $this->_type = 'select';
+
     }
 
     public function render($attribute = null)

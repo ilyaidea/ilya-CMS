@@ -49,7 +49,7 @@ class UserDataTable extends DataTable
         $this->add($username);
         $this->add($email);
         $this->add($created);
-        $this->add($avatar_id);
+        //$this->add($avatar_id);
         //$this->add($create_ip);
 
 

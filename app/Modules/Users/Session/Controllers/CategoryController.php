@@ -15,12 +15,12 @@
 namespace Modules\Users\Session\Controllers;
 
 
-use DataTables\DataTable;
 use Ilya\Models\Lang;
 use Lib\DataTables\Resultset;
 use Lib\Mvc\Helper\CmsCache;
+use Modules\System\Widgets\Lib\WidgetDetails;
 use Modules\Users\Session\Forms\CategoryForm;
-use Modules\Users\Session\Models\ModelUserFieldsCategory;
+use Modules\Users\Session\Models\UserFieldsCategory\ModelUserFieldsCategory;
 use Phalcon\Mvc\View;
 
 /**
@@ -54,10 +54,12 @@ class CategoryController extends ControllerBase
 
     public function showAction ()
     {
+        $this->content->setTemplate("category");
+
         if ( $this->request->isAjax() )
         {
 
-            $categories = ModelUserFieldsCategory::find();
+            $categories =ModelUserFieldsCategory ::find();
 
             $row = [];
             foreach ( $categories as $category )
@@ -103,6 +105,7 @@ class CategoryController extends ControllerBase
 
     public function addAction ()
     {
+
         $categoryForm = new CategoryForm();
 
         try

@@ -27,15 +27,18 @@ use Modules\Users\Session\Models\ModelUserIp;
 class UsersController extends Controller
 {
 
+    public function init()
+    {
+
+    }
     public function indexAction()
     {
-     //  $this->request->getServerAddress();
     }
 
     public function showAction()
     {
-
-        $this->content->theme->noLeftRightMasterPage();
+        $this->content->setTemplate("User");
+       // $this->content->theme->noLeftMasterPage();
 
        // dump('ok');
 
@@ -50,7 +53,6 @@ class UsersController extends Controller
 
     public function addAction()
     {
-        $this->content->theme->noLeftRightMasterPage();
 
         $this->content->form(
             Form::inst(new RegisterForm(),'add_form')

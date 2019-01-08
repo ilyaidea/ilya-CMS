@@ -110,6 +110,7 @@ class LoginController extends Controller
 
         $this->flash->success('Success Login', $loginForm->prefix );
 
+      //  dump($this->request->get('to'));
         if($this->request->get('to'))
         {
             $this->response->redirect(
