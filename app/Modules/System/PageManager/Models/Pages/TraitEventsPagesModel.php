@@ -15,8 +15,6 @@
 namespace Modules\System\PageManager\Models\Pages;
 
 
-use Phalcon\Mvc\Model\Manager;
-
 trait TraitEventsPagesModel
 {
     public function afterCreate()
@@ -70,6 +68,7 @@ trait TraitEventsPagesModel
         {
             $this->setSlug(str_replace(' ', '-', $this->getTitle()));
         }
+
     }
 
     public function beforeCreate()
@@ -86,10 +85,12 @@ trait TraitEventsPagesModel
 
     public function beforeSave()
     {
-//        if(!$this->getPosition())
-//            $this->setPositionIfNull();
         if (!$this->getPosition() || !is_numeric($this->getPosition()))
             $this->setPositionIfEmpty();
+
+        if ($this->getSlug())
+
+            $this->findRoutesBySlug();
     }
 
 }

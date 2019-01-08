@@ -15,174 +15,181 @@ namespace Modules\System\PageManager\Controllers;
 
 use Lib\Contents\Classes\DataTable;
 use Lib\Contents\Classes\Form;
+use Lib\Exception;
 use Lib\Mvc\Controller;
-use Lib\Mvc\Helper;
 use Modules\System\PageManager\DataTables\PageDataTable;
 use Modules\System\PageManager\Forms\PageForm;
 use Modules\System\PageManager\Models\Pages\ModelPages;
 
-/**@property Helper helper */
 class IndexController extends Controller
 {
-    public function indexAction()
-    {
-        $content = $this->helper->content();
-        $content->setTemplate('test-template', $this->helper->t('test_template'));
-        $content->getTheme()->noLeftMasterPage();
-    }
-
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Actions
+     */
 
     public function showAction()
     {
-        $this->content->theme->noLeftRightMasterPage();
+        try
+        {
+            $this->content->theme->noLeftRightMasterPage();
 
-        $this->content->dataTable(
-            DataTable::inst(new PageDataTable(), 'dt_page' ));
-
-        $dt_page = $this->content->dataTable('dt_page');
+            $this->content->dataTable(
+                DataTable::inst(new PageDataTable(), 'dt_page' ));
+        }
+        catch(\Exception $exception)
+        {
+            $this->flash->error($exception->getMessage());
+        }
     }
-
 
     public function addAction()
     {
-        $parent = $this->request->get('parent');
-        $fragment = $this->request->get('fragment');
-
         $this->content->theme->noLeftMasterPage();
 
         $this->content->form(Form::inst(new PageForm(), 'add_form'));
 
         $addForm = $this->content->form('add_form');
 
-        if($addForm->isValid())
+        try
         {
-            $page = new ModelPages();
-
-            $page->setParentId($parent);
-            $page->setTitle($this->request->getPost('title'));
-            $page->setContent($this->request->getPost('content'));
-            $page->setLanguage($this->request->getPost('language'));
-            $page->setPosition($this->request->getPost('position'));
-
-            if (!$page->save())
+            if ($addForm->isValid())
             {
-                $this->flash->error($page->getMessages(), $addForm);
-            }
-            else
-            {
-                $page->sortByPosition();
+                $page = new ModelPages();
+                $result = $page->createPageForRequest($this);
 
-                $this->flash->success('Saved Successfully', $fragment);
-
-                return $this->response->redirect(
-                    $this->url->get(
-                        [
-                            'for' => 'default__'. $this->helper->locale()->getLanguage(),
-                            'module' => $this->config->module->name,
-                            'controller' => $this->dispatcher->getControllerName(),
-                            'action' => 'show',
-                            'params' => $page->getId()
-                        ]) .'#part_'.$fragment,
-                    true );
-            }
-        }
-    }
-
-
-    public function editAction()
-    {
-        $id = $this->dispatcher->getParam(0);
-        $fragment = $this->request->get('fragment');
-
-        /** @var ModelPages $page */
-        $page = ModelPages::findFirst( $id );
-
-        $parent = $page->getParentId();
-
-        if( !$page )
-        {
-            die( 'the menu dose not exist' );
-        }
-
-        $this->content->form(Form::inst(new PageForm($page,[ 'edit' => true ]), 'edit_form'));
-
-        $editForm = $this->content->form('edit_form');
-
-        if( $editForm->isValid() )
-        {
-            $page->setParentId($parent);
-            $page->setTitle($this->request->getPost('title'));
-            $page->setContent($this->request->getPost('content'));
-            $page->setLanguage($this->request->getPost('language'));
-            $page->setPosition($this->request->getPost('position'));
-//            $page->beforUdate();
-//            die(print_r($page->toArray()));
-
-            if($page->update())
-            {
-                $this->flash->success('Edited Successfully',$fragment);
-
-                $page->save();
-
-                $page->sortByPosition();
-
-                return $this->response->redirect(
-                    $this->url->get(
-                        [
-                            'for' => 'default__'. $this->helper->locale()->getLanguage(),
-                            'module' => $this->config->module->name,
-                            'controller' => $this->dispatcher->getControllerName(),
-                            'action' => 'show',
-                        ]) .'#part_'.$fragment,
-                    true );
-            }
-            else
-            {
-                foreach($page->getMessages() as $message)
+                if($result == true) // This means that the page has been successfully saved
                 {
-                    $this->flash->error('Error Edit => '. $message);
+                    $this->flash->success('This page was successfully saved', $this->getFragmentFromGetRequest());
+
+                    $this->redirectToShowAction();
+                }
+                else // This means that the page has not been successfully saved
+                {
+                    throw new Exception(implode(', ', $page->getMessages()));
                 }
             }
         }
+        catch (Exception $exception)
+        {
+            $this->flash->error($exception->getMessage(), $addForm->prefix);
+        }
     }
 
+    public function editAction()
+    {
+        try
+        {
+            $pageId = $this->validatePageId();
+
+            /** @var ModelPages $page */
+            $page = ModelPages::findFirst( $pageId );
+
+            if(!$page)
+                throw new Exception('This page does not exist !');
+
+            $editForm = $this->createPageForm($page, [ 'edit' => true ]);
+
+            if( $editForm->isValid() )
+            {
+                $result = $page->updatePageForRequest($this);
+
+                if($result)
+                {
+                    $this->flash->success('Edited Successfully',$this->getFragmentFromGetRequest());
+                    $this->redirectToShowAction();
+                }
+                else
+                    throw new Exception(implode(', ', $page->getMessages()));
+            }
+        }
+        catch(Exception $exception)
+        {
+            $this->flash->error($exception->getMessage());
+        }
+    }
 
     public  function deleteAction()
     {
         $id = $this->dispatcher->getParam(0);
         $fragment = $this->request->get('fragment');
 
-        /** @var $page ModelPages */
-        $page = ModelPages::findFirst($id);
-
-        if(! $page)
+        try
         {
-            die('this id dose not exist');
-        }
+            /** @var $page ModelPages */
+            $page = ModelPages::findFirst($id);
+//            dump($page);
 
-        if ($page->delete())
-        {
-            $page->sortByPosition();
-
-            $this->flash->success('Deleted Successfully',$fragment);
-
-            return $this->response->redirect(
-                $this->url->get(
-                    [
-                        'for' => 'default__'. $this->helper->locale()->getLanguage(),
-                        'module' => $this->config->module->name,
-                        'controller' => $this->dispatcher->getControllerName(),
-                        'action' => 'show',
-                    ]) .'#part_'.$fragment,
-                true );
-        }
-        else
-        {
-            foreach ($page->getMessages() as $message)
+            if (!$page)
             {
-                $this->flash->error('Error Delete');
+                throw new \Exception('this id dose not exist');
+            }
+
+            if (!$page->delete())
+            {
+                foreach ($page->getMessages() as $e)
+                {
+                    throw new \Exception($e);
+                }
+            }
+            else
+            {
+                $page->sortByPosition();
+
+                $this->flash->success('Deleted Successfully', $fragment);
             }
         }
+
+        catch(\Exception $exception)
+        {
+            $this->flash->error($exception->getMessage(), $fragment);
+        }
+
+        return $this->response->redirect(
+            $this->url->get(
+                [
+                    'for' => 'default__'. $this->helper->locale()->getLanguage(),
+                    'module' => $this->config->module->name,
+                    'controller' => $this->dispatcher->getControllerName(),
+                    'action' => 'show',
+                ]) .'#part_'.$fragment,
+            true );
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Private Methods
+     */
+
+    private function redirectToShowAction()
+    {
+        $this->response->redirect(
+            $this->url->get(
+                [
+                    'for' => 'default__'. $this->helper->locale()->getLanguage(),
+                    'module' => $this->config->module->name,
+                    'controller' => $this->dispatcher->getControllerName(),
+                    'action' => 'show'
+                ]) .'#part_'.$this->getFragmentFromGetRequest(),
+            true );
+        $this->response->send();
+    }
+
+    private function validatePageId()
+    {
+        $pageId = $this->dispatcher->getParam(0);
+
+        if(!(isset($pageId) && is_numeric($pageId)))
+        {
+            throw new Exception('Param page_id is required');
+        }
+
+        return $pageId;
+    }
+
+    private function createPageForm($entity = null, $options = [])
+    {
+        $this->content->form(Form::inst(new PageForm($entity, $options), 'form'));
+
+        return $this->content->form('form');
     }
 
 }
