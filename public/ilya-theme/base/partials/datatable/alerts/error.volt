@@ -1,4 +1,4 @@
-{# datatable-ok( datatable ) #}
+{# datatable/alerts/error( datatable ) #}
 {% if datatable.getSibling(prefix) %}
     {% set datatable = datatable.getSibling(prefix) %}
     {% if messages['error'][datatable.prefix] is defined %}
