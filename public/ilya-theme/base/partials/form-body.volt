@@ -8,8 +8,10 @@
             <table class="ilya-form-{{ form.design.getStyle() }}-table">
         {% endif %}
 
-                {{ partial('form-ok', ['form': form]) }}
-                {{ partial('form-error', ['form': form]) }}
+                {{ partial('form/alerts/success', ['form': form]) }}
+                {{ partial('form/alerts/notice', ['form': form]) }}
+                {{ partial('form/alerts/warning', ['form': form]) }}
+                {{ partial('form/alerts/error', ['form': form]) }}
                 {{ partial('form-fields', ['form': form]) }}
                 {{ partial('form-buttons', ['form': form]) }}
 
