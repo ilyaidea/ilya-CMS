@@ -12,9 +12,6 @@ use Modules\System\Native\DataTables\DtLanguages;
 use Modules\System\Native\Forms\FormLanguage;
 use Modules\System\Native\Models\Language;
 
-/**
- * @property Helper $helper
- */
 class LanguageController extends Controller
 {
     public function indexAction()

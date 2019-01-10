@@ -3,6 +3,7 @@
 namespace Modules\System\Native\Controllers;
 
 use Lib\Assets\Exception;
+use Lib\Common\Arrays;
 use Lib\Contents\Classes\DataTable;
 use Lib\Contents\Classes\Form;
 use Lib\Mvc\Controller;
@@ -19,24 +20,22 @@ class TranslateController extends Controller
 {
     public function indexAction()
     {
-      $this->content->theme->noLeftRightMasterPage();
-      try
-      {
-          $this->content->dataTable(
-              DataTable::inst(new DtTranslates(), 'dtTranslate')
-          );
-          $this->content->dataTable('dtTranslate');
-      }
-      catch (\Exception $exception)
-      {
-          $this->flash->error($exception->getMessage());
-      }
+        $this->content->theme->noLeftRightMasterPage();
+        try {
+            $this->content->dataTable(
+                DataTable::inst(new DtTranslates(), 'dtTranslate')
+            );
+            $this->content->dataTable('dtTranslate');
+        } catch (\Exception $exception) {
+            $this->flash->error($exception->getMessage());
+        }
     }
+
     public function addAction()
     {
         $this->content->theme->noLeftRightMasterPage();
         $fragment = $this->request->get('fragment');
-       try {
+        try {
             $this->content->form(
                 Form::inst(new FormTranslate(), 'add_form')
             );
@@ -64,10 +63,9 @@ class TranslateController extends Controller
                     if (!$translate->save()) {
 
                         foreach ($translate->getMessages() as $message)
-                            $this->flash->error($language['iso'] . ' => ' . $message,$addform);
-                    }
-                    else {
-                        $this->flash->success('Saved for => '.$language['iso'],$fragment);
+                            $this->flash->error($language['iso'] . ' => ' . $message, $addform);
+                    } else {
+                        $this->flash->success('Saved for => ' . $language['iso'], $fragment);
                     }
 
                 }//end of foreach
@@ -75,7 +73,7 @@ class TranslateController extends Controller
                 $this->response->redirect(
                     $this->url->get(
                         [
-                            'for' => 'default__'.$this->helper->locale()->getLanguage(),
+                            'for' => 'default__' . $this->helper->locale()->getLanguage(),
                             'module' => $this->config->module->name,
                             'controller' => 'translate',
                             'action' => 'index',
@@ -92,18 +90,22 @@ class TranslateController extends Controller
 
         }
     }
+
     public function editAction()
     {
         $fragment = $this->request->get('fragment');
+        $translateId = $this->dispatcher->getParam(0);
         $this->content->theme->noLeftMasterPage();
-        try {
-            $translateId = $this->dispatcher->getParam(0);
+        try
+        {
             if (!$translateId || !is_numeric($translateId))
                 throw new \Exception('this translateID does not exist');
 
-            $translateModel = ModelTranslate::findFirst([
+            $translateModel = ModelTranslate::findFirst
+            ([
                 "id = :id: AND language = :lang:",
-                'bind' => [
+                'bind' =>
+                [
                     'id' => $translateId,
                     'lang' => $this->helper->locale()->getLanguage()
                 ]
@@ -114,38 +116,42 @@ class TranslateController extends Controller
             /** @var ModelTranslate $translateModel */
             $oldphrase = $translateModel->getPhrase();
 
-            $this->content->form(
+            $this->content->form
+            (
                 Form::inst(new FormTranslate($translateModel, ['edit' => true]), 'edit_form')
-
             );
             $edit_form = $this->content->form('edit_form');
 
-            if ($edit_form->isValid()) {
-                if ($oldphrase !== $this->request->getPost('phrase')) {
+            if ($edit_form->isValid())
+            {
+                if ($oldphrase !== $this->request->getPost('phrase'))
+                {
                     $oldphrases = ModelTranslate::findByPhrase($oldphrase);
 
-                    foreach ($oldphrases as $old) {
+                    foreach ($oldphrases as $old)
+                    {
                         /** @var ModelTranslate $old */
                         $old->setPhrase($this->request->getPost('phrase'));
                         $old->update();
                     }
                 }
-                else {
+                else
+                {
                     /** @var ModelTranslate $translateModel */
                     $translateModel->setPhrase($this->request->getPost('phrase'));
                     $translateModel->setTranslation($this->request->getPost('translation'));
 
                     if (!$translateModel->update())
-                        $this->flash->error($translateModel->getMessages(),$edit_form->prefix);
+                        $this->flash->error($translateModel->getMessages(), $edit_form->prefix);
 
                     else
                     {
-                        $this->flash->success('success edited',$fragment);
+                        $this->flash->success('success edited', $fragment);
                     }
                     $this->response->redirect(
                         $this->url->get(
                             [
-                                'for' => 'default__'.$this->helper->locale()->getLanguage(),
+                                'for' => 'default__' . $this->helper->locale()->getLanguage(),
                                 'module' => $this->config->module->name,
                                 'controller' => 'translate',
                                 'action' => 'index',
@@ -156,8 +162,7 @@ class TranslateController extends Controller
                     $this->response->send();
                 }
             }
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->flash->error($e->getMessage());
 
         }
@@ -193,7 +198,7 @@ class TranslateController extends Controller
                     foreach ($translates->getMessages() as $message)
                         throw new \Exception($message->getMessage());
                 }
-                $this->flash->success('deleted successfully =>'.$translateModel->getPhrase(), $fragment);
+                $this->flash->success('deleted successfully =>' . $translateModel->getPhrase(), $fragment);
 
             }
 
@@ -205,7 +210,7 @@ class TranslateController extends Controller
         $this->response->redirect(
             $this->url->get(
                 [
-                    'for' => 'default__'.$this->helper->locale()->getLanguage(),
+                    'for' => 'default__' . $this->helper->locale()->getLanguage(),
                     'module' => $this->config->module->name,
                     'controller' => 'translate',
                     'action' => 'index',
@@ -216,4 +221,16 @@ class TranslateController extends Controller
         $this->response->send();
     }
 
+    /**
+     * compare translate cache and translate database then
+     * insert different array to database
+     */
+    public function compareAction()
+    {
+        $translateCache = CmsCache::getInstance()->get('translates');
+        $translateModel = ModelTranslate::buildCmsTranslatesCache() ;
+        $differentArray = Arrays::compareArrays($translateCache,$translateModel);
+        ModelTranslate::insertArrayToDatabase($differentArray);
+    }
 }
+

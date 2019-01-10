@@ -52,4 +52,33 @@ class Arrays
 
         return $attrs;
     }
+
+    /**
+     * compare 2 arrays and returns an array contains differences
+     * in this example, compares translate cache and translate model,
+     * and returns an array that does not exist in the database  *
+     */
+    public static function compareArrays(array $array1 ,array $array2)
+    {
+        $diff =[];
+
+        foreach ($array1 as $lang => $value)
+        {
+            if ( isset($array2[$lang])  )
+            {
+                foreach ($value as $phrase => $translate)
+                {
+                    if (!array_key_exists($phrase,$array2[$lang]))
+                    {
+                        $diff[$lang][$phrase] = $translate;
+                    }
+                }
+            }
+            else
+            {
+                $diff[$lang];
+            }
+        }
+        return $diff;
+    }
 }
