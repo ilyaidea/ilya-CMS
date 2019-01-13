@@ -17,8 +17,10 @@ use Lib\Contents\Classes\DataTable;
 use Lib\Contents\Classes\Form;
 use Lib\Exception;
 use Lib\Mvc\Controller;
+use Modules\Notification\News\Models\Keywords;
 use Modules\System\PageManager\DataTables\PageDataTable;
 use Modules\System\PageManager\Forms\PageForm;
+use Modules\System\PageManager\Models\Keywords\ModelKeywords;
 use Modules\System\PageManager\Models\Pages\ModelPages;
 
 class IndexController extends Controller
@@ -42,6 +44,7 @@ class IndexController extends Controller
         }
     }
 
+
     public function addAction()
     {
         $this->content->theme->noLeftMasterPage();
@@ -57,8 +60,10 @@ class IndexController extends Controller
                 $page = new ModelPages();
                 $result = $page->createPageForRequest($this);
 
-                if($result == true) // This means that the page has been successfully saved
+                if($result == true) // This means the page has been successfully saved
                 {
+                    ModelKeywords::saveKeywords($page->getId(),$this->request->getPost('keywords'));
+
                     $this->flash->success('This page was successfully saved', $this->getFragmentFromGetRequest());
 
                     $this->redirectToShowAction();
@@ -74,6 +79,7 @@ class IndexController extends Controller
             $this->flash->error($exception->getMessage(), $addForm->prefix);
         }
     }
+
 
     public function editAction()
     {
@@ -107,6 +113,7 @@ class IndexController extends Controller
             $this->flash->error($exception->getMessage());
         }
     }
+
 
     public  function deleteAction()
     {

@@ -31,12 +31,13 @@ class PageForm extends Form
 
         $this->addTitle();
         $this->addSlug();
-//        $this->addKeyword();
+        $this->addKeywords();
         $this->addContent();
         $this->addLanguage();
         $this->addPosition();
         $this->addSave();
     }
+
 
     public function addTitle()
     {
@@ -102,12 +103,13 @@ class PageForm extends Form
         $this->add($slug);
     }
 
-//    public function addKeyword()
-//    {
-//        $keyword = new Text('');
-//        $title->setLabel('Title');
-//        $title->setAttributes(['placeholder' => 'Please enter title',]);
-//    }
+    public function addKeywords()
+    {
+        $keywords = new Text('keywords');
+        $keywords->setLabel('Keywords');
+        $keywords->setAttributes(['placeholder' => 'Please enter keywords',]);
+        $this->add($keywords);
+    }
 
         public function addContent()
     {

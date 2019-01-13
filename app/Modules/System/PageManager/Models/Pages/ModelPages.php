@@ -113,6 +113,7 @@ class ModelPages extends Model implements IModelEvents
      * Public static Methods
      */
 
+
     public static function findAllParentsByLang($lang = null)
     {
         if(!$lang)
