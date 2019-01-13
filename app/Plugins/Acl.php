@@ -17,6 +17,7 @@ namespace Plugins;
 
 use Ilya\Models\Users;
 use Lib\Acl\DefaultAcl;
+use Lib\Mvc\Model\Users\ModelUsers;
 use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Dispatcher;
@@ -52,13 +53,13 @@ class Acl extends Plugin
         if($session)
         {
             $id = $session->id;
-            $user = Users::findFirstById($id);
+            $user = ModelUsers::findFirstById($id);
 
             $role = $user->getRole();
         }
         else
         {
-            $role = 'guest';
+            $role = 'admin';
         }
 
         return $role;

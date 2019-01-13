@@ -28,6 +28,15 @@ class ModelOptions extends Model
 
     }
 
+    public static $keys = [
+        'DEBUG_MODE'        => 1,
+        'TECHNICAL_WORKS'   => 1,
+        'PROFILER'          => 1,
+        'WIDGETS_CACHE'     => 1,
+        'DISPLAY_CHANGELOG' => 1,
+        'ADMIN_EMAIL'       => 'webmaster@localhost',
+    ];
+
     public static function findCacheByKey($key)
     {
         if(CmsCache::getInstance()->get('options'))

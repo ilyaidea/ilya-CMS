@@ -1,24 +1,11 @@
 <?php
-/**
- * Summary File Bootstrap
- *
- * We introduce the namespace in classes so that if we had another class with the same name
- ,we would recognize another class in another class
- *
- * Description File Bootstrap
- *
- * ILYA CMS Created by ILYA-IDEA Company.
- * @author Ali Mansoori
- * Date: 7/9/2018
- * Time: 10:50 AM
- * @version 1.0.0
- * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
- */
 namespace Ilya;
 
+use Lib\Bootstrap\IBootstrap;
 use Phalcon\Application\Exception;
 
-class Bootstrap
+include_once APP_PATH. 'Library/Bootstrap/IBootstrap.php';
+class Bootstrap implements IBootstrap
 {
     private $config;
 
@@ -33,16 +20,7 @@ class Bootstrap
     }
 
     /**
-     * Summary Function run
-     *
-     * Description Function run
-     *
-     * When bootstrap runs, it becomes config
-     *
-     * @author Ali Mansoori
-     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
-     * @version 1.0.0
-     * @example Desc <code></code>
+     * Run Bootstrap Application
      */
     public function run()
     {
@@ -54,10 +32,9 @@ class Bootstrap
         try
         {
             // Handle the request
-            $response = $application->handle()->getContent();
+            $response = $application->handle()->send();
 //            $response->send();
 
-            echo $response;
 //            echo $this->process_data_alan($response);
         }
         catch (Exception $e)
@@ -74,22 +51,12 @@ class Bootstrap
         }
     }
 
-    /**
-     * Summary Function registerAutoLoaders
-     *
-     * Description Function registerAutoLoaders
-     *
-     * @author Ali Mansoori
-     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
-     * @version 1.0.0
-     * @example Desc <code></code>
-     */
-    protected function registerAutoLoaders()
+    public function registerAutoLoaders()
     {
         include_once APP_PATH. 'config/loader.php';
     }
 
-    function process_data_alan($text) //
+    private function process_data_alan($text) //
     {
         $re = '%# Collapse ws everywhere but in blacklisted elements.
         (?>             # Match all whitespans other than single space.

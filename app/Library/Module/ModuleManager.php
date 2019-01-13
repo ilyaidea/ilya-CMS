@@ -15,6 +15,7 @@
 namespace Lib\Module;
 
 
+use Lib\Common\Directory;
 use Lib\Common\UtilMetaData;
 use Lib\Contents\Classes\Form;
 use Lib\Di\ModuleServices;
@@ -152,5 +153,28 @@ class ModuleManager extends Module
         }
 
         return $widgets;
+    }
+
+    /**
+     * Summary Function getAllModules
+     * Returns all modules that located in \Lib\Common\Directory
+     * @return array
+     */
+    public static function getAllModules()
+    {
+        $modules = [];
+
+        foreach (Directory::getSubDirs(APP_PATH. 'Modules/*') as $modulePath)
+        {
+            foreach (Directory::getSubDirs($modulePath. '/*') as $module)
+            {
+                $modules[Text::uncamelize(basename($module), '-')] = [
+                    'className' => 'Modules\\'. ucfirst(basename($modulePath)). "\\". ucfirst(basename($module)). '\Module',
+                    'path'      => $module. '/Module.php'
+                ];
+            }
+        }
+
+        return $modules;
     }
 }

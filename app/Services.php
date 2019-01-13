@@ -16,6 +16,7 @@ namespace Ilya;
 use Lib\Acl\DefaultAcl;
 use Lib\Authenticates\Auth;
 use Lib\Contents\ContentBuilder;
+use Lib\Debug;
 use Lib\Filter;
 use Lib\Flash\Session;
 use Lib\Http\Response;
@@ -35,6 +36,7 @@ use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Events\Manager;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\View\Engine\Php;
+use Phalcon\Registry;
 use Phalcon\Security;
 use Phalcon\Session\Adapter\Files;
 use Plugins\Acl;
@@ -43,22 +45,16 @@ use Phalcon\Mvc\Model\Transaction\Manager as TransactionManager;
 
 class Services extends \Lib\Di\FactoryDefault
 {
+    protected function initSharedRegistry()
+    {
+        return new Registry();
+    }
+
     protected function initSharedManager()
     {
         return new Manager();
     }
 
-    /**
-     * Summary Function initUrl test
-     *
-     * Description Function initUrl
-     *
-     * @author Ali Mansoori
-     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
-     * @return \Phalcon\Mvc\Url
-     * @version 1.0.0
-     * @example Desc <code></code>
-     */
     protected function initUrl()
     {
         $url = new \Phalcon\Mvc\Url();
@@ -114,17 +110,7 @@ class Services extends \Lib\Di\FactoryDefault
     {
         return new Response();
     }
-    /**
-     * Summary Function initDb
-     *
-     * Description Function initDb
-     *
-     * @author Ali Mansoori
-     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
-     * @return mixed
-     * @version 1.0.0
-     * @example Desc <code></code>
-     */
+
     protected function initSharedDb()
     {
         $dbConf = $this->getShared('config')->database->toArray();
@@ -290,7 +276,7 @@ class Services extends \Lib\Di\FactoryDefault
         $eventManager->attach('dispatch:beforeDispatchLoop', function($eventManager, Dispatcher $dispatcher) use ($di){
             new DbManagerPlugin();
             new Localization($dispatcher);
-//            new Acl($di->getShared('acl'), $dispatcher, $di->getShared('view'));
+            new Acl($di->getShared('acl'), $dispatcher, $di->getShared('view'));
         });
 
         $dispatcher->setEventsManager($eventManager);
@@ -301,5 +287,20 @@ class Services extends \Lib\Di\FactoryDefault
     protected function initSharedTransactions()
     {
         return new TransactionManager();
+    }
+
+    protected function initDebug()
+    {
+        return new Debug();
+    }
+
+    /**
+     * Run in end application
+     */
+    protected function afterInitDebug()
+    {
+        /** @var Debug $debug */
+        $debug = $this[ 'debug'];
+        $debug->listen();
     }
 }

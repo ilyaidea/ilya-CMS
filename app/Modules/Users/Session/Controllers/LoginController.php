@@ -1,17 +1,4 @@
 <?php
-/**
- * Summary File LoginController
- *
- * Description File LoginController
- *
- * ILYA CMS Created by ILYA-IDEA Company.
- * @author Ali Mansoori
- * Date: 12/23/2018
- * Time: 8:27 PM
- * @version 1.0.0
- * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
- */
-
 namespace Modules\Users\Session\Controllers;
 
 
@@ -19,10 +6,14 @@ use Lib\Contents\Classes\Form;
 use Lib\Mvc\Controller;
 use Lib\Mvc\Model\Users\ModelUsers;
 use Lib\Security\Limits;
-use Lib\Tag;
 use Modules\Users\Session\Forms\LoginForm;
-use Modules\Users\Session\Lib\Composite\Fieldset;
-use Modules\Users\Session\Lib\Composite\Input;
+use Modules\Users\Session\Lib\Exam1\AdapterEBookToBook;
+use Modules\Users\Session\Lib\Exam1\Book1;
+use Modules\Users\Session\Lib\Exam1\Book2;
+use Modules\Users\Session\Lib\Exam1\Client;
+use Modules\Users\Session\Lib\Exam1\PoemEBook;
+use Modules\Users\Session\Lib\Exam1\StoryEBook;
+use Phalcon\Exception;
 
 class LoginController extends Controller
 {

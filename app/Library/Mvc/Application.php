@@ -14,47 +14,25 @@
 namespace Lib\Mvc;
 
 
-use Phalcon\Events\Event;
-use Phalcon\Events\Manager;
-use Phalcon\Mvc\Dispatcher;
-use Phalcon\Text;
+use Ilya\Services;
+use Lib\Module\ModuleManager;
 
 class Application extends \Phalcon\Mvc\Application
 {
     /**
      * Application constructor.
      * Loads the modules and initializes their routs
-     * @param \Phalcon\DiInterface|null $di
+     * @param \Phalcon\DiInterface|null|Services $di
      */
     public function __construct(\Phalcon\DiInterface $di = null)
     {
         parent::__construct($di);
-        $this->registerModules(self::getAllModules());
-        $this->setDI($di);
+        $this->registerModules(ModuleManager::getAllModules());
+
         $this->initRoute($di);
-    }
 
-    /**
-     * Summary Function getAllModules
-     * Returns all modules that located in \Lib\Common\Directory
-     * @return array
-     */
-    public static function getAllModules()
-    {
-        $modules = [];
+        $di->afterInitServices();
 
-        foreach (\Lib\Common\Directory::getSubDirs(APP_PATH. 'Modules/*') as $modulePath)
-        {
-            foreach (\Lib\Common\Directory::getSubDirs($modulePath. '/*') as $module)
-            {
-                $modules[Text::uncamelize(basename($module), '-')] = [
-                    'className' => 'Modules\\'. ucfirst(basename($modulePath)). "\\". ucfirst(basename($module)). '\Module',
-                    'path'      => $module. '/Module.php'
-                ];
-            }
-        }
-
-        return $modules;
     }
 
     /**

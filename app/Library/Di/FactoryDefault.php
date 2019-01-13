@@ -94,4 +94,18 @@ class FactoryDefault extends \Phalcon\Di\FactoryDefault
 
         return false;
     }
+
+    public function afterInitServices()
+    {
+        $reflection = new \ReflectionObject($this);
+
+        foreach ($reflection->getMethods() as $method)
+        {
+            if ($this->isMethodNameStart($method->name, 9, 'afterInit') && $method->name !== 'afterInitServices')
+            {
+                $methodName = $method->name;
+                $this->$methodName();
+            }
+        }
+    }
 }
