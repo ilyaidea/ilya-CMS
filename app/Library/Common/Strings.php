@@ -15,27 +15,37 @@ namespace Lib\Common;
 
 class Strings
 {
-    /**
-     * Summary Function isMethodNameStart
-     *
-     * Description Function isMethodNameStart
-     *
-     * @author Ali Mansoori
-     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
-     * @param $name
-     * @param $maxLenght
-     * @param $needle
-     * @return bool
-     * @version 1.0.0
-     */
-    public static function IsStartBy( $string, $by, $maxLenghtString = null )
+    public static function IsStartBy( $string, $by, $caseSensitive = false, $maxLenghtString = null )
     {
+        if(!$caseSensitive)
+        {
+            $string = strtolower($string);
+            $by = strtolower($by);
+        }
+
         if ( !is_null($maxLenghtString) && (strlen($string) > $maxLenghtString) && (strpos($string, $by) === 0))
             return true;
         elseif (is_null($maxLenghtString) && strpos($string, $by) === 0)
             return true;
 
         return false;
+    }
+
+    public static function IsEndBy( $string, $by, $caseSensitive = false)
+    {
+        $length = strlen($by);
+
+        if(!$caseSensitive)
+        {
+            $string = strtolower($string);
+            $by = strtolower($by);
+        }
+
+        if ($length == 0) {
+            return true;
+        }
+
+        return (substr($string, -$length) === $by);
     }
 
     /**

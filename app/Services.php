@@ -13,6 +13,7 @@
  */
 namespace Ilya;
 
+use Lib\Acl\CheckAcl;
 use Lib\Acl\DefaultAcl;
 use Lib\Authenticates\Auth;
 use Lib\Contents\ContentBuilder;
@@ -276,7 +277,7 @@ class Services extends \Lib\Di\FactoryDefault
         $eventManager->attach('dispatch:beforeDispatchLoop', function($eventManager, Dispatcher $dispatcher) use ($di){
             new DbManagerPlugin();
             new Localization($dispatcher);
-            new Acl($di->getShared('acl'), $dispatcher, $di->getShared('view'));
+            new CheckAcl($di->getShared('acl'), $dispatcher, $di->getShared('view'));
         });
 
         $dispatcher->setEventsManager($eventManager);
