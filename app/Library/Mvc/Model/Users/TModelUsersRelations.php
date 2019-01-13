@@ -15,10 +15,22 @@
 namespace Lib\Mvc\Model\Users;
 
 
+use Lib\Mvc\Model\Roles\ModelRoles;
+use Lib\Mvc\Model\UsersRolesMap\ModelUsersRolesMap;
+
 trait TModelUsersRelations
 {
     protected function relations()
     {
-
+        $this->hasManyToMany(
+            'id',
+            ModelUsersRolesMap::class,
+            'user_id', 'role_id',
+            ModelRoles::class,
+            'id',
+            [
+                'alias' => 'Roles'
+            ]
+        );
     }
 }

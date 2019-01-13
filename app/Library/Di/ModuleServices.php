@@ -16,6 +16,7 @@ namespace Lib\Di;
 
 
 use Lib\Acl\DefaultAcl;
+use Lib\Acl\IAcl;
 use Lib\Module\ModuleManager;
 use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Acl\Role;
@@ -127,7 +128,7 @@ class ModuleServices extends Component
 
     protected function setAcl()
     {
-        /** @var DefaultAcl $acl */
+        /** @var Memory|IAcl $acl */
         $acl = $this->getDI()->getShared( 'acl' );
 
         $aclPath = $this->path. '/config/acl.php';
@@ -141,9 +142,10 @@ class ModuleServices extends Component
             return $acl;
         }
 
-        $resources = require_once $aclPath;
+//        $resources = require_once $aclPath;
 
-        $acl->addRolesAndAllow($resources, $this->namespace);
+//        $acl->addRolesAndAllow($resources, $this->namespace);
+        $acl->addRolesAndAllow($this->namespace);
 
         return $acl;
     }

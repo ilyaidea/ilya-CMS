@@ -1,20 +1,8 @@
 <?php
-/**
- * Summary File Users
- *
- * Description File Users
- *
- * ILYA CMS Created by ILYA-IDEA Company.
- * @author Ali Mansoori
- * Date: 6/30/2018
- * Time: 6:17 PM
- * @version 1.0.0
- * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
- */
-
 namespace Lib\Mvc\Model\Users;
 
 use Lib\Mvc\Model;
+use Phalcon\Di;
 
 class ModelUsers extends Model
 {
@@ -25,6 +13,7 @@ class ModelUsers extends Model
 
     public function init()
     {
+        $this->setDbRef(true);
         $this->setSource('ilya_users');
     }
 
@@ -71,5 +60,32 @@ class ModelUsers extends Model
                 ]
             ]
         );
+    }
+
+    public static function getUserRolesForAuth()
+    {
+        $session = Di::getDefault()->getShared('session')->get('auth');
+
+        $roles = [];
+        if($session)
+        {
+            $id = $session->id;
+            $user = self::findFirst($id);
+
+            if($user)
+            {
+                $roles = $user->getRoles()->toArray();
+                if(!empty($roles))
+                {
+                    $roles = array_column($roles, 'name');
+                }
+            }
+        }
+        else
+        {
+            $roles[] = 'guest';
+        }
+
+        return $roles;
     }
 }

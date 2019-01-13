@@ -13,6 +13,7 @@
  */
 
 namespace Lib\Mvc;
+use Lib\Mvc\Model\Users\ModelUsers;
 use Phalcon\Mvc\Model\Manager;
 
 use Lib\Mvc\Model\TraitSetPosition;
@@ -39,9 +40,6 @@ abstract class Model extends \Phalcon\Mvc\Model
         if($this->getDI()->getShared('config')->database->dbname)
             $this->setSchema($this->getDI()->getShared('config')->database->dbname);
 
-        if(method_exists($this,'relations'))
-            $this->relations();
-
         $this->helper = $this->getDI()->getShared('helper');
 
         if(isset($this->getDI()->getShared('config')->module->database->connection) && !$this->isDbRef() )
@@ -49,6 +47,9 @@ abstract class Model extends \Phalcon\Mvc\Model
             $this->setConnectionService($this->getDI()->getShared('config')->module->database->connection);
             $this->setSchema($this->getDI()->getShared('config')->module->database->dbname);
         }
+
+        if(method_exists($this,'relations'))
+            $this->relations();
 
     }
 
