@@ -91,10 +91,14 @@ trait TraitEventsLanguage
 {
 //        $this->position = $this->getUpperPosition() + 1;
 }
-
+    /*
+     * after inserting a row, creates new rows for other languages
+     * and sets their translation: null
+     */
     public function updateTranslate()
     {
-        $translates = ModelTranslate::find(
+        $translates = ModelTranslate::find
+        (
             [
                 'columns' => 'phrase,language'
             ]
@@ -103,9 +107,11 @@ trait TraitEventsLanguage
         /** @var ModelTranslate $translate */
         foreach ($translates as $translate)
         {
-            $isExistThisTranslate = ModelTranslate::findFirst([
+            $isExistThisTranslate = ModelTranslate::findFirst
+            ([
                 'conditions' => 'phrase=:ph: AND language=:lang:',
-                'bind' => [
+                'bind' =>
+                [
                     'ph' => $translate->phrase,
                     'lang' => $this->getIso()
                 ]
@@ -124,11 +130,7 @@ trait TraitEventsLanguage
                 }
             }
         }
-
-
     }
-
-
 
     private function buildCmsLanguagesCache()
     {
@@ -219,8 +221,6 @@ trait TraitEventsLanguage
             if (!$primary) {
                 $this->setIsPrimary(1);
                 $this->save();
-
-               // $this->getDI()->get('flash')->notice('There should always be a primary language');
             }
         }
     }
@@ -242,14 +242,12 @@ trait TraitEventsLanguage
             if(isset($previous))
             {
                 $positionHtml = 'after '. (($passedself ? $language['title'] : $previous['title']));
-//dump($positionHtml);
             }
             else
             {
                 $positionHtml = 'First';
             }
             $positionOptions[$language['position']] = $positionHtml;
-           // dump($positionHtml);
             $previous = $language;
         }
         if (isset($previous))
@@ -258,7 +256,6 @@ trait TraitEventsLanguage
             $positionOptions[1+$previous['position']] = $positionvalue;
         }
 
-     // dump($previous);
         return $positionOptions;
     }
 

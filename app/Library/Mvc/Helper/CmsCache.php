@@ -25,7 +25,7 @@ class CmsCache extends Component
 
     public static function getInstance ()
     {
-        // if dont exist folder => create
+        // if the folder does not exist => create it
         if ( !file_exists( self::DIR_CACHE ) )
         {
             mkdir( self::DIR_CACHE, 0777, true );
@@ -50,10 +50,16 @@ class CmsCache extends Component
             return json_decode( file_get_contents( $file ), true );
     }
 
+    /*
+     * receive the name of json file & an array of data
+     */
     public function save ( $key, $data )
     {
         try
         {
+            /*
+             * This function writes data to a file & returns the number of bytes that were written to the file
+             */
             file_put_contents( $this->file( $key ), json_encode( $data ) );
         }
         catch ( \Exception $exception )
@@ -65,6 +71,9 @@ class CmsCache extends Component
 
     }
 
+    /*
+     * create file name like BASE_PATH.'data/cache/cms/translates.json'
+     */
     private function file ( $key )
     {
         return self::DIR_CACHE.$key.'.json';
