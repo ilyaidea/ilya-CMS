@@ -31,12 +31,12 @@ class WidgetForm extends Form
     public function addWidget()
     {
         $array = $this->findWidgetName();
+
         $widget = new CheckBoxList(
             'widget',$array,null,[
-                'class' => 'checkBoxList'
+                'class' => 'checkBoxList',
             ]
         );
-        $widget->setDefault(false);
         $widget->setLabel('Widget : ');
         $this->add($widget);
     }
