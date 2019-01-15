@@ -89,19 +89,6 @@ class ModuleManager extends Module
         return $controllers;
     }
 
-    /**
-     * Summary Function getAllActions
-     *
-     * Description Function getAllActions
-     *
-     * @author Ali Mansoori
-     * @copyright Copyright (c) 2017-2018, ILYA-IDEA Company
-     * @param $controllerClass
-     * @return array
-     * @throws \ReflectionException
-     * @version 1.0.0
-     * @example Desc <code></code>
-     */
     public static function getAllActions( $controllerClass)
     {
         $methods = (new \ReflectionClass($controllerClass))->getMethods(\ReflectionMethod::IS_PUBLIC);
@@ -176,5 +163,29 @@ class ModuleManager extends Module
         }
 
         return $modules;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModulePath()
+    {
+        return $this->modulePath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModuleName()
+    {
+        return $this->moduleName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModuleNamespace()
+    {
+        return $this->moduleNamespace;
     }
 }

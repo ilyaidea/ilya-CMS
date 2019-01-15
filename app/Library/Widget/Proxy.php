@@ -20,7 +20,7 @@ class Proxy extends \Phalcon\Mvc\User\Component
     private $object;
     private $namespace;
 
-    public function __construct($namespace, $params = [])
+    public function __construct($namespace, $params = [], $diffNamespace = null)
     {
         $this->namespace = $namespace;
 
@@ -31,7 +31,25 @@ class Proxy extends \Phalcon\Mvc\User\Component
         $loader = new Loader();
         $loader->registerClasses([
             $this->namespace => APP_PATH. str_replace('\\', '/', $namespace). '.php'
-        ])->register();
+        ]);
+
+        if($diffNamespace && isset($diffNamespace['namespace']) && isset($diffNamespace['path']))
+        {
+            $loader->registerClasses([
+                $diffNamespace['namespace']. '\Module' => $diffNamespace['path']. '/Module.php'
+            ]);
+        }
+
+        $loader->register();
+
+        if($diffNamespace && isset($diffNamespace['namespace']) && isset($diffNamespace['path']))
+        {
+            $m = $diffNamespace['namespace']. '\Module';
+            $module = new $m();
+            $module->registerAutoloaders();
+            $module->registerservices();
+        }
+
 
         $namespace = '\\'. $this->namespace;
 

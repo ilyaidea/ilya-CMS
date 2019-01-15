@@ -68,7 +68,35 @@ class Helper extends Component
 
     public function widget($namespace, $params = [])
     {
-        return new Proxy($namespace, $params);
+        return new Proxy($namespace, $params, $this->isLoadInOwnModule($namespace));
+    }
+
+    /*
+         * آیا ویجت در ماژول خودش لود شده است.
+     */
+    private function isLoadInOwnModule($namespace)
+    {
+        $expload = explode('\\', $namespace);
+        $row = [];
+
+        foreach($expload as $key=>$value)
+        {
+            if($value === 'Widgets')
+                break;
+
+            $row[] = $value;
+
+        }
+
+        if(isset($this->config->module->namespace) && $this->config->module->namespace === implode('\\', $row))
+        {
+            return null;
+        }
+
+        return [
+            'namespace' => implode('\\', $row),
+            'path' => APP_PATH. implode('/', $row)
+        ];
     }
 
     public function modulePartial($template, $data, $module = null)

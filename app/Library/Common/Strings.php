@@ -48,6 +48,15 @@ class Strings
         return (substr($string, -$length) === $by);
     }
 
+    public static function IsUrl($string)
+    {
+        if (filter_var($string, FILTER_VALIDATE_URL) == true) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Return true if at least one of the values in array $matches is a substring of $string. Otherwise, return false.
      *
