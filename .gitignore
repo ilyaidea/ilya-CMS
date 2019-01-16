@@ -2,9 +2,6 @@
 /data
 data/*
 !data/cache/cms/*
-schemas/*
-!schemas/ilya-cms.sql
-!schemas/ER.mwb
 /vendor/
 
 composer*
