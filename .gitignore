@@ -5,6 +5,7 @@ data/*
 /vendor/
 
 composer*
+!composer.json
 
 composer\.lock
 

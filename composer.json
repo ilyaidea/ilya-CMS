@@ -1,0 +1,22 @@
+{
+    "name": "projekt/cms",
+    "authors": [
+        {
+            "name": "Ali mansoori",
+            "email": "alimanssouri221@gmail.com"
+        }
+    ],
+    "minimum-stability": "alpha",
+    "require": {
+        "datatables.net/editor-php": "1.*"
+
+    },
+    "require-dev": {
+        "phpdocumentor/phpdocumentor": "2.*",
+        "phalcon/devtools": "dev-master",
+        "loadsys/loadsys_codesniffer": "~3.0",
+        "nikic/php-parser": "^3.1",
+        "consolidation/robo": "^1.0.0",
+        "phpunit/phpunit": "^5.0"
+    }
+}
