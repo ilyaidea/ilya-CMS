@@ -13,17 +13,11 @@ trait TModelRolesProperties
     private $name;
     private $description;
 
-    /**
-     * @return mixed
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
     public function getParentId()
     {
         return $this->parent_id;
@@ -37,9 +31,6 @@ trait TModelRolesProperties
         $this->parent_id = $parent_id;
     }
 
-    /**
-     * @return mixed
-     */
     public function getName()
     {
         return $this->name;
@@ -53,9 +44,6 @@ trait TModelRolesProperties
         $this->name = $name;
     }
 
-    /**
-     * @return mixed
-     */
     public function getDescription()
     {
         return $this->description;

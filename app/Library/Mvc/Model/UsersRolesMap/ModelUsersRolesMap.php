@@ -20,6 +20,7 @@ use Lib\Mvc\Model;
 class ModelUsersRolesMap extends Model
 {
     use TModelUsersRolesMapProperties;
+    use TModelUsersRolesMapValidations;
 
     public function init()
     {

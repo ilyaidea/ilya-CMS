@@ -162,8 +162,8 @@ class ModuleServices extends Component
 
         $dbConf = $this->config->module->database->toArray();
 
-        $adapter = 'Phalcon\Db\Adapter\Pdo\\'.$dbConf[ 'adapter'];
-        unset($dbConf['adapter']);
+        $adapter = 'Phalcon\Db\Adapter\Pdo\\'.$dbConf['AdapterBook'];
+        unset($dbConf['AdapterBook']);
 
         $conn = mysqli_connect($this->config->module->database->host, $this->config->module->database->username, $this->config->module->database->password);
 

@@ -24,6 +24,7 @@ class  ModelTranslate extends Model
     use TraitPropertiesTranslate;
     use TraitEventsTranslate;
     use TraitValidationTranslate;
+    use TraitRelationsTranslate;
 
     public function initialize()
     {

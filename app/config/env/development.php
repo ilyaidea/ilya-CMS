@@ -2,7 +2,7 @@
 return new \Phalcon\Config(
     [
         'database' => [
-            'adapter'  => 'Mysql',
+            'AdapterBook' => 'Mysql',
             'host'     => '127.0.0.1',
             'username' => 'root',
             'password' => '',

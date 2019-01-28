@@ -21,6 +21,7 @@ class ModelRoles extends Model
 {
     use TModelRolesProperties;
     use TModelRolesRelations;
+    use TModelRolesValidations;
 
     public function init()
     {
@@ -34,7 +35,7 @@ class ModelRoles extends Model
      * @param string $except
      * @return \Phalcon\Mvc\Model\ResultsetInterface
      */
-    public static function findAllExceptByName( $except)
+    public static function findAllExceptByName($except)
     {
         return ModelRoles::find([
             'conditions' => 'name <> :name:',
