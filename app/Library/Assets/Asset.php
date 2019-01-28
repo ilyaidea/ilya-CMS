@@ -108,8 +108,8 @@ class Asset extends Component
 
         if($cssSize !== CmsCache::getInstance()->get($this->key. '.css'))
         {
-//            $this->cssmin->minify('tmp/'. $this->key.'.css');
-//            CmsCache::getInstance()->save($this->key.'.css', $cssSize);
+            $this->cssmin->minify('tmp/'. $this->key.'.css');
+            CmsCache::getInstance()->save($this->key.'.css', $cssSize);
         }
 
         $jsSize = 0;
@@ -138,12 +138,12 @@ class Asset extends Component
 
         if($jsSize !== CmsCache::getInstance()->get($this->key. '.js'))
         {
-//            $this->jsmin->minify( 'tmp/'. $this->key.'.js');
-//            CmsCache::getInstance()->save($this->key.'.js', $jsSize);
+            $this->jsmin->minify( 'tmp/'. $this->key.'.js');
+            CmsCache::getInstance()->save($this->key.'.js', $jsSize);
         }
 
-//        $this->assets->addCss('tmp/'. $this->key.'.css');
-//        $this->assets->addJs('tmp/'. $this->key.'.js');
+        $this->assets->addCss('tmp/'. $this->key.'.css');
+        $this->assets->addJs('tmp/'. $this->key.'.js');
     }
 
     protected function getHashKey()

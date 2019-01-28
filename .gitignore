@@ -1,7 +1,4 @@
 /.idea
-/data
-data/*
-!data/cache/cms/*
 /vendor/
 
 composer*
