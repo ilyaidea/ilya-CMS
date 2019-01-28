@@ -21,6 +21,7 @@ class ModelResources extends Model
 {
     use TModelResourcesProperties;
     use TModelResourcesRelations;
+    use TModelResourcesValidations;
 
     public function init()
     {

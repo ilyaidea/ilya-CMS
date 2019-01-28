@@ -9,6 +9,8 @@ use Lib\Contents\Classes\Form;
 use Lib\Mvc\Controller;
 use Lib\Mvc\Helper;
 use Lib\Mvc\Helper\CmsCache;
+use Modules\Showcase\Products\Models\Digikala\Digikala;
+use Modules\Showcase\Products\Models\Products;
 use Modules\System\Native\DataTables\DtTranslates;
 use Modules\System\Native\Forms\FormTranslate;
 use \Modules\System\Native\Models\Translate\ModelTranslate;
@@ -96,8 +98,7 @@ class TranslateController extends Controller
         $fragment = $this->request->get('fragment');
         $translateId = $this->dispatcher->getParam(0);
         $this->content->theme->noLeftMasterPage();
-        try
-        {
+        try {
             if (!$translateId || !is_numeric($translateId))
                 throw new \Exception('this translateID does not exist');
 
@@ -105,10 +106,10 @@ class TranslateController extends Controller
             ([
                 "id = :id: AND language = :lang:",
                 'bind' =>
-                [
-                    'id' => $translateId,
-                    'lang' => $this->helper->locale()->getLanguage()
-                ]
+                    [
+                        'id' => $translateId,
+                        'lang' => $this->helper->locale()->getLanguage()
+                    ]
             ]);
             if (!$translateModel)
                 throw new \Exception('this translate does not exist');
@@ -122,21 +123,16 @@ class TranslateController extends Controller
             );
             $edit_form = $this->content->form('edit_form');
 
-            if ($edit_form->isValid())
-            {
-                if ($oldphrase !== $this->request->getPost('phrase'))
-                {
+            if ($edit_form->isValid()) {
+                if ($oldphrase !== $this->request->getPost('phrase')) {
                     $oldphrases = ModelTranslate::findByPhrase($oldphrase);
 
-                    foreach ($oldphrases as $old)
-                    {
+                    foreach ($oldphrases as $old) {
                         /** @var ModelTranslate $old */
                         $old->setPhrase($this->request->getPost('phrase'));
                         $old->update();
                     }
-                }
-                else
-                {
+                } else {
                     /** @var ModelTranslate $translateModel */
                     $translateModel->setPhrase($this->request->getPost('phrase'));
                     $translateModel->setTranslation($this->request->getPost('translation'));
@@ -144,8 +140,7 @@ class TranslateController extends Controller
                     if (!$translateModel->update())
                         $this->flash->error($translateModel->getMessages(), $edit_form->prefix);
 
-                    else
-                    {
+                    else {
                         $this->flash->success('success edited', $fragment);
                     }
                     $this->response->redirect(
@@ -227,9 +222,22 @@ class TranslateController extends Controller
      */
     public function compareAction()
     {
+      //  $array1 = array('a' => 'aa', 'b' => 'bb');
+        // @session_start();
+        $fileuploader = new \UploadHandler();
+        /** @var Digikala $a */
+        $fileuploader->basename("F:\web\ilya-CMS\public\files\thumbnail\1525189943-38523.png");
+       print_r($fileuploader->get_singular_param_name());
+
+
+        //$a = array("Horse", "Dog", "Cat");
+     //  print_r(getimagesize("https://avatars3.githubusercontent.com/u/40712232?s=460&v=4"));
+
+        //print_r(array_values($array1)) ;
+        //  dump()
         $translateCache = CmsCache::getInstance()->get('translates');
-        $translateModel = ModelTranslate::buildCmsTranslatesCache() ;
-        $differentArray = Arrays::compareArrays($translateCache,$translateModel);
+        $translateModel = ModelTranslate::buildCmsTranslatesCache();
+        $differentArray = Arrays::compareArrays($translateCache, $translateModel);
         ModelTranslate::insertArrayToDatabase($differentArray);
     }
 }

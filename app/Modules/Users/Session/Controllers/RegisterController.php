@@ -47,7 +47,7 @@ class RegisterController extends Controller
 
         // Check we haven't suspended registration, and this IP isn't blocked
 
-        $this->content->setTemplate("register");
+        //$this->content->setTemplate("register");
 
         $this->content->form(
             Form::inst(new RegisterForm(), 'register_form')
