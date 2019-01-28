@@ -41,7 +41,7 @@ class LoginController extends Controller
         // Check we haven't suspended registration, and this IP isn't blocked
 
         //
-        $this->content->theme->noLeftMasterPage();
+        $this->content->theme->viewMasterPage();
         $this->content->setTemplate('tem');
 
         $this->content->form(
