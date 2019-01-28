@@ -102,6 +102,11 @@ class Services extends \Lib\Di\FactoryDefault
             $content = $this->getShared('content');
             $content->process();
         });
+        $eventManager->attach('view:afterRender', function() {
+            /** @var ContentBuilder $content */
+            $content = $this->getShared('content');
+            $content->assets->process();
+        });
         $view->setEventsManager($eventManager);
 
         return $view;
