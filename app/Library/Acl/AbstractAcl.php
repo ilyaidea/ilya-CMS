@@ -81,7 +81,7 @@ class AbstractAcl extends Memory implements IAcl
                 foreach($resources as $resource)
                 {
                     // later check if exist resource after allow
-                    $this->allow($role->name, $resource->controller, $resource->action);
+                    $this->allow($role->name, $resource->controller.$resource->action, $resource->action);
                 }
             }
         }
@@ -91,7 +91,6 @@ class AbstractAcl extends Memory implements IAcl
      * The task is to add Controllers Array to resources for ACL
      *
      * @param array $controllers
-     * @throws \ReflectionException
      */
     public function addResourcesForControllerClass( $controllers )
     {
@@ -99,7 +98,7 @@ class AbstractAcl extends Memory implements IAcl
         {
             foreach(ModuleManager::getAllActions($controller) as $action)
             {
-                $this->addResource($controller, $action);
+                $this->addResource(new Acl\Resource($controller.$action), $action);
             }
         }
     }
