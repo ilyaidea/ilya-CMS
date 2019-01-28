@@ -116,8 +116,8 @@ class Services extends \Lib\Di\FactoryDefault
     {
         $dbConf = $this->getShared('config')->database->toArray();
 
-        $adapter = 'Phalcon\Db\Adapter\Pdo\\'. $dbConf['adapter'];
-        unset($dbConf['adapter']);
+        $adapter = 'Phalcon\Db\Adapter\Pdo\\'. $dbConf['AdapterBook'];
+        unset($dbConf['AdapterBook']);
 
         /** @var Mysql $connection */
         $connection = new $adapter($dbConf);

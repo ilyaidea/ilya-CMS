@@ -24,6 +24,7 @@ class ModelLanguage extends Model
     use TraitPropertiesLanguage;
     use TraitValidationLanguage;
     use TraitEventsLanguage;
+    use TraitRelationsLanguage;
 
     public function init()
     {
