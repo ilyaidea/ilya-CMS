@@ -1,6 +1,1 @@
-*.css
-*.js
-bower_components
-node_modules
-package-lock.json
-assets
+assets/*

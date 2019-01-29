@@ -1,7 +1,6 @@
 <?php
 namespace Lib\Acl;
 
-
 use Lib\Mvc\Model\Users\ModelUsers;
 use Lib\Mvc\View;
 use Phalcon\Mvc\Dispatcher;
@@ -39,7 +38,7 @@ class CheckAcl extends Plugin
         {
             if(!$this->acl->isAllowed(
                     $role,
-                    $this->dispatcher->getControllerClass(),
+                    $this->dispatcher->getControllerClass().$this->dispatcher->getActionName(),
                     $this->dispatcher->getActionName()
                 )
             )
@@ -63,8 +62,12 @@ class CheckAcl extends Plugin
 
     private function checkExistUserRolesAndExistResource()
     {
-        if(!empty(ModelUsers::getUserRolesForAuth()) &&
-            $this->acl->isResource($this->dispatcher->getControllerClass())
+        if(
+            !empty(ModelUsers::getUserRolesForAuth()) &&
+            $this->acl->isResource(
+                $this->dispatcher->getControllerClass().
+                $this->dispatcher->getActionName()
+            )
         )
         {
             return true;

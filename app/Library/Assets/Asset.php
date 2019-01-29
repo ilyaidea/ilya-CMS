@@ -93,12 +93,12 @@ class Asset extends Component
                 }
                 if(!file_exists($css))
                 {
-                    $this->assets->addInlineCss($css);
+//                    $this->assets->addInlineCss($css);
                     $cssSize += strlen($css);
                 }
                 else
                 {
-                    $this->assets->addCss($css);
+//                    $this->assets->addCss($css);
                     $cssSize += filesize($css);
                 }
 
@@ -123,12 +123,12 @@ class Asset extends Component
                 }
                 if(!file_exists($js))
                 {
-                    $this->assets->addInlineJs($js);
+//                    $this->assets->addInlineJs($js);
                     $jsSize += strlen($js);
                 }
                 else
                 {
-                    $this->assets->addJs($js);
+//                    $this->assets->addJs($js);
                     $jsSize += filesize($js);
                 }
 

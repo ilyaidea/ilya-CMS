@@ -468,14 +468,15 @@ h1 {
 	}
 }
 
+/*
 @media (max-width: 979px) {
 	#qam-sidepanel-left-toggle {
-		right: 0;
-		left: auto;
+		right: auto;
+		left: 0;
 	}
 	#qam-sidepanel-left-toggle.active {
-		right: 280px;
 		left: auto;
+		right: 0;
 	}
 
 	.ilya-sidepanel-left {
@@ -486,4 +487,4 @@ h1 {
 		right: 0 !important;
 		left: auto;
 	}
-}
+}*/
