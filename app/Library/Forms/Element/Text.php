@@ -13,6 +13,7 @@
  */
 namespace Lib\Forms\Element;
 
+use Lib\Forms\Design;
 use Lib\Forms\Element;
 use Lib\Tag;
 

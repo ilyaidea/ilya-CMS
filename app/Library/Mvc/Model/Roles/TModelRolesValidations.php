@@ -37,6 +37,15 @@ trait TModelRolesValidations
             'cancelOnFail' => true
         ]));
 
+        $validator->add('name',
+            new StringLength([
+                "max"            => 30,
+                "min"            => 2,
+                "messageMaximum" => "name is too long!",
+                "messageMinimum" => "name is too short!",
+                'cancelOnFail' => true
+            ])
+        );
         /*
          * description
          */

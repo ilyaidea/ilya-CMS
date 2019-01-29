@@ -34,9 +34,8 @@ class FormLanguage extends Form
                 'placeholder' => $this->helper->t('Please enter the language name')
             ]
         );
-          $title->setLabel(
-              $this->helper->t('Title')
-          );
+          $title->setLabel($this->helper->t('Title'));
+
           $title->setUserOption('note',$this->helper->t('For example: English'));
 
           if ($this->isEditMode())
@@ -109,7 +108,6 @@ class FormLanguage extends Form
     {
         $position = new Select('position');
         $position->setOptions( ModelLanguage::positionOptions() );
-       // dump($position);
         $position->setLabel($this->helper->t($this->helper->t('POSITION')));
         $position->addValidators( [
         new Numericality( [

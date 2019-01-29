@@ -18,7 +18,7 @@ trait TraitValidationLanguage
     {
         $validator = new Validation();
 
-        /**
+        /*
          * ISO
          */
         if($this->getId())
@@ -57,7 +57,7 @@ trait TraitValidationLanguage
             'message' => 'ISO is required'
         ] ) );
 
-        /**
+        /*
          * Name
          */
         $validator->add('title', new PresenceOf([
